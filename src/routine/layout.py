@@ -294,4 +294,4 @@ class Layout:
 
 
 def get_layouts_dir():
-    return os.path.join(os.getcwd(),config.RESOURCES_DIR, 'layouts', config.bot.module_name)
+    return os.path.join(os.getcwd(),config.RESOURCES_DIR, 'layouts', config.bot.command_book.name)
