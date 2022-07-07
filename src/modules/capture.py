@@ -136,7 +136,7 @@ class Capture:
                 self.window['width'] = self.default_window_resolution['1366x768'][0]
                 self.window['height'] = self.default_window_resolution['1366x768'][1]
 
-            # Calibrate by finding the bottom right corner of the minimap
+            # Calibrate by finding the top-left and bottom-right corners of the minimap
             self.frame = self.screenshot_in_bg(self.handle,0,0,self.window['width'],self.window['height'])
             if self.frame is None:
                 continue
