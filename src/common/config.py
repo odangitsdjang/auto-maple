@@ -43,3 +43,6 @@ listener = None
 
 # Shares the gui to all modules
 gui = None
+
+# keys 
+keys = None

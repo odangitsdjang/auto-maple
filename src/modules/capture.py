@@ -76,16 +76,17 @@ class Capture:
         mss.windows.CAPTUREBLT = 0
         while True:
             # Calibrate screen capture
-            handle = user32.FindWindowW(None, 'MapleStory')
+            handle = user32.FindWindowW(None, 'Ristonia - A Better 64-bit Mushroom Game')
             rect = wintypes.RECT()
             user32.GetWindowRect(handle, ctypes.pointer(rect))
             rect = (rect.left, rect.top, rect.right, rect.bottom)
             rect = tuple(max(0, x) for x in rect)
-
             self.window['left'] = rect[0]
             self.window['top'] = rect[1]
             self.window['width'] = max(rect[2] - rect[0], MMT_WIDTH)
             self.window['height'] = max(rect[3] - rect[1], MMT_HEIGHT)
+
+            print(self.window)
 
             # Calibrate by finding the bottom right corner of the minimap
             with mss.mss() as self.sct:

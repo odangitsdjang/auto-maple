@@ -3,8 +3,6 @@
 import math
 import time
 from src.common import config, settings, utils
-from src.common.vkeys import key_down, key_up, press
-
 
 #################################
 #       Routine Components      #
@@ -76,7 +74,8 @@ class Point(Component):
 
     def main(self):
         """Executes the set of actions associated with this Point."""
-
+        print("Point class executing")
+        print(f"commands at this point: {self.commands}")
         if self.counter == 0:
             move = config.bot.command_book['move']
             move(*self.location).execute()
@@ -84,6 +83,8 @@ class Point(Component):
                 adjust = config.bot.command_book.get('adjust')      # TODO: adjust using step('up')?
                 adjust(*self.location).execute()
             for command in self.commands:
+                print("Command type is:")
+                print(type(command))
                 command.execute()
         self._increment_counter()
 
@@ -236,9 +237,9 @@ class Move(Command):
         self.prev_direction = ''
 
     def _new_direction(self, new):
-        key_down(new)
+        config.keys.key_down(new)
         if self.prev_direction and self.prev_direction != new:
-            key_up(self.prev_direction)
+            config.keys.key_up(self.prev_direction)
         self.prev_direction = new
 
     def main(self):
@@ -284,7 +285,7 @@ class Move(Command):
                 global_error = utils.distance(config.player_pos, self.target)
                 toggle = not toggle
             if self.prev_direction:
-                key_up(self.prev_direction)
+                config.keys.key_up(self.prev_direction)
 
 
 class Adjust(Command):
@@ -328,9 +329,9 @@ class Walk(Command):
         self.duration = float(duration)
 
     def main(self):
-        key_down(self.direction)
+        config.keys.key_down(self.direction)
         time.sleep(self.duration)
-        key_up(self.direction)
+        config.keys.key_up(self.direction)
         time.sleep(0.05)
 
 
@@ -346,7 +347,7 @@ class Fall(Command):
 
     def main(self):
         start = config.player_pos
-        key_down('down')
+        config.keys.key_down('DOWN')
         time.sleep(0.05)
         if config.stage_fright and utils.bernoulli(0.5):
             time.sleep(utils.rand_float(0.2, 0.4))
@@ -354,9 +355,9 @@ class Fall(Command):
         while config.enabled and \
                 counter > 0 and \
                 utils.distance(start, config.player_pos) < self.distance:
-            press('space', 1, down_time=0.1)
+            config.keys.press('SPACE', 1, down_time=0.1)
             counter -= 1
-        key_up('down')
+        config.keys.key_up('DOWN')
         time.sleep(0.05)
 
 

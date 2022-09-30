@@ -111,11 +111,40 @@ KEY_MAP = {
     "'": 0xDE
 }
 
+PUL = ctypes.POINTER(ctypes.c_ulong)
+class KeyboardInput(ctypes.Structure):
+    _fields_ = [("wVk", ctypes.c_ushort),
+                ("wScan", ctypes.c_ushort),
+                ("dwFlags", ctypes.c_ulong),
+                ("time", ctypes.c_ulong),
+                ("dwExtraInfo", PUL)]
+
+class HardwareInput(ctypes.Structure):
+    _fields_ = [("uMsg", ctypes.c_ulong),
+                ("wParamL", ctypes.c_short),
+                ("wParamH", ctypes.c_ushort)]
+
+class MouseInput(ctypes.Structure):
+    _fields_ = [("dx", ctypes.c_long),
+                ("dy", ctypes.c_long),
+                ("mouseData", ctypes.c_ulong),
+                ("dwFlags", ctypes.c_ulong),
+                ("time",ctypes.c_ulong),
+                ("dwExtraInfo", PUL)]
+
+class Input_I(ctypes.Union):
+    _fields_ = [("ki", KeyboardInput),
+                 ("mi", MouseInput),
+                 ("hi", HardwareInput)]
+
+class Input(ctypes.Structure):
+    _fields_ = [("type", ctypes.c_ulong),
+                ("ii", Input_I)]
 
 #################################
 #     C Struct Definitions      #
 #################################
-wintypes.ULONG_PTR = wintypes.WPARAM
+"""wintypes.ULONG_PTR = wintypes.WPARAM
 
 
 class KeyboardInput(ctypes.Structure):
@@ -155,7 +184,7 @@ class Input(ctypes.Structure):
     _anonymous_ = ('_input',)
     _fields_ = (('type', wintypes.DWORD),
                 ('_input', _Input))
-
+"""
 
 LPINPUT = ctypes.POINTER(Input)
 
@@ -174,37 +203,50 @@ user32.SendInput.argtypes = (wintypes.UINT, LPINPUT, ctypes.c_int)
 #################################
 #           Functions           #
 #################################
+# @utils.run_if_enabled
+# def key_down(key):
+#     """
+#     Simulates a key-down action. Can be cancelled by Bot.toggle_enabled.
+#     :param key:     The key to press.
+#     :return:        None
+#     """
+
+#     key = key.lower()
+#     if key not in KEY_MAP.keys():
+#         print(f"Invalid keyboard input: '{key}'.")
+#     else:
+#         print(f"key being pressed: '{key}'.")
+#         x = Input(type=INPUT_KEYBOARD, ki=KeyboardInput(wVk=KEY_MAP[key]))
+#         print(f"{ctypes.byref(x)}, {ctypes.sizeof(x)}")
+#         user32.SendInput(1, ctypes.byref(x), ctypes.sizeof(x))
 @utils.run_if_enabled
 def key_down(key):
-    """
-    Simulates a key-down action. Can be cancelled by Bot.toggle_enabled.
-    :param key:     The key to press.
-    :return:        None
-    """
+    extra = ctypes.c_ulong(0)
+    ii_ = Input_I()
+    ii_.ki = KeyboardInput( 0, KEY_MAP[key], 0x0008, 0, ctypes.pointer(extra) )
+    x = Input( ctypes.c_ulong(1), ii_ )
+    user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
-    key = key.lower()
-    if key not in KEY_MAP.keys():
-        print(f"Invalid keyboard input: '{key}'.")
-    else:
-        x = Input(type=INPUT_KEYBOARD, ki=KeyboardInput(wVk=KEY_MAP[key]))
-        user32.SendInput(1, ctypes.byref(x), ctypes.sizeof(x))
+# def key_up(key):
+#     """
+#     Simulates a key-up action. Cannot be cancelled by Bot.toggle_enabled.
+#     This is to ensure no keys are left in the 'down' state when the program pauses.
+#     :param key:     The key to press.
+#     :return:        None
+#     """
 
-
+#     key = key.lower()
+#     if key not in KEY_MAP.keys():
+#         print(f"Invalid keyboard input: '{key}'.")
+#     else:
+#         x = Input(type=INPUT_KEYBOARD, ki=KeyboardInput(wVk=KEY_MAP[key], dwFlags=KEYEVENTF_KEYUP))
+#         user32.SendInput(1, ctypes.byref(x), ctypes.sizeof(x))
 def key_up(key):
-    """
-    Simulates a key-up action. Cannot be cancelled by Bot.toggle_enabled.
-    This is to ensure no keys are left in the 'down' state when the program pauses.
-    :param key:     The key to press.
-    :return:        None
-    """
-
-    key = key.lower()
-    if key not in KEY_MAP.keys():
-        print(f"Invalid keyboard input: '{key}'.")
-    else:
-        x = Input(type=INPUT_KEYBOARD, ki=KeyboardInput(wVk=KEY_MAP[key], dwFlags=KEYEVENTF_KEYUP))
-        user32.SendInput(1, ctypes.byref(x), ctypes.sizeof(x))
-
+    extra = ctypes.c_ulong(0)
+    ii_ = Input_I()
+    ii_.ki = KeyboardInput( 0, KEY_MAP[key], 0x0008 | 0x0002, 0, ctypes.pointer(extra) )
+    x = Input( ctypes.c_ulong(1), ii_ )
+    user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 @utils.run_if_enabled
 def press(key, n, down_time=0.05, up_time=0.1):

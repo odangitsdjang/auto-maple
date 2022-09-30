@@ -13,6 +13,7 @@ from src.detection import detection
 from src.routine import components
 from src.routine.routine import Routine
 from src.routine.components import Point
+from src.common import config
 from src.common.vkeys import press, click
 from src.common.interfaces import Configurable
 
@@ -25,7 +26,7 @@ class Bot(Configurable):
     """A class that interprets and executes user-defined routines."""
 
     DEFAULT_CONFIG = {
-        'Interact': 'y',
+        'Interact': 'SPACE',
         'Feed pet': '9'
     }
 
@@ -78,6 +79,7 @@ class Bot(Configurable):
         last_fed = time.time()
         while True:
             if config.enabled and len(config.routine) > 0:
+                print("Running now")
                 # Buff and feed pets
                 self.buff.main()
                 pet_settings = config.gui.settings.pets
@@ -85,15 +87,19 @@ class Bot(Configurable):
                 num_pets = pet_settings.num_pets.get()
                 now = time.time()
                 if auto_feed and now - last_fed > 1200 / num_pets:
-                    press(self.config['Feed pet'], 1)
+                    config.keys.press(self.config['Feed pet'], 1)
                     last_fed = now
 
                 # Highlight the current Point
+                print("Highlighting current point now")
                 config.gui.view.routine.select(config.routine.index)
                 config.gui.view.details.display_info(config.routine.index)
 
                 # Execute next Point in the routine
+                print(f"All routines: {config.routine}, routine length: {len(config.routine)}")
+                print("Executing next point now")
                 element = config.routine[config.routine.index]
+                print(f"next routine element: {element}")
                 if self.rune_active and isinstance(element, Point) \
                         and element.location == self.rune_closest_pos:
                     self._solve_rune(model)
@@ -116,7 +122,7 @@ class Bot(Configurable):
         adjust = self.command_book['adjust']
         adjust(*self.rune_pos).execute()
         time.sleep(0.2)
-        press(self.config['Interact'], 1, down_time=0.2)        # Inherited from Configurable
+        config.keys.press(self.config['Interact'], 1, down_time=0.2)        # Inherited from Configurable
 
         print('\nSolving rune:')
         inferences = []
@@ -128,7 +134,7 @@ class Bot(Configurable):
                 if solution in inferences:
                     print('Solution found, entering result')
                     for arrow in solution:
-                        press(arrow, 1, down_time=0.1)
+                        config.keys.press(arrow, 1, down_time=0.1)
                     time.sleep(1)
                     for _ in range(3):
                         time.sleep(0.3)
