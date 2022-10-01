@@ -10,10 +10,11 @@ SC_DECIMAL_ARROW = {
 }
 
 SC_DECIMAL = {
-    "ALT": 56, "SPACE": 57, "CTRL": 29, "SHIFT": 42,
-    "A": 30, "S": 31, "D": 32, "F": 33,
+    "0": 1, "1": 2, "2": 3, "3": 4, "4": 5, "5": 6, "6": 7,
     "Q": 16, "W": 17, "E": 18, "R": 19,
-    "0": 1, "1": 2, "2": 3, "3": 4, "4": 5, "5": 6, "6": 7
+    "A": 30, "S": 31, "D": 32, "F": 33,
+    "Z": 44, "N": 49,
+    "ALT": 56, "SPACE": 57, "CTRL": 29, "SHIFT": 42
 }
 
 # Change these to your own settings.
@@ -36,10 +37,11 @@ class Keys:
         self.context = context
 
     def release_all(self):
-        key = key.upper()
         for key in SC_DECIMAL_ARROW:
+            key = key.upper()
             self.context.send(self.device, key_stroke(SC_DECIMAL_ARROW[key], 3, 0))
         for key in SC_DECIMAL:
+            key = key.upper()
             self.context.send(self.device, key_stroke(SC_DECIMAL[key], 1, 0))
 
     def release(self, key):
