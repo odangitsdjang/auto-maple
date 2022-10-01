@@ -127,6 +127,7 @@ class Bot(Configurable):
         print('\nSolving rune:')
         inferences = []
         for _ in range(15):
+            print('\nSolving, iteration _ inside 15 times loop:')
             frame = config.capture.frame
             solution = detection.merge_detection(model, frame)
             if solution:

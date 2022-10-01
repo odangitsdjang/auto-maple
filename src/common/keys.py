@@ -1,6 +1,7 @@
 import time
 from random import random
 from interception import *
+from interception.stroke import key_stroke
 from src.common import utils
 
 
@@ -22,14 +23,14 @@ ROPE_LIFT_KEY = "D"
 
 class Keys:
     def __init__(self):
-        context = interception() 
+        context = interception()
         context.set_filter(interception.is_keyboard, interception_filter_key_state.INTERCEPTION_FILTER_KEY_ALL.value)
         print("Click any key on your keyboard.")
         while True:
             device = context.wait()
             if interception.is_keyboard(device):
                 print(f"Bound to keyboard: {context.get_HWID(device)}.")
-                c.set_filter(interception.is_keyboard, 0)
+                context.set_filter(interception.is_keyboard, 0)
                 break
         self.device = device
         self.context = context
@@ -74,13 +75,16 @@ class Keys:
         :return:            None
         """
         key = key.upper()
+        print(f"Pressing key: {key}")
 
         for _ in range(n):
             if key in SC_DECIMAL_ARROW:
+                print("Entered ARROW block")
                 self.context.send(self.device, key_stroke(SC_DECIMAL_ARROW[key], 2, 0))
                 time.sleep(down_time * (0.8 + 0.4 * random()))
                 self.context.send(self.device, key_stroke(SC_DECIMAL_ARROW[key], 3, 0))
             else:
+                print("Entered DECIMAL block")
                 self.context.send(self.device, key_stroke(SC_DECIMAL[key], 0, 0))
                 time.sleep(down_time * (0.8 + 0.4 * random()))
                 self.context.send(self.device, key_stroke(SC_DECIMAL[key], 1, 0))

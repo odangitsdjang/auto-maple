@@ -120,21 +120,24 @@ def merge_detection(model, image):
     :param image:   The input image.
     :return:        A list of four arrow directions.
     """
-
+    print("Running merge_detection")
     label_map = {1: 'up', 2: 'down', 3: 'left', 4: 'right'}
     converter = {'up': 'right', 'down': 'left'}         # For the 'rotated inferences'
     classes = []
     
     # Preprocessing
+    print("preprocessing")
     height, width, channels = image.shape
     cropped = image[120:height//2, width//4:3*width//4]
     filtered = filter_color(cropped)
     cannied = canny(filtered)
 
     # Isolate the rune box
+    print("Isolate the rune box")
     height, width, channels = cannied.shape
     boxes = get_boxes(model, cannied)
     if len(boxes) == 4:      # Only run further inferences if arrows have been correctly detected
+        print("4 boxes found")
         y_mins = [b[0][0] for b in boxes]
         x_mins = [b[0][1] for b in boxes]
         y_maxes = [b[0][2] for b in boxes]
@@ -156,11 +159,13 @@ def merge_detection(model, image):
             preprocessed[y_offset:y_offset+height, x_offset:x_offset+width] = rune_box
 
         # Run detection on preprocessed image
+        print("Run detection on preprocessed image")
         lst = sort_by_confidence(model, preprocessed)
         lst.sort(key=lambda x: x[1][1])
         classes = [label_map[item[2]] for item in lst]
 
         # Run detection on rotated image
+        print("Run detection on rotated image")
         rotated = cv2.rotate(preprocessed, cv2.ROTATE_90_COUNTERCLOCKWISE)
         lst = sort_by_confidence(model, rotated)
         lst.sort(key=lambda x: x[1][2], reverse=True)
@@ -169,6 +174,7 @@ def merge_detection(model, image):
                            if item[2] in [1, 2]]
             
         # Merge the two detection results
+        print("Merge two detection results")
         for i in range(len(classes)):
             if rotated_classes and classes[i] in ['left', 'right']:
                 classes[i] = rotated_classes.pop(0)
