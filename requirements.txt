@@ -8,7 +8,7 @@ Pillow
 pygame
 pywin32
 pywinauto
-tensorflow-gpu
+tensorflow
 pynput
 pywinio
 clipboard
