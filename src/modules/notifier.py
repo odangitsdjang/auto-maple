@@ -93,14 +93,14 @@ class Notifier:
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                     if np.count_nonzero(gray < 15) / height / width > self.room_change_threshold:
                         if settings.rent_frenzy == False:
-                            self._send_msg_to_line_notify("畫面黑屏")
+                            # self._send_msg_to_line_notify("畫面黑屏")
                             self._alert('siren')
 
                 # Check for elite warning
                 elite_frame = frame[height // 4:3 * height // 4, width // 4:3 * width // 4]
                 elite = utils.multi_match(elite_frame, ELITE_TEMPLATE, threshold=0.9)
                 if len(elite) > 0:
-                    self._send_msg_to_line_notify("黑王出沒")
+                    # self._send_msg_to_line_notify("黑王出沒")
                     if settings.rent_frenzy == False and not settings.auto_change_channel:
                         self._alert('siren')
                     elif settings.auto_change_channel:
@@ -124,7 +124,7 @@ class Notifier:
                 fiona_lie_detector = utils.multi_match(fiona_frame, FIONA_LIE_DETECTOR_TEMPLATE, threshold=0.9)
                 if len(fiona_lie_detector) > 0:
                     print("find fiona_lie_detector")
-                    self._send_msg_to_line_notify("菲歐娜測謊")
+                    # self._send_msg_to_line_notify("菲歐娜測謊")
                     # if settings.rent_frenzy == False:
                     self._alert('siren')
                     time.sleep(0.1)
@@ -145,7 +145,7 @@ class Notifier:
                                         config.should_change_channel = True
                                     self._ping('rune_appeared', volume=0.75)
                             else:
-                                self._send_msg_to_line_notify("輪之詛咒")
+                                # self._send_msg_to_line_notify("輪之詛咒")
                                 self._alert('siren')
 
                     # check for unexpected conversation
@@ -167,8 +167,8 @@ class Notifier:
                     revive_frame = frame[height//2-100:height//2+200, width //2-150:width//2+150]
                     revive_confirm = utils.multi_match(revive_frame, REVIVE_CONFIRM_TEMPLATE, threshold=0.9)
                     if len(revive_confirm) > 0:
-                        if settings.rent_frenzy == False:
-                            self._send_msg_to_line_notify("角色死亡")
+                        # if settings.rent_frenzy == False:
+                            # self._send_msg_to_line_notify("角色死亡")
                         revive_confirm_pos = min(revive_confirm, key=lambda p: p[0])
                         target = (
                             round(revive_confirm_pos[0] +(width //2-150)),
@@ -225,13 +225,13 @@ class Notifier:
                             self._ping('rune_appeared', volume=0.75)
                     elif now - rune_start_time > self.rune_alert_delay and now - config.latest_solved_rune >= (60 * int(settings.rune_cd_min) + self.rune_alert_delay):     # Alert if rune hasn't been solved
                         config.bot.rune_active = False
-                        self._send_msg_to_line_notify("解輪耗時過久")
+                        # self._send_msg_to_line_notify("解輪耗時過久")
                         if settings.auto_change_channel:
                             config.should_change_channel = True
                         else:
                             self._alert('siren')
                     elif config.bot.solve_rune_fail_count >= 3 and not settings.auto_change_channel:
-                        self._send_msg_to_line_notify("多次解輪失敗")
+                        # self._send_msg_to_line_notify("多次解輪失敗")
                         self._alert('siren')
                     else:
                         # check for rune is actually existing
@@ -264,20 +264,20 @@ class Notifier:
                 detection_i = detection_i + 1
             time.sleep(self.notifier_delay)
 
-    def _send_msg_to_line_notify(self,msg,file=None):
-        url = "https://notify-api.line.me/api/notify"
-        if settings.id == "veg":
-            token = "ezvoLebyYzo6yYlh1BbcF0pab4gU2pWBBG8S0QzkysA"
-        else:
-            token = "gOgNCkc4PLinHFzJSbqQZHQyLotFuu0skBCFmHicKoZ"
-        my_headers = {'Authorization': 'Bearer ' + token }
-        data = {"message" : msg }
-        if file:
-            image = open(file, 'rb')    # 以二進位方式開啟圖片
-            imageFile = {'imageFile' : image}   # 設定圖片資訊
-            r = requests.post(url,headers = my_headers, data = data, files=imageFile)
-        else:
-            r = requests.post(url,headers = my_headers, data = data)
+    # def _send_msg_to_line_notify(self,msg,file=None):
+    #     url = "https://notify-api.line.me/api/notify"
+    #     if settings.id == "veg":
+    #         token = "ezvoLebyYzo6yYlh1BbcF0pab4gU2pWBBG8S0QzkysA"
+    #     else:
+    #         token = "gOgNCkc4PLinHFzJSbqQZHQyLotFuu0skBCFmHicKoZ"
+    #     my_headers = {'Authorization': 'Bearer ' + token }
+    #     data = {"message" : msg }
+    #     if file:
+    #         image = open(file, 'rb')    # 以二進位方式開啟圖片
+    #         imageFile = {'imageFile' : image}   # 設定圖片資訊
+    #         r = requests.post(url,headers = my_headers, data = data, files=imageFile)
+    #     else:
+    #         r = requests.post(url,headers = my_headers, data = data)
 
     def _alert(self, name, volume=0.6):
         """
@@ -302,7 +302,7 @@ class Notifier:
         time.sleep(1)
         config.listener.enabled = True
 
-    def _ping(self, name, volume=0.5):
+    def _ping(self, name, volume=0.33):
         """A quick notification for non-dangerous events."""
 
         self.mixer.load(get_alert_path(name))
