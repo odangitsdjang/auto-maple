@@ -19,7 +19,7 @@ class GUI:
         config.gui = self
 
         self.root = tk.Tk()
-        self.root.title('Auto Maple')
+        self.root.title('Hello World') # changing the name here to be safe
         icon = tk.PhotoImage(file='assets/icon.png')
         self.root.iconphoto(False, icon)
         self.root.geometry(GUI.RESOLUTIONS['DEFAULT'])
