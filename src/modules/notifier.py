@@ -104,7 +104,7 @@ class Notifier:
                     self._alert('siren')
             time.sleep(0.05)
 
-    def _alert(self, name, volume=0.33):
+    def _alert(self, name, volume=0.50):
         """
         Plays an alert to notify user of a dangerous event. Stops the alert
         once the key bound to 'Start/stop' is pressed.
@@ -121,7 +121,7 @@ class Notifier:
         time.sleep(2)
         config.listener.enabled = True
 
-    def _ping(self, name, volume=0.33):
+    def _ping(self, name, volume=0.50):
         """A quick notification for non-dangerous events."""
 
         self.mixer.load(get_alert_path(name))
