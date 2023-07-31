@@ -302,7 +302,7 @@ class Notifier:
         time.sleep(1)
         config.listener.enabled = True
 
-    def _ping(self, name, volume=0.33):
+    def _ping(self, name, volume=0.50):
         """A quick notification for non-dangerous events."""
 
         self.mixer.load(get_alert_path(name))
