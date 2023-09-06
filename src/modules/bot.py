@@ -14,7 +14,7 @@ from src.routine import components
 from src.routine.routine import Routine
 from src.command_book.command_book import CommandBook
 from src.routine.components import Point
-from src.common.vkeys import press, click
+from src.common.vkeys import press, click, key_up
 from src.common.interfaces import Configurable
 
 
@@ -112,6 +112,7 @@ class Bot(Configurable):
         :param sct:     The mss instance object with which to take screenshots.
         :return:        None
         """
+        key_up("a") # TODO: temporary hack, fix this with better solution
 
         move = self.command_book['move']
         move(*self.rune_pos).execute()
