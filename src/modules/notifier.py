@@ -102,7 +102,7 @@ class Notifier:
                 if len(elite) > 0:
                     # self._send_msg_to_line_notify("黑王出沒")
                     if settings.rent_frenzy == False and not settings.auto_change_channel:
-                        self._alert('siren')
+                        self._ping('mando_this_is_the_way')
                     elif settings.auto_change_channel:
                         pass
                         # config.should_change_channel = True
