@@ -74,7 +74,7 @@ class Notifier:
                 elite_frame = frame[height // 4:3 * height // 4, width // 4:3 * width // 4]
                 elite = utils.multi_match(elite_frame, ELITE_TEMPLATE, threshold=0.9)
                 if len(elite) > 0:
-                    self._alert('siren')
+                    self._ping('mando_this_is_the_way')
 
                 # Check for other players entering the map
                 filtered = utils.filter_color(minimap, OTHER_RANGES)
