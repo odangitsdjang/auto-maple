@@ -6,8 +6,31 @@ import cv2
 import time
 import threading
 import numpy as np
+import matplotlib.pyplot as plt
 from src.common import config, settings
 from random import random
+from ctypes import windll
+from ctypes.wintypes import RECT, HWND
+
+
+def move_window(handle: HWND, x: int, y: int):
+    """(x, y)
+
+    Args:
+        handle (HWND): 
+        x (int): 
+        y (int): 
+    """
+    #test move
+    SetWindowPos = windll.user32.SetWindowPos
+    # GetClientRect = windll.user32.GetClientRect
+    # GetWindowRect = windll.user32.GetWindowRect
+    # EnableWindow = windll.user32.EnableWindow
+
+    SWP_NOSIZE = 0x0001
+    SWP_NOMOVE = 0X0002
+    SWP_NOZORDER = 0x0004
+    SetWindowPos(handle, 0, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER)
 
 
 def run_if_enabled(function):
@@ -63,6 +86,114 @@ def game_window_click(point=(0,0),button='left',click_time=1,delay=0.4):
     click(target, button=button,click_time=click_time)
     time.sleep(rand_float(delay,delay*1.5))
 
+def wait_for_is_standing(ms=2000):
+    """
+    Wait until player stand on the ground 
+    :param ms:   The maximun waiting time
+    :return:    is_standing or not
+    """
+    for i in range(int(ms / 10)): # maximum time : 2s
+        if config.player_states['is_standing']:
+            return True
+        time.sleep(0.01)
+    return False
+
+def wait_for_is_jumping(ms=2000):
+    """
+    Wait until player stand on the ground 
+    :param ms:   The maximun waiting time
+    :return:    is_standing or not
+    """
+    for i in range(int(ms / 10)): # maximum time : 2s
+        if config.player_states['movement_state'] == config.MOVEMENT_STATE_JUMPING:
+            return True
+        time.sleep(0.01)
+    return False
+
+def wait_for_is_falling(ms=2000):
+    """
+    Wait until player stand on the ground 
+    :param ms:   The maximun waiting time
+    :return:    is_standing or not
+    """
+    for i in range(int(ms / 10)): # maximum time : 2s
+        if config.player_states['movement_state'] == config.MOVEMENT_STATE_FALLING:
+            return True
+        time.sleep(0.01)
+    return False
+
+def check_is_jumping():
+    """
+    check if player state is not standing
+    :return:    is jumping or not
+    """
+    return not config.player_states['is_standing']
+
+def get_if_skill_ready(skill:str,bias=0):
+    """
+    check if skill is ready
+    :return: True or False
+    """
+    command_book = config.bot.command_book
+    target_skill_name = None
+    skills = skill.split("|")
+    for key in command_book:
+        for s in skills:
+            skill_and_bias = s.split('-')
+            if len(skill_and_bias) == 1:
+                bias = 0
+            else:
+                bias = float(skill_and_bias[1])
+            if key.lower() == skill_and_bias[0]:
+                target_skill_name = command_book[key].__name__
+                if command_book[key].get_is_skill_ready(bias):
+                    break
+                else:
+                    target_skill_name = None
+        if target_skill_name:
+            break
+
+    if target_skill_name:
+        return True
+    else:
+        return False
+
+def get_is_in_skill_buff(skill):
+    """
+    check if in skill buff time
+    :return: True or False
+    """
+    command_book = config.bot.command_book
+    target_skill_name = None
+    skills = skill.split("|")
+    for key in command_book:
+        for s in skills:
+            skill_and_bias = s.split('-')
+            if str(s).find('+') >= 0:
+                skill_and_bias = s.split('+')
+                skill_and_bias[1] = float(skill_and_bias[1]) * -1
+            if len(skill_and_bias) == 1:
+                bias = 0
+            else:
+                bias = float(skill_and_bias[1])
+            if key.lower() == skill_and_bias[0]:
+                target_skill_name = command_book[key].__name__
+                if not config.skill_cd_timer[target_skill_name]:
+                    config.skill_cd_timer[target_skill_name] = 0
+                if (time.time() + bias) - float(config.skill_cd_timer[target_skill_name]) < int(command_book[target_skill_name.lower()].buff_time):
+                    # print("in skill buff : ",target_skill_name, ", bias : ",bias)
+                    break
+                else:
+                    target_skill_name = None
+        if target_skill_name:
+            break
+
+    if target_skill_name:
+        # print("in skill buff : ",skills)
+        return True
+    else:
+        # print("not in skill buff : ",skills)
+        return False
 
 def separate_args(arguments):
     """
@@ -101,8 +232,7 @@ def single_match(frame, template):
     bottom_right = (top_left[0] + w, top_left[1] + h)
     return top_left, bottom_right
 
-
-def multi_match(frame, template, threshold=0.95):
+def multi_match(frame, template, threshold=0.95,save_result = False):
     """
     Finds all matches in FRAME that are similar to TEMPLATE by at least THRESHOLD.
     :param frame:       The image in which to search.
@@ -111,19 +241,87 @@ def multi_match(frame, template, threshold=0.95):
     :return:            An array of matches that exceed THRESHOLD.
     """
 
-    if template.shape[0] > frame.shape[0] or template.shape[1] > frame.shape[1]:
-        return []
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     result = cv2.matchTemplate(gray, template, cv2.TM_CCOEFF_NORMED)
     locations = np.where(result >= threshold)
     locations = list(zip(*locations[::-1]))
     results = []
+    if save_result:
+        img_disp = gray.copy()
     for p in locations:
         x = int(round(p[0] + template.shape[1] / 2))
         y = int(round(p[1] + template.shape[0] / 2))
         results.append((x, y))
+        if save_result:
+            right_bottom = (p[0] + template.shape[1], p[1] + template.shape[0])
+            cv2.rectangle(img_disp, p,right_bottom, (0,255,0), 5, 8, 0 )
+    if save_result:
+        fig,ax = plt.subplots(3,1)
+        fig.suptitle('match_template')
+        ax[0].set_title('img_src')
+        ax[0].imshow(cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)) 
+        ax[1].set_title('img_templ')
+        ax[1].imshow(template,'gray') 
+        ax[2].set_title('img_disp')
+        ax[2].imshow(cv2.cvtColor(img_disp,cv2.COLOR_BGR2RGB)) 
+        plt.savefig('plot.png') 
     return results
 
+def single_match_with_threshold(frame, template, threshold=0.95):
+    """
+    Finds max match in FRAME that are similar to TEMPLATE by at least THRESHOLD.
+    :param frame:       The image in which to search.
+    :param template:    The template to match with.
+    :param threshold:   The minimum percentage of TEMPLATE that each result must match.
+    :return:            An array of matches that exceed THRESHOLD.
+    """
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    result = cv2.matchTemplate(gray, template, cv2.TM_CCOEFF_NORMED)
+    results = []
+    _, score, _, top_left = cv2.minMaxLoc(result)
+    print("score : ",score)
+    if score >= threshold:
+        x = int(round(top_left[0] + template.shape[1] / 2))
+        y = int(round(top_left[1] + template.shape[0] / 2))
+        results.append((x, y))
+    return results
+
+def single_match_with_digit(frame, template, threshold=0.95):
+    """
+    Finds max match in FRAME that are similar to TEMPLATE by at least THRESHOLD.
+    :param frame:       The image in which to search.
+    :param template:    The template to match with.
+    :param threshold:   The minimum percentage of TEMPLATE that each result must match.
+    :return:            An array of matches that exceed THRESHOLD.
+    """
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    result = cv2.matchTemplate(gray, template, cv2.TM_CCOEFF_NORMED)
+    results = []
+    _, score, _, top_left = cv2.minMaxLoc(result)
+    # print("score : ",score)
+    if score >= threshold:
+        x = round(top_left[0] + template.shape[1] / 2,1)
+        y = round(top_left[1] + template.shape[0] / 2,1)
+        results.append((x, y))
+    return results
+
+def convert_to_roundint(point):
+    """
+    Converts POINT into roundint coordinates in the range [0, 1] based on FRAME.
+    Normalizes the units of the vertical axis to equal those of the horizontal
+    axis by using config.mm_ratio.
+    :param point:   The point in absolute coordinates.
+    :param frame:   The image to use as a reference.
+    :return:        The given point in roundint coordinates.
+    """
+
+    # x = point[0] / frame.shape[1]
+    # y = point[1] / config.capture.minimap_ratio / frame.shape[0]
+    x = int(round(point[0]))
+    y = int(round(point[1])) 
+    return x, y
 
 def convert_to_relative(point, frame):
     """
@@ -149,7 +347,6 @@ def convert_to_absolute(point, frame):
     :param frame:   The image to use as a reference.
     :return:        The given point in absolute coordinates.
     """
-
     if point[0] < 1 and point[1] < 1:
         x = int(round(point[0] * frame.shape[1]))
         y = int(round(point[1] * config.capture.minimap_ratio * frame.shape[0]))
@@ -191,6 +388,7 @@ def draw_location(minimap, pos, color):
     """
 
     center = convert_to_absolute(pos, minimap)
+    # center = pos
     if settings.move_tolerance < 1:
         radius = round(minimap.shape[1] * settings.move_tolerance)
     else:

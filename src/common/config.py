@@ -19,7 +19,7 @@ enabled = False
 # If there is another player in the map, Auto Maple will purposely make random human-like mistakes
 stage_fright = False
 
-# map_changing = False
+map_changing = False
 
 # record the player's current states
 player_states = {
