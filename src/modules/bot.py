@@ -8,7 +8,7 @@ import inspect
 import importlib
 import traceback
 from os.path import splitext, basename
-from src.common import config, utils
+from src.common import config, utils, settings
 from src.detection import detection
 from src.routine import components
 from src.routine.routine import Routine
@@ -26,7 +26,7 @@ class Bot(Configurable):
     """A class that interprets and executes user-defined routines."""
 
     DEFAULT_CONFIG = {
-        'Interact': 'y',
+        'Interact': 'space',
         'Feed pet': '9'
     }
 
@@ -37,11 +37,13 @@ class Bot(Configurable):
         config.bot = self
 
         self.rune_active = False
+        self.in_rune_buff = False
         self.rune_pos = (0, 0)
         self.rune_closest_pos = (0, 0)      # Location of the Point closest to rune
         self.submodules = []
         self.command_book = None            # CommandBook instance
         # self.module_name = None
+        # self.model = None
         # self.buff = components.Buff()
 
         # self.command_book = {}
@@ -76,6 +78,8 @@ class Bot(Configurable):
         print('\n[~] Initialized detection algorithm')
 
         self.ready = True
+        self.solve_rune_fail_count = 0
+
         config.listener.enabled = True
         last_fed = time.time()
         while True:
@@ -96,13 +100,27 @@ class Bot(Configurable):
 
                 # Execute next Point in the routine
                 element = config.routine[config.routine.index]
-                if self.rune_active and isinstance(element, Point) \
-                        and element.location == self.rune_closest_pos:
-                    self._solve_rune(model)
-                element.execute()
-                config.routine.step()
+                if self.rune_active and (isinstance(element, Point) \
+                        # and element.location == self.rune_closest_pos:
+                        and (element.location == self.rune_closest_pos or utils.distance(config.bot.rune_pos, element.location) <= 40) \
+                        and time.time() - float(config.latest_solved_rune) >= (int(settings.rune_cd_min) * 60) \
+                        or config.should_solve_rune \
+                        or not self.in_rune_buff):
+                    if not self.model:
+                        self.model = detection.load_model()
+                    if self._solve_rune(self.model):
+                        self.solve_rune_fail_count = 0
+                    else:
+                        self.solve_rune_fail_count = self.solve_rune_fail_count + 1
+                    if self.solve_rune_fail_count >= 2 and settings.auto_change_channel:
+                        print("max try, auto change channel")
+                        change_action = components.ChangeChannel(max_rand=40)
+                        change_action.execute()
+                    elif self.solve_rune_fail_count >= 2:
+                        pass
+                config.routine.next_step()
             else:
-                time.sleep(0.01)
+                time.sleep(0.03)
 
     @utils.run_if_enabled
     def _solve_rune(self, model):
@@ -114,43 +132,75 @@ class Bot(Configurable):
         """
         key_up("a") # TODO: temporary hack, fix this with better solution
 
-        move = self.command_book['move']
-        move(*self.rune_pos).execute()
-        adjust = self.command_book['adjust']
-        adjust(*self.rune_pos).execute()
-        time.sleep(0.2)
-        press(self.config['Interact'], 1, down_time=0.2)        # Inherited from Configurable
-
-        print('\nSolving rune:')
-        inferences = []
-        for _ in range(15):
-            frame = config.capture.frame
-            solution = detection.merge_detection(model, frame)
-            if solution:
-                print(', '.join(solution))
-                if solution in inferences:
-                    print('Solution found, entering result')
-                    for arrow in solution:
-                        press(arrow, 1, down_time=0.1)
-                    time.sleep(1)
-                    for _ in range(3):
-                        time.sleep(0.3)
-                        frame = config.capture.frame
-                        rune_buff = utils.multi_match(frame[:frame.shape[0] // 8, :],
-                                                      RUNE_BUFF_TEMPLATE,
-                                                      threshold=0.9)
-                        if rune_buff:
-                            rune_buff_pos = min(rune_buff, key=lambda p: p[0])
-                            target = (
-                                round(rune_buff_pos[0] + config.capture.window['left']),
-                                round(rune_buff_pos[1] + config.capture.window['top'])
-                            )
-                            click(target, button='right')
-                    self.rune_active = False
+        if self.in_rune_buff:
+            print('in rune buff, quit solve rune')
+            return True
+        for _ in range(2):
+            move = self.command_book['move']
+            move(*self.rune_pos).execute()
+            adjust = self.command_book['adjust']
+            adjust(*self.rune_pos).execute()
+        time.sleep(0.5)   
+        for ii in range(2):
+            if ii == 1:
+                press("left", 1, down_time=0.1,up_time=0.3) 
+            elif ii == 2:
+                press("right", 1, down_time=0.2,up_time=0.3) 
+            press(self.config['Interact'], 1, down_time=0.15,up_time=0.1) # Inherited from Configurable
+            print('\nSolving rune:')
+            time.sleep(1.5)
+            for _ in range(5):
+                if self.rune_active == False:
                     break
-                elif len(solution) == 4:
-                    inferences.append(solution)
-
+                frame = config.capture.frame
+                # height, width, _n = frame.shape
+                # solution_frame = frame[height//2-300:height//2+30, width //2-500:width//2+500]
+                cv2.imwrite('./recording/s_' + str(time.time()) + '.png',frame)
+                solution = detection.merge_detection(model, frame)
+                if solution:
+                    print(', '.join(solution))
+                    if len(solution) == 4:
+                        print('Solution found, entering result')
+                        for arrow in solution:
+                            press(arrow, 1, down_time=0.1)
+                        time.sleep(1)
+                        find_rune_buff = False
+                        for _ in range(2):
+                            time.sleep(0.2)
+                            frame = config.capture.frame
+                            rune_buff = utils.multi_match(frame[:95, :],
+                                                        RUNE_BUFF_TEMPLATE,
+                                                        threshold=0.93)
+                            print('rune_buff matched : ',len(rune_buff))
+                            if len(rune_buff) >= 2:
+                                config.latest_solved_rune = time.time()
+                                config.should_solve_rune = False
+                                self.rune_active = False
+                                self.in_rune_buff = True
+                                find_rune_buff = True
+                            if len(rune_buff) >= 3:
+                                rune_buff_pos = min(rune_buff, key=lambda p: p[0])
+                                print('rune_buff_pos : ', rune_buff_pos)
+                                target = (
+                                    round(rune_buff_pos[0]),
+                                    round(rune_buff_pos[1])
+                                )
+                                utils.game_window_click(target, button='right')
+                                config.latest_solved_rune = time.time()
+                                config.should_solve_rune = False
+                                self.rune_active = False
+                                self.in_rune_buff = True
+                                find_rune_buff = True
+                                utils.game_window_click((700,120), button='right')
+                        if find_rune_buff:
+                            return True
+            press("left", 1, down_time=0.05,up_time=0.1)
+            press("right", 1, down_time=0.05,up_time=0.1)
+            if self.rune_active == False:
+                break
+            time.sleep(2.8) 
+        return False
+    
     def load_commands(self, file):
         try:
             self.command_book = CommandBook(file)

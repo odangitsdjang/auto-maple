@@ -70,30 +70,44 @@ SETTING_VALIDATORS = {
     'move_tolerance': float,
     'adjust_tolerance': float,
     'record_layout': validate_boolean,
-    'buff_cooldown': validate_nonnegative_int
+    'buff_cooldown': validate_nonnegative_int,
+    'platforms': str,
+    'rune_cd_min' : validate_nonnegative_int,
+    'auto_change_channel': validate_boolean,
+    'full_screen':validate_boolean,
 }
 
 
 def reset():
     """Resets all settings to their default values."""
 
-    global move_tolerance, adjust_tolerance, record_layout, buff_cooldown
-    move_tolerance = 0.1
-    adjust_tolerance = 0.01
+    global move_tolerance, adjust_tolerance, record_layout, buff_cooldown, platforms
+    move_tolerance = 9
+    adjust_tolerance = 2
     record_layout = False
     buff_cooldown = 180
+    platforms = ""
+    rune_cd_min = 15
 
 
 # The allowed error from the destination when moving towards a Point
-move_tolerance = 0.1
+move_tolerance = 9
 
 # The allowed error from a specific location while adjusting to that location
-adjust_tolerance = 0.01
+adjust_tolerance = 2
 
 # Whether the bot should save new player positions to the current layout
 record_layout = False
 
 # The amount of time (in seconds) to wait between each call to the 'buff' command
 buff_cooldown = 180
+
+platforms = ""
+
+rune_cd_min = 15
+
+auto_change_channel = False
+
+full_screen = False
 
 reset()

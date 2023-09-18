@@ -93,7 +93,7 @@ class Notifier:
                     rune_start_time = now
                     if matches and config.routine.sequence:
                         abs_rune_pos = (matches[0][0], matches[0][1])
-                        config.bot.rune_pos = utils.convert_to_relative(abs_rune_pos, minimap)
+                        config.bot.rune_pos = abs_rune_pos
                         distances = list(map(distance_to_rune, config.routine.sequence))
                         index = np.argmin(distances)
                         config.bot.rune_closest_pos = config.routine[index].location

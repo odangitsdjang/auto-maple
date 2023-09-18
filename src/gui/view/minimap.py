@@ -10,8 +10,8 @@ class Minimap(LabelFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, 'Minimap', **kwargs)
 
-        self.WIDTH = 400
-        self.HEIGHT = 300
+        self.WIDTH = 320
+        self.HEIGHT = 240
         self.canvas = tk.Canvas(self, bg='black',
                                 width=self.WIDTH, height=self.HEIGHT,
                                 borderwidth=0, highlightthickness=0)
@@ -29,20 +29,12 @@ class Minimap(LabelFrame):
             player_pos = minimap['player_pos']
 
             img = cv2.cvtColor(minimap['minimap'], cv2.COLOR_BGR2RGB)
-            height, width, _ = img.shape
-
-            # Resize minimap to fit the Canvas
-            ratio = min(self.WIDTH / width, self.HEIGHT / height)
-            new_width = int(width * ratio)
-            new_height = int(height * ratio)
-            if new_height * new_width > 0:
-                img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
 
             # Mark the position of the active rune
             if rune_active:
                 cv2.circle(img,
                            utils.convert_to_absolute(rune_pos, img),
-                           3,
+                           2,
                            (128, 0, 128),
                            -1)
 
@@ -67,11 +59,18 @@ class Minimap(LabelFrame):
             # Draw the player's position on top of everything
             cv2.circle(img,
                        utils.convert_to_absolute(player_pos, img),
-                       3,
+                       2,
                        (0, 0, 255),
                        -1)
 
             # Display the minimap in the Canvas
+            # Resize minimap to fit the Canvas
+            height, width, _ = img.shape
+            ratio = min(self.WIDTH / width, self.HEIGHT / height)
+            new_width = int(width * ratio)
+            new_height = int(height * ratio)
+            if new_height * new_width > 0:
+                img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
             img = ImageTk.PhotoImage(Image.fromarray(img))
             if self.container is None:
                 self.container = self.canvas.create_image(self.WIDTH // 2,

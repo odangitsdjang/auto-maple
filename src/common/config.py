@@ -19,6 +19,32 @@ enabled = False
 # If there is another player in the map, Auto Maple will purposely make random human-like mistakes
 stage_fright = False
 
+# map_changing = False
+
+# record the player's current states
+player_states = {
+  'is_standing':True,
+  'fly_mode':True,
+  'movement_state':0,
+  'in_bottom_platform':False,
+  'is_stuck':False,
+  'is_keydown_skill':False,
+}
+
+MOVEMENT_STATE_STANDING = 0
+MOVEMENT_STATE_JUMPING = 1
+MOVEMENT_STATE_FALLING = 2
+
+# # skill cd timer
+# skill_cd_timer = {}
+# skill_maintained_count = {}
+
+# # is_skill_ready
+# is_skill_ready_collector = {}
+
+# # skill buff time timer
+# skill_buff_timer = {}
+
 # Represents the current shortest path that the bot is taking
 path = []
 

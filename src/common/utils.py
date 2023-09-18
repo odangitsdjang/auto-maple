@@ -3,6 +3,7 @@
 import math
 import queue
 import cv2
+import time
 import threading
 import numpy as np
 from src.common import config, settings
@@ -48,6 +49,19 @@ def distance(a, b):
     """
 
     return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
+
+def game_window_click(point=(0,0),button='left',click_time=1,delay=0.4):
+    from src.common.vkeys import click
+    if not config.enabled:
+        return
+        
+    target = (
+        round(point[0] + config.capture.window['left']),
+        round(point[1] + config.capture.window['top'])
+    )
+    print(button + " clicking point: " + target)
+    click(target, button=button,click_time=click_time)
+    time.sleep(rand_float(delay,delay*1.5))
 
 
 def separate_args(arguments):
@@ -136,8 +150,12 @@ def convert_to_absolute(point, frame):
     :return:        The given point in absolute coordinates.
     """
 
-    x = int(round(point[0] * frame.shape[1]))
-    y = int(round(point[1] * config.capture.minimap_ratio * frame.shape[0]))
+    if point[0] < 1 and point[1] < 1:
+        x = int(round(point[0] * frame.shape[1]))
+        y = int(round(point[1] * config.capture.minimap_ratio * frame.shape[0]))
+    else:
+        x = int(round(point[0]))
+        y = int(round(point[1]))
     return x, y
 
 
@@ -173,9 +191,13 @@ def draw_location(minimap, pos, color):
     """
 
     center = convert_to_absolute(pos, minimap)
+    if settings.move_tolerance < 1:
+        radius = round(minimap.shape[1] * settings.move_tolerance)
+    else:
+        radius = round(settings.move_tolerance)
     cv2.circle(minimap,
                center,
-               round(minimap.shape[1] * settings.move_tolerance),
+               radius,
                color,
                1)
 

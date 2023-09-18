@@ -10,8 +10,8 @@ class Minimap(LabelFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, 'Minimap', **kwargs)
 
-        self.WIDTH = 400
-        self.HEIGHT = 300
+        self.WIDTH = 320
+        self.HEIGHT = 240
         self.canvas = tk.Canvas(self, bg='black',
                                 width=self.WIDTH, height=self.HEIGHT,
                                 borderwidth=0, highlightthickness=0)
@@ -25,8 +25,10 @@ class Minimap(LabelFrame):
 
         if config.capture.minimap_sample is not None:
             minimap = cv2.cvtColor(config.capture.minimap_sample, cv2.COLOR_BGR2RGB)
+             # img = self.resize_to_fit(minimap)
+            print("draw_point ",location)
+            utils.draw_location(minimap, location, (0, 255, 0))
             img = self.resize_to_fit(minimap)
-            utils.draw_location(img, location, (0, 255, 0))
             self.draw(img)
 
     def draw_default(self):

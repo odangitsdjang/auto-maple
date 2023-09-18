@@ -156,7 +156,7 @@ class Routine:
             print(f"{' ' * 4} -  {e}")
 
     @utils.run_if_enabled
-    def step(self):
+    def next_step(self):
         """Increments config.seq_index and wraps back to 0 at the end of config.sequence."""
 
         self.index = (self.index + 1) % len(self.sequence)
