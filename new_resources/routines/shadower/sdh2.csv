@@ -4,7 +4,7 @@ $, target=home_scroll_key, value=f2
 $, target=auto_change_channel, value=false
 $, target=platforms, value=b55|22~60*38|93~131*26
 $, target=rune_cd_min, value=15
-*, x=177, y=45.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=skill_d, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+*, x=177, y=45.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=4, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=skill_d, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
     EndScript, should_back_home=true, home_scroll_key=f2, end_time=2:46
     Skill_D, direction=, jump=false, rep=1, pre_delay=0.1, duration=0, key_down_skill=false, key_up_skill=false, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
 *, x=177, y=45.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=20, active_if_in_y_range=20, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=

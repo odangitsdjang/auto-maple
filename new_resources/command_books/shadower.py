@@ -308,12 +308,12 @@ class Skill_A(BaseSkill):
     _display_name = 'Cruel Step'
     _distance = 27
     key=Key.SKILL_A
-    delay=0.45
+    delay=0.35
     rep_interval=0.5
     skill_cool_down=0
     ground_skill=False
     buff_time=0
-    combo_delay = 0.25
+    combo_delay = 0.10
 
 class Skill_1(BaseSkill):
     _display_name = 'Veil of Shadow'
