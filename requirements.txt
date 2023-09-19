@@ -14,4 +14,3 @@ pywinio
 clipboard
 requests
 matplotlib
-pickle

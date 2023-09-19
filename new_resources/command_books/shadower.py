@@ -29,10 +29,10 @@ class Key:
     SKILL_C = '' # Phase dash ??
     SKILL_2 = "" 
     SKILL_3 = '1' # Slash Shadow Formation
-    SKILL_4 = 'down+4' # 噴泉
+    SKILL_4 = 'down+7' # Erda Fountain
 
     # special Skills
-    SP_F12 = 'f12' # 輪迴
+    SP_F12 = '' # frenzy totem
 
 def step(direction, target):
     """
@@ -408,7 +408,7 @@ class Skill_3(BaseSkill):
     combo_delay = 0.3
 
 class Skill_4(BaseSkill):
-    _display_name ='噴泉'
+    _display_name ='Erda fountain'
     key=Key.SKILL_4
     delay=0.9
     rep_interval=0.25
