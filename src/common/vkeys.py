@@ -287,7 +287,7 @@ def release_unreleased_key():
         key_up(key)
     
 @utils.run_if_enabled
-def press(key, n=1, down_time=0.1, up_time=0.08):
+def press(key, n=1, down_time=0.05, up_time=0.08):
     """
     Presses KEY N times, holding it for DOWN_TIME seconds, and releasing for UP_TIME seconds.
     :param key:         The keyboard input to press.
