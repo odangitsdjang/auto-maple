@@ -74,8 +74,8 @@ class Capture:
             # 'height': 200,
         }
         self.default_window_resolution = {
-            '1366':(1366,768),
-            '1280':(1280,720)
+            '1366x768':(1366,768),
+            '1920x1080':(1920,1080)
         }
         self.latest_positions = []
         self.MAX_LATEST_POSITION_AMOUNT = 10
@@ -112,8 +112,8 @@ class Capture:
             if settings.full_screen:
                 self.window['left'] = 0
                 self.window['top'] = 0
-                self.window['width'] = self.default_window_resolution['1366'][0]
-                self.window['height'] = self.default_window_resolution['1366'][1]
+                self.window['width'] = self.default_window_resolution['1920x1080'][0]
+                self.window['height'] = self.default_window_resolution['1920x1080'][1]
             else:
                 self.window['left'] = rect[0]
                 self.window['top'] = rect[1]
@@ -124,17 +124,17 @@ class Capture:
             # win32gui.SetForegroundWindow(self.handle)
             # win32gui.MoveWindow(self.handle,0,0,self.window['width'],self.window['height'],True)
 
-            if abs(self.default_window_resolution['1366'][0] - self.window['width']) < \
-                    abs(self.default_window_resolution['1280'][0] - self.window['width']):
-                # self.window['left'] = rect[0] + (self.default_window_resolution['1366'][0] - self.window['width'])
-                self.window['top'] = rect[1] + abs(self.default_window_resolution['1366'][1] - self.window['height'])
-                self.window['width'] = self.default_window_resolution['1366'][0]
-                self.window['height'] = self.default_window_resolution['1366'][1]
+            if abs(self.default_window_resolution['1920x1080'][0] - self.window['width']) < \
+                    abs(self.default_window_resolution['1366x768'][0] - self.window['width']):
+                # self.window['left'] = rect[0] + (self.default_window_resolution['1920x1080'][0] - self.window['width'])
+                self.window['top'] = rect[1] + abs(self.default_window_resolution['1920x1080'][1] - self.window['height'])
+                self.window['width'] = self.default_window_resolution['1920x1080'][0]
+                self.window['height'] = self.default_window_resolution['1920x1080'][1]
             else:
-                # self.window['left'] = rect[0] + (self.default_window_resolution['1280'][0] - self.window['width'])
-                self.window['top'] = rect[1] + abs(self.default_window_resolution['1280'][1] - self.window['height'])
-                self.window['width'] = self.default_window_resolution['1280'][0]
-                self.window['height'] = self.default_window_resolution['1280'][1]
+                # self.window['left'] = rect[0] + (self.default_window_resolution['1366x768'][0] - self.window['width'])
+                self.window['top'] = rect[1] + abs(self.default_window_resolution['1366x768'][1] - self.window['height'])
+                self.window['width'] = self.default_window_resolution['1366x768'][0]
+                self.window['height'] = self.default_window_resolution['1366x768'][1]
 
             # Calibrate by finding the bottom right corner of the minimap
             self.frame = self.screenshot_in_bg(self.handle,0,0,self.window['width'],self.window['height'])
