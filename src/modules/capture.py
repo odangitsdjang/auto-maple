@@ -162,8 +162,12 @@ class Capture:
                 # refresh whole game frame every 0.5s
                 if self.refresh_counting % 3 == 0:
                     self.frame = self.screenshot_in_bg(self.handle,0,0,self.window['width'],self.window['height'])
-                    # if self.refresh_counting % 20 == 0:
-                    #     cv2.imwrite('./test.png',self.frame)
+                    if self.refresh_counting % 20 == 0 and config.should_solve_rune:
+                        # TODO: add calculation based on latest solved rune time to only capture one time
+                        print(config.latest_solved_rune)
+                        print(time.time() - config.latest_solved_rune)
+                        print("capturing rune image")
+                        cv2.imwrite('./runes/' + time.time() + '.png', self.frame)
 
                 # save pic every 1s, max 60 pic
                 if self.refresh_counting % 80 == 0 and config.enabled:
