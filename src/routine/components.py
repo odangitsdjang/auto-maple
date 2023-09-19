@@ -1090,8 +1090,8 @@ class ChangeChannel(Command):
                 break
 
 class EndScript(Command):
-    """ go to target channel """
-    _display_name = '結束腳本'
+    """ End Script at given military time: e.g. '19:20' (7:20 PM) """
+    _display_name = 'End Script'
 
     def __init__(self,should_back_home='true',home_scroll_key='f9',end_time=''):
         super().__init__(locals())
