@@ -11,7 +11,7 @@ class Key:
     # Movement
     JUMP = 'alt'
     FLASH_JUMP = 'alt'
-    ROPE = '`'
+    ROPE = 'v'
     UP_JUMP = 'up+alt'
 
     # Buffs
@@ -19,18 +19,16 @@ class Key:
     # Buffs Toggle
 
     # Attack Skills
-    SKILL_A = 'a' # 冷血連擊
-    SKILL_1 = '1' # 暗影霧殺
-    SKILL_D = 'd' # 絕殺領域
-    SKILL_S = 's'# 楓幣炸彈
-    SKILL_W = 'w' # 穢土轉生
-    SKILL_E = 'e' # 黑影切斷
-    SKILL_X = 'x' # 滅殺刃影
-    SKILL_C = 'c' # 瞬影殺
-    SKILL_F = 'f' # 
-    SKILL_F2 = 'f2' # 
-    SKILL_2 = '2' # 
-    SKILL_3 = '3' # 滅鬼斬靈陣
+    SKILL_A = 'shift' # cruel step
+    SKILL_1 = 'e' # Veil of Shadow
+    SKILL_D = 'q' # Dark Flare
+    SKILL_S = 'delete' # Meso Explosion
+    SKILL_W = 'w' # Sudden Raid
+    SKILL_E = 'insert' # Trick blade
+    SKILL_X = 'd' # Shadow Assault 
+    SKILL_C = '' # Phase dash ??
+    SKILL_2 = "" 
+    SKILL_3 = '1' # Slash Shadow Formation
     SKILL_4 = 'down+4' # 噴泉
 
     # special Skills
@@ -72,7 +70,7 @@ def step(direction, target):
                 SkillCombination(direction='',jump='false',target_skills='skill_as').execute()
             else:
                 if d_y == 0:
-                    Skill_C().execute()
+                    # Skill_C().execute()
                     Skill_S().execute()
                 else:
                     Skill_AS(direction='',jump='true').execute()
@@ -307,7 +305,7 @@ class Rope(BaseSkill):
     combo_delay = 0.2
 
 class Skill_A(BaseSkill):
-    _display_name = '冷血連擊'
+    _display_name = 'Cruel Step'
     _distance = 27
     key=Key.SKILL_A
     delay=0.45
@@ -318,7 +316,7 @@ class Skill_A(BaseSkill):
     combo_delay = 0.25
 
 class Skill_1(BaseSkill):
-    _display_name = '暗影霧殺'
+    _display_name = 'Veil of Shadow'
     _distance = 27
     key=Key.SKILL_1
     delay=0.9
@@ -329,7 +327,7 @@ class Skill_1(BaseSkill):
     combo_delay = 0.9
 
 class Skill_D(BaseSkill):
-    _display_name = '絕殺領域'
+    _display_name = 'Dark Flare'
     _distance = 27
     key=Key.SKILL_D
     delay=0.45
@@ -340,7 +338,7 @@ class Skill_D(BaseSkill):
     combo_delay = 0.5
 
 class Skill_S(BaseSkill):
-    _display_name = '楓幣炸彈'
+    _display_name = 'Meso Explosion'
     _distance = 50
     key=Key.SKILL_S
     delay=0.05
@@ -351,7 +349,7 @@ class Skill_S(BaseSkill):
     combo_delay = 0.05
 
 class Skill_AS(BaseSkill):
-    _display_name = '冷血連擊+楓炸'
+    _display_name = 'Cruel Step + Meso'
     _distance = 27
     key=Skill_A.key
     delay=0.06
@@ -368,7 +366,7 @@ class Skill_AS(BaseSkill):
         time.sleep(utils.rand_float(0.19*0.95, 0.19*1.1))
 
 class Skill_W(BaseSkill):
-    _display_name = '穢土轉生'
+    _display_name = 'Sudden Raid'
     _distance = 50
     key=Key.SKILL_W
     delay=0.63
@@ -379,7 +377,7 @@ class Skill_W(BaseSkill):
     combo_delay = 0.53
 
 class Skill_E(BaseSkill):
-    _display_name = '黑影切斷'
+    _display_name = 'Trick blade'
     _distance = 50
     key=Key.SKILL_E
     delay=0.4
@@ -400,7 +398,7 @@ class Skill_2(BaseSkill):
     combo_delay = 0.4
 
 class Skill_3(BaseSkill):
-    _display_name ='滅鬼斬靈陣'
+    _display_name ='Slash Shadow Formation'
     key=Key.SKILL_3
     delay=0.4
     rep_interval=0.25
@@ -420,7 +418,7 @@ class Skill_4(BaseSkill):
     combo_delay = 0.3
 
 class Skill_X(BaseSkill):
-    _display_name ='滅殺刃影'
+    _display_name ='Shadow Assault'
     key=Key.SKILL_X
     delay=0.3
     rep_interval=0.25
