@@ -11,29 +11,29 @@ class Key:
     # Movement
     JUMP = 'alt'
     FLASH_JUMP = 'alt'
-    ROPE = 'c'
+    ROPE = 'v'
     UP_JUMP = 'up+alt'
-    DASH = '`' # 皇家衝擊
+    DASH = 's' # Bluster
 
     # Buffs
     
     # Buffs Toggle
 
     # Attack Skills
-    SKILL_1 = '1' # 烈日狂斬/月光分裂
-    SKILL_2 = '2' # 雙重狂斬
-    SKILL_3 = '3' # 宇宙
-    SKILL_4 = '4' # 靈魂蝕日
-    SKILL_A = 'a' # 極樂之境
-    SKILL_Q = 'q' # 宇宙融合
-    SKILL_W = 'w' # 宇宙爆裂
-    SKILL_E = 'e' # 宇宙轟炸
-    SKILL_SHIFT = 'shift' # 熾烈突擊
-    SKILL_R = 'down+r' # 噴泉
-    SKILL_T = 't' # 西格諾斯槍兵陣
+    SKILL_AUTO = 'shift' # Basic solar/lunar slash
+    SKILL_1 = '1' # Cosmos (LOTD)
+    SKILL_2 = '2' # Rift of damnation/styx
+    SKILL_3 = '3' # Soul eclipse
+    SKILL_D = 'd' # Equinox slash
+    SKILL_DEL = 'delete' # Cosmic Forge
+    SKILL_0 = '0' # Cosmic Burst / Note: Turn off auto cast when running bot!
+    SKILL_Q = 'q' # Cosmic Shower
+    SKILL_F = 'f' # Blazing Assault/Luster Charge
+    SKILL_7 = 'down+7' # Fountain
+    SKILL_MINUS = '-' # 西格諾斯槍兵陣/Cygnus?
 
     # special Skills
-    SP_F12 = 'f12' # 輪迴
+    SP_F12 = '' # Frenzy
 
 def step(direction, target):
     """
@@ -57,7 +57,7 @@ def step(direction, target):
         if abs(d_x) >= 16:
             if abs(d_x) >= 50:
                 FlashJump(direction='',triple_jump='false',fast_jump='false').execute()
-                SkillCombination(direction='',jump='false',target_skills='skill_2|skill_1').execute()
+                SkillCombination(direction='',jump='false',target_skills='skill_d|skill_1').execute()
             elif abs(d_x) >= 28:
                 FlashJump(direction='',triple_jump='false',fast_jump='false').execute()
                 SkillCombination(direction='',jump='false',target_skills='skill_1').execute()
@@ -205,7 +205,7 @@ class Buff(Command):
         if self.cd180_buff_time == 0 or now - self.cd150_buff_time > 151:
             self.cd150_buff_time = now
         if self.cd180_buff_time == 0 or now - self.cd180_buff_time > 181:
-            # Skill_4().execute()
+            # Skill_3().execute()
             self.cd180_buff_time = now
         if self.cd200_buff_time == 0 or now - self.cd200_buff_time > 200:
             self.cd200_buff_time = now
@@ -281,7 +281,7 @@ class UpJump(BaseSkill):
         
 class Rope(BaseSkill):
     """Performs a up jump in the given direction."""
-    _display_name = '連接繩索'
+    _display_name = 'Rope lift'
     _distance = 27
     key=Key.ROPE
     delay=1.4
@@ -291,10 +291,10 @@ class Rope(BaseSkill):
     buff_time=0
     combo_delay = 0.2
 
-class Skill_1(BaseSkill):
-    _display_name = '烈日狂斬/月光分裂'
+class Skill_Auto(BaseSkill):
+    _display_name = 'Basic solar/lunar slash'
     _distance = 20
-    key=Key.SKILL_1
+    key=Key.SKILL_AUTO
     delay=0.45
     rep_interval=0.5
     skill_cool_down=0
@@ -302,10 +302,10 @@ class Skill_1(BaseSkill):
     buff_time=0
     combo_delay = 0.05
 
-class Skill_2(BaseSkill):
-    _display_name = '雙重狂斬(位移22)'
+class Skill_D(BaseSkill):
+    _display_name = 'Equinox slash'
     _distance = 22
-    key=Key.SKILL_2
+    key=Key.SKILL_D
     delay=0.4
     rep_interval=0.5
     skill_cool_down=5
@@ -314,9 +314,19 @@ class Skill_2(BaseSkill):
     combo_delay = 0.4
 
 class Skill_3(BaseSkill):
-    _display_name = '宇宙'
+    _display_name = 'Soul eclipse'
     _distance = 0
     key=Key.SKILL_3
+    delay=0.5
+    rep_interval=0.5
+    skill_cool_down=171.2
+    ground_skill=False
+    buff_time=40
+    combo_delay = 0.5
+class Skill_1(BaseSkill):
+    _display_name = 'Cosmos'
+    _distance = 0
+    key=Key.SKILL_1
     delay=0.65
     rep_interval=0.5
     skill_cool_down=86
@@ -324,21 +334,10 @@ class Skill_3(BaseSkill):
     buff_time=15
     combo_delay = 0.65
 
-class Skill_4(BaseSkill):
-    _display_name = '靈魂蝕日'
+class Skill_2(BaseSkill):
+    _display_name = 'Rift of damnation/styx'
     _distance = 0
-    key=Key.SKILL_4
-    delay=0.5
-    rep_interval=0.5
-    skill_cool_down=171.2
-    ground_skill=False
-    buff_time=40
-    combo_delay = 0.5
-
-class Skill_A(BaseSkill):
-    _display_name = '極樂之境'
-    _distance = 0
-    key=Key.SKILL_A
+    key=Key.SKILL_2
     delay=1
     rep_interval=0.5
     skill_cool_down=180
@@ -346,10 +345,10 @@ class Skill_A(BaseSkill):
     buff_time=40
     combo_delay = 1
 
-class Skill_SHIFT(BaseSkill):
-    _display_name = '熾烈突擊(位移31)'
+class Skill_F(BaseSkill):
+    _display_name = 'Blazing Assault/Luster Charge'
     _distance = 31
-    key=Key.SKILL_SHIFT
+    key=Key.SKILL_F
     delay=0.5
     rep_interval=0.5
     skill_cool_down=43
@@ -357,10 +356,10 @@ class Skill_SHIFT(BaseSkill):
     buff_time=5
     combo_delay = 0.05
 
-class Skill_SHIFT2(BaseSkill):
-    _display_name = '熾烈突擊(位移31)'
+class Skill_F2(BaseSkill):
+    _display_name = 'Blazing Assault/Luster Charge'
     _distance = 31
-    key=Key.SKILL_SHIFT
+    key=Key.SKILL_F
     delay=0.5
     rep_interval=0.5
     skill_cool_down=5
@@ -369,11 +368,11 @@ class Skill_SHIFT2(BaseSkill):
     combo_delay = 0.2
 
     def main(self):
-        self.active_if_in_skill_buff = 'skill_shift'
+        self.active_if_in_skill_buff = 'skill_f'
         return super().main()
 
 class Dash(BaseSkill):
-    _display_name = '皇家衝擊(位移18)'
+    _display_name = 'Bluster'
     _distance = 18
     key=Key.DASH
     delay=0.55
@@ -383,10 +382,10 @@ class Dash(BaseSkill):
     buff_time=0
     combo_delay = 0.2
 
-class Skill_Q(BaseSkill):
-    _display_name = '宇宙融合'
+class Skill_Del(BaseSkill):
+    _display_name = 'Cosmic Forge'
     _distance = 0
-    key=Key.SKILL_Q
+    key=Key.SKILL_DEL
     delay=1
     rep_interval=0.5
     skill_cool_down=171.2
@@ -394,22 +393,22 @@ class Skill_Q(BaseSkill):
     buff_time=60
     combo_delay = 1
 
-class Skill_W(BaseSkill):
-    _display_name = '宇宙爆裂'
+class Skill_0(BaseSkill):
+    _display_name = 'Cosmic Burst'
     _distance = 0
-    key=Key.SKILL_W
+    key=Key.SKILL_0
     delay=0.1
     rep_interval=0.5
     skill_cool_down=15
     ground_skill=False
     buff_time=0
     combo_delay = 0.1
-    skill_image = IMAGE_DIR + 'skill_w.png'
+    skill_image = IMAGE_DIR + 'skill_0.png'
 
-class Skill_E(BaseSkill):
-    _display_name = '宇宙轟炸'
+class Skill_Q(BaseSkill):
+    _display_name = 'Cosmic Shower'
     _distance = 0
-    key=Key.SKILL_E
+    key=Key.SKILL_Q
     delay=0.6
     rep_interval=0.5
     skill_cool_down=30
@@ -417,10 +416,10 @@ class Skill_E(BaseSkill):
     buff_time=60
     combo_delay = 0.1
 
-class Skill_R(BaseSkill):
-    _display_name = '噴泉'
+class Skill_7(BaseSkill):
+    _display_name = 'Erda Fountain'
     _distance = 0
-    key=Key.SKILL_R
+    key=Key.SKILL_7
     delay=0.9
     rep_interval=0.5
     skill_cool_down=57
@@ -428,10 +427,10 @@ class Skill_R(BaseSkill):
     buff_time=60
     combo_delay = 0.9
 
-class Skill_T(BaseSkill):
-    _display_name = '西格諾斯槍兵陣'
+class Skill_Minus(BaseSkill):
+    _display_name = '西格諾斯槍兵陣/Cygnus?'
     _distance = 0
-    key=Key.SKILL_T
+    key=Key.SKILL_MINUS
     delay=0.8
     rep_interval=0.5
     skill_cool_down=28.5
@@ -439,10 +438,10 @@ class Skill_T(BaseSkill):
     buff_time=20
     combo_delay = 0.2
 
-class Skill_TT(BaseSkill):
-    _display_name = '槍兵陣轉頭'
+class Skill_Minus2(BaseSkill):
+    _display_name = '槍兵陣轉頭/Cygnus?'
     _distance = 0
-    key=Key.SKILL_T
+    key=Key.SKILL_MINUS
     delay=0.1
     rep_interval=0.5
     skill_cool_down=0
@@ -451,11 +450,11 @@ class Skill_TT(BaseSkill):
     combo_delay = 0.1
 
     def main(self):
-        self.active_if_in_skill_buff = 'skill_t'
+        self.active_if_in_skill_buff = 'skill_minus'
         return super().main()
 
 class AutoHunting(Command):
-    _display_name ='自動走位狩獵'
+    _display_name ='自動走位狩獵/AutoHunting'
 
     def __init__(self,duration='180',map=''):
         super().__init__(locals())
@@ -468,7 +467,7 @@ class AutoHunting(Command):
         toggle = True
         move = config.bot.command_book['move']
         GoToMap(target_map=self.map).execute()
-        SkillCombination(direction='',target_skills='skill_as').execute()
+        SkillCombination(direction='',target_skills='skill_auto').execute()
         minimap = config.capture.minimap['minimap']
         height, width, _n = minimap.shape
         bottom_y = height - 30
@@ -476,12 +475,12 @@ class AutoHunting(Command):
         settings.platforms = 'b' + str(int(bottom_y))
         while True:
             if settings.auto_change_channel and config.should_solve_rune:
-                Skill_1().execute()
+                Skill_Auto().execute()
                 config.bot._solve_rune()
                 continue
             if settings.auto_change_channel and config.should_change_channel:
                 ChangeChannel(max_rand=40).execute()
-                Skill_1().execute()
+                Skill_Auto().execute()
                 continue
             Frenzy().execute()
             frame = config.capture.frame
@@ -503,9 +502,9 @@ class AutoHunting(Command):
                     bottom_y = config.player_pos[1]
                     settings.platforms = 'b' + str(int(bottom_y))
                 FlashJump(direction='left').execute()
-                SkillCombination(direction='left',target_skills='skill_r|skill_w|skill_1').execute()
+                SkillCombination(direction='left',target_skills='skill_7|skill_0|skill_auto').execute()
                 UpJump(direction='left').execute()
-                SkillCombination(direction='left',target_skills='skill_e|skill_w|skill_shift|skill_2|skill_1').execute()
+                SkillCombination(direction='left',target_skills='skill_q|skill_0|skill_f|skill_d|skill_auto').execute()
             else:
                 # left side
                 move(20,bottom_y).execute()
@@ -513,22 +512,21 @@ class AutoHunting(Command):
                     bottom_y = config.player_pos[1]
                     settings.platforms = 'b' + str(int(bottom_y))
                 FlashJump(direction='right').execute()
-                SkillCombination(direction='right',target_skills='skill_r|skill_w|skill_1').execute()
+                SkillCombination(direction='right',target_skills='skill_7|skill_0|skill_auto').execute()
                 UpJump(direction='right').execute()
-                SkillCombination(direction='right',target_skills='skill_e|skill_w|skill_shift|skill_2|skill_1').execute()
+                SkillCombination(direction='right',target_skills='skill_q|skill_0|skill_f|skill_d|skill_auto').execute()
             
             if settings.auto_change_channel and config.should_solve_rune:
                 config.bot._solve_rune()
                 continue
             if settings.auto_change_channel and config.should_change_channel:
                 ChangeChannel(max_rand=40).execute()
-                Skill_1().execute()
+                Skill_Auto().execute()
                 continue
             move(width//2,bottom_y).execute()
             UpJump(jump='true').execute()
-            SkillCombination(direction='left',target_skills='skill_4|skill_a|skill_3|skill_q|skill_w|skill_1').execute()
+            SkillCombination(direction='left',target_skills='skill_3|skill_2|skill_1|skill_del|skill_0|skill_auto').execute()
             toggle = not toggle
-            
 
         if settings.home_scroll_key:
             config.map_changing = True
