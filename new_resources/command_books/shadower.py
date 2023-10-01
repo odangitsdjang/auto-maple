@@ -371,7 +371,7 @@ class Skill_AS(BaseSkill):
     def main(self):
         super().main()
         Skill_S().execute()
-        time.sleep(utils.rand_float(0.11*0.95, 0.11*1.1)) # Note: this can probably be faster but leaving it slow to cover more cases for now
+        # time.sleep(utils.rand_float(0.11*0.95, 0.11*1.1)) # Note: this can probably be faster but leaving it slow to cover more cases for now
 
 class Skill_W(BaseSkill):
     _display_name = 'Sudden Raid'
