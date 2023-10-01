@@ -15,8 +15,13 @@ class Key:
     UP_JUMP = 'up+alt'
 
     # Buffs
+    DECENT_SPEED_INFUSION = "0"
+    DECENT_SHARP_EYES = "8"
+    DECENT_ADVANCED_BLESSING = "-"
+    DECENT_HOLY_SYMBOL = "6"
     
-    # Buffs Toggle
+    MAPLE_WARRIOR = "5"
+    SHADOW_PARTNER = ""
 
     # Attack Skills
     SKILL_A = 'shift' # cruel step
@@ -193,7 +198,7 @@ class Adjust(Command):
             toggle = not toggle
 
 class Buff(Command):
-    """Uses each of Adele's buffs once."""
+    """Uses each of Shadower's buffs once."""
 
     def __init__(self):
         super().__init__(locals())
@@ -206,7 +211,7 @@ class Buff(Command):
         self.decent_buff_time = 0
 
     def main(self):
-        # buffs = [Key.SPEED_INFUSION, Key.HOLY_SYMBOL, Key.SHARP_EYE, Key.COMBAT_ORDERS, Key.ADVANCED_BLESSING]
+        buffs = [Key.DECENT_SPEED_INFUSION, Key.DECENT_HOLY_SYMBOL, Key.DECENT_SHARP_EYES, Key.DECENT_ADVANCED_BLESSING]
         now = time.time()
         utils.wait_for_is_standing(1000)
         if self.cd120_buff_time == 0 or now - self.cd120_buff_time > 121:
@@ -221,11 +226,14 @@ class Buff(Command):
         if self.cd240_buff_time == 0 or now - self.cd240_buff_time > 240:
             self.cd240_buff_time = now
         if self.cd900_buff_time == 0 or now - self.cd900_buff_time > 900:
+            press(Key.MAPLE_WARRIOR, 1)
+            time.sleep(utils.rand_float(0.15, 0.20))
             self.cd900_buff_time = now
-        # if self.decent_buff_time == 0 or now - self.decent_buff_time > settings.buff_cooldown:
-        #     for key in buffs:
-        #       press(key, 3, up_time=0.3)
-        #       self.decent_buff_time = now	
+        if self.decent_buff_time == 0 or now - self.decent_buff_time > settings.buff_cooldown:
+            for key in buffs:
+              press(key, 1, up_time=0.3)
+              time.sleep(utils.rand_float(0.10, 0.15))
+            self.decent_buff_time = now	
 
 class FlashJump(Command):
     """Performs a flash jump in the given direction."""
@@ -308,12 +316,12 @@ class Skill_A(BaseSkill):
     _display_name = 'Cruel Step'
     _distance = 27
     key=Key.SKILL_A
-    delay=0.35
+    delay=0.30
     rep_interval=0.5
     skill_cool_down=0
     ground_skill=False
     buff_time=0
-    combo_delay = 0.10
+    combo_delay = 0.05
 
 class Skill_1(BaseSkill):
     _display_name = 'Veil of Shadow'
@@ -363,7 +371,7 @@ class Skill_AS(BaseSkill):
     def main(self):
         super().main()
         Skill_S().execute()
-        time.sleep(utils.rand_float(0.19*0.95, 0.19*1.1))
+        time.sleep(utils.rand_float(0.11*0.95, 0.11*1.1)) # Note: this can probably be faster but leaving it slow to cover more cases for now
 
 class Skill_W(BaseSkill):
     _display_name = 'Sudden Raid'
