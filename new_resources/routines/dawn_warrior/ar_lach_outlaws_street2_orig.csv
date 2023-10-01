@@ -24,7 +24,7 @@ $, target=rune_cd_min, value=15
 >, label=large, frequency=1, skip=False, frequency_to_loop=False, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=skill_2, active_if_not_in_skill_buff=
 *, x=116, y=37.000, frequency=1, skip=False, adjust=False, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
     FlashJump, direction=right, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
-    SkillCombination, direction=, jump=false, target_skills=skill_auto+skill_w, combo=false, wait=0, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    SkillCombination, direction=, jump=false, target_skills=skill_auto+skill_0, combo=false, wait=0, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
 *, x=150, y=37, frequency=2, skip=true, adjust=False, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=skill_3, active_if_not_in_skill_buff=
     UpJump, direction=, jump=false, rep=1, pre_delay=0.1, duration=0, key_down_skill=false, key_up_skill=false, combo=false, wait_until_ready=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
     Skill_Auto, direction=, jump=false, rep=1, pre_delay=0.4, duration=0, key_down_skill=false, key_up_skill=false, combo=false, wait_until_ready=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
