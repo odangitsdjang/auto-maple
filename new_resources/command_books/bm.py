@@ -8,19 +8,51 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/dawn_warrior/'
 
 # List of key mappings
 class Key:
+    INTERACT = 'space'
+
     # Movement
     JUMP = 'alt'
     FLASH_JUMP = 'alt'
     ROPE = 'v'
     UP_JUMP = 'up+alt'
-    DASH = 's' # Bluster
+    BLINK_SHOT = "n"
+
+    GRITTY = "q"
+    ARROW_BLAST = "d"
+    ERDA_FOUNTAIN = "down+7"
+    
+    # 120s Buffs First Rotation
+    QUIVER_BARRAGE = "8"
+    INHUMAN_SPEED = "0"
+    CONCENTRATION = '='
+
+    # 120s Buff Second Rotation (balance out damage)
+    STORM_OF_ARROWS = '9'
+    # EPIC_ADVENTURE = '-'
+    VICIOUS_SHOT = "o"
+
+    # 3rd rotation
+    ARACHNID = "5"
+    FURY_OF_THE_WILD = "3"
+
+    # TOTEM = "6"
+
+    # 200s+ Buffs
+    PHOENIX = "6"
+    
+    # Skills
+    ARROW_STREAM = "shift"
+    HURRICANE = 'a'
+
+
 
     # Buffs
     
     # Buffs Toggle
 
     # Attack Skills
-    SKILL_AUTO = 'shift' # Basic solar/lunar slash
+    ARROW_STREAM = "shift"
+    SKILL_HURR = 'a' # Hurricane
     SKILL_1 = '1' # Cosmos (LOTD)
     SKILL_2 = '2' # Rift of damnation/styx
     SKILL_3 = '3' # Soul eclipse
@@ -29,7 +61,6 @@ class Key:
     SKILL_0 = '0' # Cosmic Burst / Note: Turn off auto cast when running bot!
     SKILL_Q = 'q' # Cosmic Shower
     SKILL_F = 'f' # Blazing Assault/Luster Charge
-    SKILL_7 = 'down+7' # Fountain
     SKILL_MINUS = '-' # 西格諾斯槍兵陣/Cygnus?
 
     # special Skills
@@ -52,25 +83,22 @@ def step(direction, target):
             print("is stuck")
             time.sleep(utils.rand_float(0.1, 0.2))
             press(Key.JUMP)
-            Skill_Auto(direction='').execute()
+            Skill_Arrow_Stream(direction='').execute()
             WaitStanding(duration='1').execute()
         if abs(d_x) >= 16:
-            if abs(d_x) >= 50:
+            if abs(d_x) >= 28:
                 FlashJump(direction='',triple_jump='false',fast_jump='false').execute()
-                SkillCombination(direction='',jump='false',target_skills='skill_d|skill_auto').execute()
-            elif abs(d_x) >= 28:
-                FlashJump(direction='',triple_jump='false',fast_jump='false').execute()
-                SkillCombination(direction='',jump='false',target_skills='skill_auto').execute()
+                SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
             else:
                 if d_y == 0:
-                    Dash().execute()
+                    Skill_Arrow_Stream().execute()
                 else:
-                    Skill_Auto(direction='',jump='true').execute()
+                    Skill_Arrow_Stream(direction='',jump='true').execute()
             time.sleep(utils.rand_float(0.04, 0.06))
             # if abs(d_x) <= 22:
             #     key_up(direction)
             if config.player_states['movement_state'] == config.MOVEMENT_STATE_FALLING:
-                SkillCombination(direction='',jump='false',target_skills='skill_auto').execute()
+                SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
             utils.wait_for_is_standing(500)
         else:
             time.sleep(utils.rand_float(0.05, 0.08))
@@ -91,7 +119,7 @@ def step(direction, target):
             else:
                 press(Key.ROPE, 1)
                 time.sleep(utils.rand_float(1.2, 1.5))
-            SkillCombination(direction='',jump='false',target_skills='skill_auto').execute()
+            SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
             utils.wait_for_is_standing(1300)
         else:
             press(Key.JUMP, 1)
@@ -126,7 +154,7 @@ def step(direction, target):
                         key_down('right')
                         press(Key.JUMP)
                         key_up('right')
-            SkillCombination(direction='',jump='false',target_skills='skill_auto').execute()
+            SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
                 
         utils.wait_for_is_standing(2000)
         time.sleep(utils.rand_float(0.1, 0.12))
@@ -184,35 +212,76 @@ class Adjust(Command):
             toggle = not toggle
 
 class Buff(Command):
-    """Uses each of Adele's buffs once."""
-
-    def __init__(self):
+    def __init__(self, BlinkShot=False):
         super().__init__(locals())
-        self.cd120_buff_time = 0
-        self.cd150_buff_time = 0
-        self.cd180_buff_time = 0
+        # bm is a 2 min dpm class, separate burst skills into two timers to elongate burst / mob more effectively
+        self.reset_timers(BlinkShot) 
+
+    def reset_timers(self, BlinkShot):
+        self.cd120_first_rotation = 0 # Burst 1
+        # Burst 2
+        self.cd120_second_rotation = time.time() - 40 # always use 80 seconds after first rotation (quiver barrage lasts 40 sec)
+        # Supplemental damage after Burst 1
+        self.cd120_third_rotation = time.time() - 90 # use 30 seconds after first rotation
         self.cd200_buff_time = 0
-        self.cd240_buff_time = 0
-        self.cd900_buff_time = 0
-        self.decent_buff_time = 0
+        self.cd60_blinkshot = 0
+        self.blink_shot_on = BlinkShot  
 
     def main(self):
-        # buffs = [Key.SPEED_INFUSION, Key.HOLY_SYMBOL, Key.SHARP_EYE, Key.COMBAT_ORDERS, Key.ADVANCED_BLESSING]
         now = time.time()
-        utils.wait_for_is_standing(1000)
-        if self.cd120_buff_time == 0 or now - self.cd120_buff_time > 121:
-            self.cd120_buff_time = now
-        if self.cd180_buff_time == 0 or now - self.cd150_buff_time > 151:
-            self.cd150_buff_time = now
-        if self.cd180_buff_time == 0 or now - self.cd180_buff_time > 181:
-            # Skill_3().execute()
-            self.cd180_buff_time = now
+        is_buff_cast = 0
+
+        # resetting rotation timers if bot was off for a while (reloading does not reset time without this code - BUG?)
+        if now - self.cd120_first_rotation > 180:
+            self.reset_timers(BlinkShot=self.blink_shot_on)
+
+        # print("Time into first rotation timer: ", now - self.cd120_first_rotation)
+        # print("Time into second rotation timer: ", now - self.cd120_second_rotation)
+        if self.cd120_first_rotation == 0 or now - self.cd120_first_rotation > 120:
+            time.sleep(utils.rand_float(0.15, 0.2))
+            press(Key.STORM_OF_ARROWS, 1)
+            time.sleep(utils.rand_float(0.25, 0.28))
+            press(Key.INHUMAN_SPEED, 1)
+            time.sleep(utils.rand_float(0.21, 0.25))
+            # press(Key.EPIC_ADVENTURE, 1)
+            # time.sleep(utils.rand_float(0.15, 0.2))
+            self.cd120_first_rotation = now
+            is_buff_cast = 1
+        if now - self.cd120_second_rotation > 120:
+            time.sleep(utils.rand_float(0.15, 0.2))
+            press(Key.QUIVER_BARRAGE, 1)
+            time.sleep(utils.rand_float(0.15, 0.2))
+            press(Key.VICIOUS_SHOT, 1)
+            time.sleep(utils.rand_float(0.21, 0.25))
+            press(Key.CONCENTRATION, 1)
+            time.sleep(utils.rand_float(0.15, 0.2))
+            
+            self.cd120_second_rotation = now
+            is_buff_cast = 1
+        if now - self.cd120_third_rotation > 120: 
+            time.sleep(utils.rand_float(0.15, 0.2))
+            press(Key.ARACHNID, 1)
+            time.sleep(utils.rand_float(0.15, 0.2))
+            press(Key.FURY_OF_THE_WILD, 1)
+            time.sleep(utils.rand_float(0.15, 0.2))
+            
+            self.cd120_third_rotation = now
+            is_buff_cast = 1
         if self.cd200_buff_time == 0 or now - self.cd200_buff_time > 200:
+            time.sleep(utils.rand_float(0.15, 0.2))
+            press(Key.PHOENIX, 1)
+            time.sleep(utils.rand_float(0.15, 0.2))
             self.cd200_buff_time = now
-        if self.cd240_buff_time == 0 or now - self.cd240_buff_time > 240:
-            self.cd240_buff_time = now
-        if self.cd900_buff_time == 0 or now - self.cd900_buff_time > 900:
-            self.cd900_buff_time = now
+            is_buff_cast = 1
+        if self.blink_shot_on == "True" and (self.cd60_blinkshot == 0 or now - self.cd60_blinkshot > 60):
+            time.sleep(utils.rand_float(0.15, 0.2))
+            SkillCombination(direction='up',jump='false',target_skills='skill_blinkshot').execute()
+            SkillCombination(direction='down',jump='false',target_skills='skill_blinkshot').execute()
+            time.sleep(utils.rand_float(0.1, 0.15))
+            self.cd60_blinkshot = now
+        
+        if is_buff_cast:
+            time.sleep(utils.rand_float(0.1, 0.12))
 
 class FlashJump(Command):
     """Performs a flash jump in the given direction."""
@@ -291,135 +360,101 @@ class Rope(BaseSkill):
     buff_time=0
     combo_delay = 0.2
 
-class Skill_Auto(BaseSkill):
-    _display_name = 'Basic solar/lunar slash'
+class Skill_Arrow_Stream(BaseSkill):
+    _display_name = 'Arrow Stream'
     _distance = 20
-    key=Key.SKILL_AUTO
-    delay=0.45
+    key=Key.ARROW_STREAM
+    delay=0.3 # with decent speed infusion, needs test
     rep_interval=0.5
     skill_cool_down=0
     ground_skill=False
     buff_time=0
     combo_delay = 0.05
 
-class Skill_D(BaseSkill):
-    _display_name = 'Equinox slash'
-    _distance = 22
-    key=Key.SKILL_D
-    delay=0.4
-    rep_interval=0.5
-    skill_cool_down=5
-    ground_skill=False
-    buff_time=0
-    combo_delay = 0.4
-
-class Skill_3(BaseSkill):
-    _display_name = 'Soul eclipse'
-    _distance = 0
-    key=Key.SKILL_3
+class Skill_Arrow_Blast(BaseSkill):
+    _display_name = 'Arrow Blast/Platter'
+    _distance = 20
+    key=Key.ARROW_BLAST
+    key_down_skill=True
     delay=0.5
-    rep_interval=0.5
-    skill_cool_down=171.2
-    ground_skill=False
-    buff_time=40
-    combo_delay = 0.5
-class Skill_1(BaseSkill):
-    _display_name = 'Cosmos'
-    _distance = 0
-    key=Key.SKILL_1
-    delay=0.65
-    rep_interval=0.5
-    skill_cool_down=86
-    ground_skill=False
-    buff_time=15
-    combo_delay = 0.65
-
-class Skill_2(BaseSkill):
-    _display_name = 'Rift of damnation/styx'
-    _distance = 0
-    key=Key.SKILL_2
-    delay=1
-    rep_interval=0.5
-    skill_cool_down=180
-    ground_skill=False
-    buff_time=40
-    combo_delay = 1
-
-class Skill_F(BaseSkill):
-    _display_name = 'Blazing Assault/Luster Charge'
-    _distance = 31
-    key=Key.SKILL_F
-    delay=0.5
-    rep_interval=0.5
-    skill_cool_down=43
-    ground_skill=False
-    buff_time=5
-    combo_delay = 0.05
-
-class Skill_F2(BaseSkill):
-    _display_name = 'Blazing Assault/Luster Charge'
-    _distance = 31
-    key=Key.SKILL_F
-    delay=0.5
-    rep_interval=0.5
-    skill_cool_down=5
-    ground_skill=False
-    buff_time=0
-    combo_delay = 0.2
-
-    def main(self):
-        self.active_if_in_skill_buff = 'skill_f'
-        return super().main()
-
-class Dash(BaseSkill):
-    _display_name = 'Bluster'
-    _distance = 18
-    key=Key.DASH
-    delay=0.55
     rep_interval=0.5
     skill_cool_down=0
     ground_skill=True
     buff_time=0
-    combo_delay = 0.2
+    combo_delay = 0.05
 
-class Skill_Del(BaseSkill):
-    _display_name = 'Cosmic Forge'
-    _distance = 0
-    key=Key.SKILL_DEL
-    delay=1
+class Skill_Arrow_Blast_Up(BaseSkill):
+    _display_name = 'Arrow Blast/Platter Up'
+    _distance = 20
+    key=Key.ARROW_BLAST
+    key_up_skill=True
+    delay=0.5
     rep_interval=0.5
-    skill_cool_down=171.2
-    ground_skill=False
-    buff_time=60
-    combo_delay = 1
+    skill_cool_down=0
+    ground_skill=True
+    buff_time=0
+    combo_delay = 0.05
 
-class Skill_0(BaseSkill):
-    _display_name = 'Cosmic Burst'
-    _distance = 0
-    key=Key.SKILL_0
-    delay=0.1
+
+class Skill_Arrow_Blast_Summon(BaseSkill):
+    _display_name = 'Arrow Blast/Platter Summon'
+    _distance = 20
+    key=Key.ARROW_BLAST
+    key_down_skill=True
+    delay=0.5
+    rep_interval=0.5
+    skill_cool_down=0
+    ground_skill=True
+    buff_time=0
+    combo_delay = 0.05
+
+    def main(self):
+        super().main()
+        time.sleep(utils.rand_float(0.2, 0.25))
+        press(Key.INTERACT, 1)
+        key_up(Key.ARROW_BLAST)
+        config.player_states['is_keydown_skill'] = False
+
+class Skill_Hurricane(BaseSkill):
+    _display_name = 'Hurricane'
+    _distance = 20
+    key=Key.HURRICANE
+    key_down_skill=True
+    delay=0.5
+    rep_interval=0.5
+    skill_cool_down=0
+    ground_skill=True
+    buff_time=0
+    combo_delay = 0.05
+
+class Skill_Hurricane_Up(BaseSkill):
+    _display_name = 'Hurricane Up'
+    _distance = 20
+    key=Key.HURRICANE
+    key_up_skill=True
+    delay=0.5
+    rep_interval=0.5
+    skill_cool_down=0
+    ground_skill=True
+    buff_time=0
+    combo_delay = 0.05
+
+class Skill_Gritty(BaseSkill):
+    _display_name = 'Gritty Gust'
+    _distance = 22
+    key=Key.GRITTY
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=15
     ground_skill=False
     buff_time=0
-    combo_delay = 0.1
-    skill_image = IMAGE_DIR + 'skill_0.png'
+    combo_delay = 0.4
 
-class Skill_Q(BaseSkill):
-    _display_name = 'Cosmic Shower'
-    _distance = 0
-    key=Key.SKILL_Q
-    delay=0.6
-    rep_interval=0.5
-    skill_cool_down=30
-    ground_skill=True
-    buff_time=60
-    combo_delay = 0.1
 
-class Skill_7(BaseSkill):
+class Skill_Erda_Fountain(BaseSkill):
     _display_name = 'Erda Fountain'
     _distance = 0
-    key=Key.SKILL_7
+    key=Key.ERDA_FOUNTAIN
     delay=0.9
     rep_interval=0.5
     skill_cool_down=57
@@ -427,31 +462,16 @@ class Skill_7(BaseSkill):
     buff_time=60
     combo_delay = 0.9
 
-class Skill_Minus(BaseSkill):
-    _display_name = '西格諾斯槍兵陣/Cygnus?'
+class Skill_BlinkShot(BaseSkill):
+    _display_name = 'Blink Shot'
     _distance = 0
-    key=Key.SKILL_MINUS
-    delay=0.8
-    rep_interval=0.5
-    skill_cool_down=28.5
-    ground_skill=True
-    buff_time=20
-    combo_delay = 0.2
-
-class Skill_Minus2(BaseSkill):
-    _display_name = '槍兵陣轉頭/Cygnus?'
-    _distance = 0
-    key=Key.SKILL_MINUS
-    delay=0.1
+    key=Key.BLINK_SHOT
+    delay=0.3
     rep_interval=0.5
     skill_cool_down=0
-    ground_skill=False
+    ground_skill=True
     buff_time=0
-    combo_delay = 0.1
-
-    def main(self):
-        self.active_if_in_skill_buff = 'skill_minus'
-        return super().main()
+    combo_delay = 0.2
 
 class AutoHunting(Command):
     _display_name ='自動走位狩獵/AutoHunting'
@@ -467,7 +487,7 @@ class AutoHunting(Command):
         toggle = True
         move = config.bot.command_book['move']
         GoToMap(target_map=self.map).execute()
-        SkillCombination(direction='',target_skills='skill_auto').execute()
+        SkillCombination(direction='',target_skills='skill_arrow_stream').execute()
         minimap = config.capture.minimap['minimap']
         height, width, _n = minimap.shape
         bottom_y = height - 30
@@ -475,12 +495,12 @@ class AutoHunting(Command):
         settings.platforms = 'b' + str(int(bottom_y))
         while True:
             if settings.auto_change_channel and config.should_solve_rune:
-                Skill_Auto().execute()
+                Skill_Arrow_Stream().execute()
                 config.bot._solve_rune()
                 continue
             if settings.auto_change_channel and config.should_change_channel:
                 ChangeChannel(max_rand=40).execute()
-                Skill_Auto().execute()
+                Skill_Arrow_Stream().execute()
                 continue
             Frenzy().execute()
             frame = config.capture.frame
@@ -502,9 +522,9 @@ class AutoHunting(Command):
                     bottom_y = config.player_pos[1]
                     settings.platforms = 'b' + str(int(bottom_y))
                 FlashJump(direction='left').execute()
-                SkillCombination(direction='left',target_skills='skill_7|skill_0|skill_auto').execute()
+                SkillCombination(direction='left',target_skills='skill_erda_fountain|skill_0|skill_arrow_stream').execute()
                 UpJump(direction='left').execute()
-                SkillCombination(direction='left',target_skills='skill_q|skill_0|skill_f|skill_d|skill_auto').execute()
+                SkillCombination(direction='left',target_skills='skill_q|skill_0|skill_f|skill_d|skill_arrow_stream').execute()
             else:
                 # left side
                 move(20,bottom_y).execute()
@@ -512,20 +532,20 @@ class AutoHunting(Command):
                     bottom_y = config.player_pos[1]
                     settings.platforms = 'b' + str(int(bottom_y))
                 FlashJump(direction='right').execute()
-                SkillCombination(direction='right',target_skills='skill_7|skill_0|skill_auto').execute()
+                SkillCombination(direction='right',target_skills='skill_erda_fountain|skill_0|skill_arrow_stream').execute()
                 UpJump(direction='right').execute()
-                SkillCombination(direction='right',target_skills='skill_q|skill_0|skill_f|skill_d|skill_auto').execute()
+                SkillCombination(direction='right',target_skills='skill_q|skill_0|skill_f|skill_d|skill_arrow_stream').execute()
             
             if settings.auto_change_channel and config.should_solve_rune:
                 config.bot._solve_rune()
                 continue
             if settings.auto_change_channel and config.should_change_channel:
                 ChangeChannel(max_rand=40).execute()
-                Skill_Auto().execute()
+                Skill_Arrow_Stream().execute()
                 continue
             move(width//2,bottom_y).execute()
             UpJump(jump='true').execute()
-            SkillCombination(direction='left',target_skills='skill_3|skill_2|skill_1|skill_0|skill_del|skill_auto').execute()
+            SkillCombination(direction='left',target_skills='skill_3|skill_2|skill_1|skill_del|skill_0|skill_arrow_stream').execute()
             toggle = not toggle
 
         if settings.home_scroll_key:

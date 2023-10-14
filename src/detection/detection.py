@@ -127,7 +127,20 @@ def merge_detection(model, image):
     
     # Preprocessing
     height, width, channels = image.shape
-    cropped = image[120:height//2, width//4:3*width//4]
+    print(f"\nheight: {height}, width: {width}")
+    print(f"\nCropped Height: {height}, width: {width}")
+    cropped = image[120:height//2, width//4:3*width//4] 
+    # On 16:9 ratio: (WORKS)
+    # on 1366x768 res:  341->1024  x  120-> 384 y
+    # on 1366x768 ACTUAL: 442 ->852 x, 152 -> 252 y
+    # on 1366x768 arrow center approx (x): 513, 626, 697, 814
+    #                                         +113  +71   +117
+    # On 16:10 ratio:  (SHOULD WORK..?)
+    # on 1920x1200 res:  480-> 1440  x  120-> 450 y
+    # on 1920x1200 ACTUAL: 819 -> 1213 x, 193 -> 277 y
+    # on 1920 x 1200 arrow center approx (x): 873, 968, 1044, 1136
+    #                                              +95   +76  +92
+    
     filtered = filter_color(cropped)
     cannied = canny(filtered)
 
