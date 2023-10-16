@@ -739,9 +739,11 @@ class BaseSkill(Command):
     float_in_air=False
     recharge_interval=0
     max_maintained=0
+    key_down_skill=False
+    key_up_skill=False
 
     def __init__(self, direction='',jump='false',rep='1',pre_delay='0',duration='0',\
-            key_down_skill= 'false',key_up_skill= 'false',combo='false',wait_until_ready='false',direction_after_skill='false',\
+            combo='false',wait_until_ready='false',direction_after_skill='false',\
             active_if_skill_ready='',active_if_skill_cd='',active_if_in_skill_buff='',active_if_not_in_skill_buff=''\
             ):
         super().__init__(locals())
@@ -754,8 +756,6 @@ class BaseSkill(Command):
             config.is_skill_ready_collector[self._custom_id] = True
             config.skill_cd_timer[self._custom_id] = 0
         self.combo = settings.validate_boolean(combo)
-        self.key_down_skill = settings.validate_boolean(key_down_skill)
-        self.key_up_skill = settings.validate_boolean(key_up_skill)
         self.wait_until_ready = settings.validate_boolean(wait_until_ready)
         self.direction_after_skill = settings.validate_boolean(direction_after_skill)
         if self.skill_cool_down > 5 and settings.cd_value != '':

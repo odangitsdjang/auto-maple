@@ -410,10 +410,12 @@ class Skill_Arrow_Blast_Summon(BaseSkill):
 
     def main(self):
         super().main()
-        time.sleep(utils.rand_float(0.2, 0.25))
-        press(Key.INTERACT, 1)
+        time.sleep(utils.rand_float(0.1, 0.15))
         key_up(Key.ARROW_BLAST)
         config.player_states['is_keydown_skill'] = False
+        
+        press(Key.INTERACT, 1, down_time=.03)
+        
 
 class Skill_Hurricane(BaseSkill):
     _display_name = 'Hurricane'

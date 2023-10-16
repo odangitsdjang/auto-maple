@@ -23,6 +23,7 @@ def validate_nonnegative_int(value):
 def validate_boolean(value):
     """
     Checks whether VALUE is a valid Python boolean.
+    This method will only be called with string value, as the value would have been a user input
     :param value:   The string to check.
     :return:        VALUE as a boolean
     """
