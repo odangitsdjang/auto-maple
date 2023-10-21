@@ -3,3 +3,4 @@ assets/models/
 .idea/
 .settings/
 recording/
+.tmp*

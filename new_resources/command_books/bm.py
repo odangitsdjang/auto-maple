@@ -16,6 +16,7 @@ class Key:
     ROPE = 'v'
     UP_JUMP = 'up+alt'
     BLINK_SHOT = "n"
+    BLINK_SHOT_RESUMMON = "down+n"
 
     GRITTY = "q"
     ARROW_BLAST = "d"
@@ -91,7 +92,7 @@ def step(direction, target):
                 SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
             else:
                 if d_y == 0:
-                    Skill_Arrow_Stream().execute()
+                    pass
                 else:
                     Skill_Arrow_Stream(direction='',jump='true').execute()
             time.sleep(utils.rand_float(0.04, 0.06))
@@ -212,12 +213,13 @@ class Adjust(Command):
             toggle = not toggle
 
 class Buff(Command):
-    def __init__(self, BlinkShot=False):
+    def __init__(self, BlinkShot="False"):
         super().__init__(locals())
         # bm is a 2 min dpm class, separate burst skills into two timers to elongate burst / mob more effectively
-        self.reset_timers(BlinkShot) 
+        self.reset_timers() 
+        self.blink_shot_on =  settings.validate_boolean(BlinkShot) 
 
-    def reset_timers(self, BlinkShot):
+    def reset_timers(self):
         self.cd120_first_rotation = 0 # Burst 1
         # Burst 2
         self.cd120_second_rotation = time.time() - 40 # always use 80 seconds after first rotation (quiver barrage lasts 40 sec)
@@ -225,7 +227,7 @@ class Buff(Command):
         self.cd120_third_rotation = time.time() - 90 # use 30 seconds after first rotation
         self.cd200_buff_time = 0
         self.cd60_blinkshot = 0
-        self.blink_shot_on = BlinkShot  
+          
 
     def main(self):
         now = time.time()
@@ -233,16 +235,16 @@ class Buff(Command):
 
         # resetting rotation timers if bot was off for a while (reloading does not reset time without this code - BUG?)
         if now - self.cd120_first_rotation > 180:
-            self.reset_timers(BlinkShot=self.blink_shot_on)
+            self.reset_timers()
 
         # print("Time into first rotation timer: ", now - self.cd120_first_rotation)
         # print("Time into second rotation timer: ", now - self.cd120_second_rotation)
         if self.cd120_first_rotation == 0 or now - self.cd120_first_rotation > 120:
             time.sleep(utils.rand_float(0.15, 0.2))
             press(Key.STORM_OF_ARROWS, 1)
-            time.sleep(utils.rand_float(0.25, 0.28))
+            time.sleep(utils.rand_float(0.45, 0.48))
             press(Key.INHUMAN_SPEED, 1)
-            time.sleep(utils.rand_float(0.21, 0.25))
+            time.sleep(utils.rand_float(0.41, 0.45))
             # press(Key.EPIC_ADVENTURE, 1)
             # time.sleep(utils.rand_float(0.15, 0.2))
             self.cd120_first_rotation = now
@@ -250,18 +252,18 @@ class Buff(Command):
         if now - self.cd120_second_rotation > 120:
             time.sleep(utils.rand_float(0.15, 0.2))
             press(Key.QUIVER_BARRAGE, 1)
-            time.sleep(utils.rand_float(0.15, 0.2))
+            time.sleep(utils.rand_float(0.35, 0.40))
             press(Key.VICIOUS_SHOT, 1)
-            time.sleep(utils.rand_float(0.21, 0.25))
+            time.sleep(utils.rand_float(0.35, 0.4))
             press(Key.CONCENTRATION, 1)
-            time.sleep(utils.rand_float(0.15, 0.2))
+            time.sleep(utils.rand_float(0.35, 0.4))
             
             self.cd120_second_rotation = now
             is_buff_cast = 1
         if now - self.cd120_third_rotation > 120: 
             time.sleep(utils.rand_float(0.15, 0.2))
             press(Key.ARACHNID, 1)
-            time.sleep(utils.rand_float(0.15, 0.2))
+            time.sleep(utils.rand_float(0.30, 0.35))
             press(Key.FURY_OF_THE_WILD, 1)
             time.sleep(utils.rand_float(0.15, 0.2))
             
@@ -270,13 +272,13 @@ class Buff(Command):
         if self.cd200_buff_time == 0 or now - self.cd200_buff_time > 200:
             time.sleep(utils.rand_float(0.15, 0.2))
             press(Key.PHOENIX, 1)
-            time.sleep(utils.rand_float(0.15, 0.2))
+            time.sleep(utils.rand_float(0.25, 0.3))
             self.cd200_buff_time = now
             is_buff_cast = 1
-        if self.blink_shot_on == "True" and (self.cd60_blinkshot == 0 or now - self.cd60_blinkshot > 60):
+        if self.blink_shot_on and (self.cd60_blinkshot == 0 or now - self.cd60_blinkshot > 60):
             time.sleep(utils.rand_float(0.15, 0.2))
-            SkillCombination(direction='up',jump='false',target_skills='skill_blinkshot').execute()
-            SkillCombination(direction='down',jump='false',target_skills='skill_blinkshot').execute()
+            SkillCombination(direction='up',jump='false',target_skills='skill_blink_shot').execute()
+            SkillCombination(direction='down',jump='false',target_skills='skill_blink_shot_summon').execute()
             time.sleep(utils.rand_float(0.1, 0.15))
             self.cd60_blinkshot = now
         
@@ -362,7 +364,7 @@ class Rope(BaseSkill):
 
 class Skill_Arrow_Stream(BaseSkill):
     _display_name = 'Arrow Stream'
-    _distance = 20
+    _distance = 0
     key=Key.ARROW_STREAM
     delay=0.3 # with decent speed infusion, needs test
     rep_interval=0.5
@@ -373,7 +375,7 @@ class Skill_Arrow_Stream(BaseSkill):
 
 class Skill_Arrow_Blast(BaseSkill):
     _display_name = 'Arrow Blast/Platter'
-    _distance = 20
+    _distance = 0
     key=Key.ARROW_BLAST
     key_down_skill=True
     delay=0.5
@@ -385,7 +387,7 @@ class Skill_Arrow_Blast(BaseSkill):
 
 class Skill_Arrow_Blast_Up(BaseSkill):
     _display_name = 'Arrow Blast/Platter Up'
-    _distance = 20
+    _distance = 0
     key=Key.ARROW_BLAST
     key_up_skill=True
     delay=0.5
@@ -398,12 +400,12 @@ class Skill_Arrow_Blast_Up(BaseSkill):
 
 class Skill_Arrow_Blast_Summon(BaseSkill):
     _display_name = 'Arrow Blast/Platter Summon'
-    _distance = 20
+    _distance = 0
     key=Key.ARROW_BLAST
     key_down_skill=True
     delay=0.5
     rep_interval=0.5
-    skill_cool_down=0
+    skill_cool_down=58
     ground_skill=True
     buff_time=0
     combo_delay = 0.05
@@ -411,15 +413,14 @@ class Skill_Arrow_Blast_Summon(BaseSkill):
     def main(self):
         super().main()
         time.sleep(utils.rand_float(0.1, 0.15))
+        press(Key.INTERACT, 1, down_time=.03)
         key_up(Key.ARROW_BLAST)
         config.player_states['is_keydown_skill'] = False
-        
-        press(Key.INTERACT, 1, down_time=.03)
-        
+    
 
 class Skill_Hurricane(BaseSkill):
     _display_name = 'Hurricane'
-    _distance = 20
+    _distance = 0
     key=Key.HURRICANE
     key_down_skill=True
     delay=0.5
@@ -431,7 +432,7 @@ class Skill_Hurricane(BaseSkill):
 
 class Skill_Hurricane_Up(BaseSkill):
     _display_name = 'Hurricane Up'
-    _distance = 20
+    _distance = 0
     key=Key.HURRICANE
     key_up_skill=True
     delay=0.5
@@ -443,7 +444,7 @@ class Skill_Hurricane_Up(BaseSkill):
 
 class Skill_Gritty(BaseSkill):
     _display_name = 'Gritty Gust'
-    _distance = 22
+    _distance = 0
     key=Key.GRITTY
     delay=0.45
     rep_interval=0.5
@@ -464,13 +465,24 @@ class Skill_Erda_Fountain(BaseSkill):
     buff_time=60
     combo_delay = 0.9
 
-class Skill_BlinkShot(BaseSkill):
+class Skill_Blink_Shot(BaseSkill):
     _display_name = 'Blink Shot'
     _distance = 0
     key=Key.BLINK_SHOT
     delay=0.3
     rep_interval=0.5
-    skill_cool_down=0
+    skill_cool_down=58
+    ground_skill=True
+    buff_time=0
+    combo_delay = 0.2
+
+class Skill_Blink_Shot_Summon(BaseSkill):
+    _display_name = 'Blink Shot'
+    _distance = 0
+    key=Key.BLINK_SHOT
+    delay=0.3
+    rep_interval=0.5
+    skill_cool_down=58
     ground_skill=True
     buff_time=0
     combo_delay = 0.2

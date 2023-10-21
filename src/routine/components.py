@@ -568,11 +568,12 @@ class Adjust(Command):
         self.max_steps = settings.validate_nonnegative_int(max_steps)
 
 class Player_jump(Command):
-    def __init__(self):
+    def __init__(self, direction=''):
         super().__init__(locals())
+        self.direction = direction
     
     def main(self):
-        self.player_jump()
+        self.player_jump(direction=self.direction)
         return super().main()
 
 def step(direction, target):
