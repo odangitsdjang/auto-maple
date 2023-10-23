@@ -12,15 +12,35 @@
 
 
 ## b. PINK/PURPLE/BLUEORANGE ARROW ISSUE
-* Green yellow colors are fine
-* Blue puirple red are not fine 
+* Issue Reason: filter_color is only filtering hue from 1-75, which includes only red, orange, yellow, green
+* Solution Proposal: Include more colors in filter_color but be more specific on Saturation and Value to maintain the noise 
+
 fail folder = 1366x768 purple orange arrows, no spinner between  9/19 - 10/9 (hypothesis) there should be some that failed that are good on color 
 
 
-* filter_color hsv removes purple/orange arrows - investigate
+* List of all colors and measured hsv value from game (pass/fail): h (0-180) s (0-255) v (0-255)
+  - Red ():
+  - Orange ():
+  - Yellow ():
+  - Green (p):
+  - Blue ():
+  - Purple ():
 
-* get HSV values for all combination of arrows, allow those colors (OR) in the filter_color 
-* multi mask
+  h 0 - 180
+  s 134 - 255
+  v 199 - 255
+  ( No green border)
+
+  keep green border = 
+  h 0 - 180
+  s 175 - 255
+  v 157 - 255
+
+Test this value on images and see if it passes merge_detection function
+Test more images
+
+* Another option: use bitwise_or to create unified mask https://stackoverflow.com/questions/48109650/how-to-detect-two-different-colors-using-cv2-inrange-in-python-opencv 
+  - get HSV values for all combination of arrows, allow those colors (OR) in the filter_color 
 
 ## c. Full screen issue (doesn't reach the right arrows?)
 * Needs investigation
@@ -28,4 +48,4 @@ fail folder = 1366x768 purple orange arrows, no spinner between  9/19 - 10/9 (hy
 # Other Bot Issues
 * Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck
 * Dying, gets stuck
-* 
+* Buff function called randomly - self.buff.main() - called every step ? Needs to be looked into to maintain consistent buffs

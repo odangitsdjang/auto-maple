@@ -48,6 +48,8 @@ class Key:
 
 
     # Buffs
+    GUILD_DAMAGE = 'insert'
+    GUILD_CRIT_DAMAGE = 'pageup'
     
     # Buffs Toggle
 
@@ -487,6 +489,36 @@ class Skill_Blink_Shot_Summon(BaseSkill):
     buff_time=0
     combo_delay = 0.2
 
+class GSkill_Damage (BaseSkill):
+    _display_name ='Guild Skill Damage'
+    key=Key.GUILD_DAMAGE
+    delay=0.2
+    rep_interval=0.2
+    skill_cool_down=3600
+    ground_skill=False
+    buff_time=1800
+    combo_delay = 0.2
+
+    def main(self):
+        self.active_if_not_in_skill_buff = 'gskill_crit_damage'
+        self.active_if_skill_ready = 'gskill_damage'
+        return super().main()
+
+class GSkill_Crit_Damage (BaseSkill):
+    _display_name ='Guild Skill Crit Damage'
+    key=Key.GUILD_CRIT_DAMAGE
+    delay=0.2
+    rep_interval=0.2
+    skill_cool_down=3600
+    ground_skill=False
+    buff_time=1800
+    combo_delay = 0.2
+
+    def main(self):
+        self.active_if_not_in_skill_buff = 'gskill_damage'
+        self.active_if_skill_ready = 'gskill_crit_damage'
+        return super().main()
+    
 class AutoHunting(Command):
     _display_name ='自動走位狩獵/AutoHunting'
 
