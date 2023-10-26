@@ -473,7 +473,7 @@ class Skill_Blink_Shot(BaseSkill):
     key=Key.BLINK_SHOT
     delay=0.3
     rep_interval=0.5
-    skill_cool_down=58
+    skill_cool_down=0
     ground_skill=True
     buff_time=0
     combo_delay = 0.2
