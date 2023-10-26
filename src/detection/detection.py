@@ -127,8 +127,8 @@ def merge_detection(model, image):
     
     # Preprocessing
     height, width, channels = image.shape
-    print(f"\nheight: {height}, width: {width}")
-    print(f"\nCropped Height: {height}, width: {width}")
+    # print(f"\nheight: {height}, width: {width}")
+    # print(f"\nCropped Height: {height}, width: {width}")
     cropped = image[120:height//2, width//4:3*width//4] 
     # On 16:9 ratio: (WORKS)
     # on 1366x768 res:  341->1024  x  120-> 384 y

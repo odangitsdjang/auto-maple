@@ -13,42 +13,25 @@ class Key:
     FLASH_JUMP = 'alt'
     ROPE = 'v'
     UP_JUMP = 'up+alt'
-    BLINK_SHOT = "n"
-    BLINK_SHOT_RESUMMON = "down+n"
-
-    GRITTY = "q"
-    ARROW_BLAST = "d"
-    ERDA_FOUNTAIN = "down+7"
     
-    # 120s Buff First Rotation 
-    STORM_OF_ARROWS = '9'
-    VICIOUS_SHOT = "o"
-    INHUMAN_SPEED = "0"
-    CONCENTRATION = '='
-
-    # 120s Buffs Second Rotation (balance out damage)
-    MAPLE_GODDESS_BLESSING = "6"
-    QUIVER_BARRAGE = "8"
-    FURY_OF_THE_WILD = "3"
-
-    # 3rd rotation
-    ARACHNID = "5"
-
-    # Other Buffs
-    PHOENIX = "1"
-    MAPLE_WARRIOR = "" # Auto Buffed
-    EPIC_ADVENTURE = "" # Auto Buffed
+    MAPLE_WARRIOR = "6" 
+    EPIC_ADVENTURE = "8"
     
     # Skills
-    ARROW_STREAM = "shift"
-    HURRICANE = 'a'
+    ATTACK = "shift"
+    GRITTY = "q"
 
     # Buffs
+    BUFF_1 = "9"
+    BUFF_2 = "0"
+    BUFF_3 = "-"
+    BUFF_4 = "="
+
+    MAPLE_GODDESS_BLESSING = ""
     GUILD_DAMAGE = 'insert'
     GUILD_CRIT_DAMAGE = 'pageup'
-    
-    # special Skills
-    SP_F12 = '' # Frenzy
+    ERDA_FOUNTAIN = "down+7"
+
 
 def step(direction, target):
     """
@@ -67,22 +50,22 @@ def step(direction, target):
             print("is stuck")
             time.sleep(utils.rand_float(0.1, 0.2))
             press(Key.JUMP)
-            Skill_Arrow_Stream(direction='').execute()
+            Skill_Attack(direction='').execute()
             WaitStanding(duration='1').execute()
         if abs(d_x) >= 16:
             if abs(d_x) >= 28:
                 FlashJump(direction='',triple_jump='false',fast_jump='false').execute()
-                SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
+                SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_attack').execute()
             else:
                 if d_y == 0:
                     pass
                 else:
-                    Skill_Arrow_Stream(direction='',jump='true').execute()
+                    Skill_Attack(direction='',jump='true').execute()
             time.sleep(utils.rand_float(0.04, 0.06))
             # if abs(d_x) <= 22:
             #     key_up(direction)
             if config.player_states['movement_state'] == config.MOVEMENT_STATE_FALLING:
-                SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
+                SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_attack').execute()
             utils.wait_for_is_standing(500)
         else:
             time.sleep(utils.rand_float(0.05, 0.08))
@@ -103,7 +86,7 @@ def step(direction, target):
             else:
                 press(Key.ROPE, 1)
                 time.sleep(utils.rand_float(1.2, 1.5))
-            SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
+            SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_attack').execute()
             utils.wait_for_is_standing(1300)
         else:
             press(Key.JUMP, 1)
@@ -138,7 +121,7 @@ def step(direction, target):
                         key_down('right')
                         press(Key.JUMP)
                         key_up('right')
-            SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_arrow_stream').execute()
+            SkillCombination(direction='',jump='false',target_skills='skill_gritty|skill_attack').execute()
                 
         utils.wait_for_is_standing(2000)
         time.sleep(utils.rand_float(0.1, 0.12))
@@ -201,10 +184,7 @@ class Buff(Command):
           
     # bm is a 2 min dpm class, separate burst skills into two timers to elongate burst / mob more effectively
     def main(self):
-        Skill_Phoenix().main()
-        Skill_Arachnid().main()
-        Buff_Rotation_1().main()
-        Buff_Rotation_2().main()
+        Skill_Maple_Warrior().main()
 
 class FlashJump(Command):
     """Performs a flash jump in the given direction."""
@@ -283,10 +263,10 @@ class Rope(BaseSkill):
     buff_time=0
     combo_delay = 0.2
 
-class Skill_Arrow_Stream(BaseSkill):
-    _display_name = 'Arrow Stream'
+class Skill_Attack(BaseSkill):
+    _display_name = 'Basic Attack'
     _distance = 0
-    key=Key.ARROW_STREAM
+    key=Key.ATTACK
     delay=0.3 # with decent speed infusion, needs test
     rep_interval=0.5
     skill_cool_down=0
@@ -294,75 +274,8 @@ class Skill_Arrow_Stream(BaseSkill):
     buff_time=0
     combo_delay = 0.05
 
-class Skill_Arrow_Blast(BaseSkill):
-    _display_name = 'Arrow Blast/Platter'
-    _distance = 0
-    key=Key.ARROW_BLAST
-    key_down_skill=True
-    delay=0.5
-    rep_interval=0.5
-    skill_cool_down=0
-    ground_skill=True
-    buff_time=0
-    combo_delay = 0.05
-
-class Skill_Arrow_Blast_Up(BaseSkill):
-    _display_name = 'Arrow Blast/Platter Up'
-    _distance = 0
-    key=Key.ARROW_BLAST
-    key_up_skill=True
-    delay=0.5
-    rep_interval=0.5
-    skill_cool_down=0
-    ground_skill=True
-    buff_time=0
-    combo_delay = 0.05
-
-class Skill_Arrow_Blast_Summon(BaseSkill):
-    _display_name = 'Arrow Blast/Platter Summon'
-    _distance = 0
-    key=Key.ARROW_BLAST
-    key_down_skill=True
-    delay=0.5
-    rep_interval=0.5
-    skill_cool_down=58
-    ground_skill=True
-    buff_time=0
-    combo_delay = 0.05
-
-    def main(self):
-        super().main()
-        time.sleep(utils.rand_float(0.1, 0.15))
-        press(Key.INTERACT, 1, down_time=.03)
-        key_up(Key.ARROW_BLAST)
-        config.player_states['is_keydown_skill'] = False
-
-class Skill_Hurricane(BaseSkill):
-    _display_name = 'Hurricane'
-    _distance = 0
-    key=Key.HURRICANE
-    key_down_skill=True
-    delay=0.5
-    rep_interval=0.5
-    skill_cool_down=0
-    ground_skill=True
-    buff_time=0
-    combo_delay = 0.05
-
-class Skill_Hurricane_Up(BaseSkill):
-    _display_name = 'Hurricane Up'
-    _distance = 0
-    key=Key.HURRICANE
-    key_up_skill=True
-    delay=0.5
-    rep_interval=0.5
-    skill_cool_down=0
-    ground_skill=True
-    buff_time=0
-    combo_delay = 0.05
-
 class Skill_Gritty(BaseSkill):
-    _display_name = 'Gritty Gust'
+    _display_name = 'Gritty-like AOE jump skill'
     _distance = 0
     key=Key.GRITTY
     delay=0.45
@@ -383,101 +296,57 @@ class Skill_Erda_Fountain(BaseSkill):
     buff_time=60
     combo_delay = 0.9
 
-class Skill_Blink_Shot(BaseSkill):
-    _display_name = 'Blink Shot'
+class Skill_Maple_Warrior(BaseSkill):
+    _display_name = 'Maple Warrior'
     _distance = 0
-    key=Key.BLINK_SHOT
+    key=Key.MAPLE_WARRIOR
     delay=0.3
     rep_interval=0.5
-    skill_cool_down=0
+    skill_cool_down=600
     ground_skill=True
     buff_time=0
     combo_delay = 0.2
 
-class Skill_Blink_Shot_Summon(BaseSkill):
-    _display_name = 'Blink Shot Summon'
+class Skill_Buff_1(BaseSkill):
+    _display_name = 'Buff 1'
     _distance = 0
-    key=Key.BLINK_SHOT
+    key=Key.BUFF_1
     delay=0.3
     rep_interval=0.5
-    skill_cool_down=30 # actually lasts 60 seconds with 0 cd, but cast it faster in case of other blocking events
+    skill_cool_down=180
     ground_skill=True
-    buff_time=30
-    combo_delay = 0.2
-
-class Skill_Storm_Of_Arrows(BaseSkill):
-    _display_name = 'Storm of Arrows'
-    _distance = 0
-    key=Key.STORM_OF_ARROWS
-    delay=0.3
-    rep_interval=0.5
-    skill_cool_down=120
-    ground_skill=True
-    buff_time=65
-    combo_delay = 0.2
-
-class Skill_Inhuman_Speed(BaseSkill):
-    _display_name = 'Inhuman Speed'
-    _distance = 0
-    key=Key.INHUMAN_SPEED
-    delay=0.3
-    rep_interval=0.5
-    skill_cool_down=120
-    ground_skill=True
-    buff_time=30
+    buff_time=0
     combo_delay = 0.2
     
-class Skill_Quiver_Barrage(BaseSkill):
-    _display_name = 'Quiver Barrage'
+class Skill_Buff_2(BaseSkill):
+    _display_name = 'Buff 2'
     _distance = 0
-    key=Key.QUIVER_BARRAGE
+    key=Key.BUFF_2
     delay=0.3
     rep_interval=0.5
     skill_cool_down=120
     ground_skill=True
-    buff_time=40
+    buff_time=0
     combo_delay = 0.2
 
-class Skill_Vicious_Shot(BaseSkill):
-    _display_name = 'Vicious Shot'
+class Skill_Buff_3(BaseSkill):
+    _display_name = 'Buff 3'
     _distance = 0
-    key=Key.VICIOUS_SHOT
+    key=Key.BUFF_3
     delay=0.3
     rep_interval=0.5
     skill_cool_down=120
     ground_skill=True
-    buff_time=30
+    buff_time=0
     combo_delay = 0.2
 
-class Skill_Concentration(BaseSkill):
-    _display_name = 'Concentration'
+class Skill_Buff_4(BaseSkill):
+    _display_name = 'Buff 4'
     _distance = 0
-    key=Key.CONCENTRATION
+    key=Key.BUFF_4
     delay=0.3
     rep_interval=0.5
     skill_cool_down=120
-    ground_skill=True
-    buff_time=40
-    combo_delay = 0.2
-
-class Skill_Arachnid(BaseSkill):
-    _display_name = 'Arachnid'
-    _distance = 0
-    key=Key.ARACHNID
-    delay=0.3
-    rep_interval=0.5
-    skill_cool_down=250
-    ground_skill=True
-    buff_time=50
-    combo_delay = 0.2
-    
-class Skill_Phoenix(BaseSkill):
-    _display_name = 'Phoenix'
-    _distance = 0
-    key=Key.PHOENIX
-    delay=0.3
-    rep_interval=0.5
-    skill_cool_down=160
     ground_skill=True
     buff_time=0
     combo_delay = 0.2
@@ -492,52 +361,6 @@ class Skill_Maple_Goddess_Blessing(BaseSkill):
     ground_skill=True
     buff_time=60
     combo_delay = 0.2
-
-class Skill_Fury_Of_The_Wild(BaseSkill):
-    _display_name = 'Fury of the Wild'
-    _distance = 0
-    key=Key.FURY_OF_THE_WILD
-    delay=0.3
-    rep_interval=0.5
-    skill_cool_down=120
-    ground_skill=True
-    buff_time=40
-    combo_delay = 0.2
-
-class Buff_Rotation_1(BaseSkill):
-    _display_name ='Buff First Rotation'
-    key=Key.STORM_OF_ARROWS
-    delay=0.2
-    rep_interval=0.2
-    skill_cool_down=120
-    ground_skill=False
-    buff_time=60
-    combo_delay = 0.2
-
-    def main(self):
-        self.active_if_not_in_skill_buff = 'buff_rotation_2'
-        self.active_if_skill_ready = 'skill_storm_of_arrows'
-        super().main()
-        Skill_Vicious_Shot.execute()
-        Skill_Inhuman_Speed().execute()
-        Skill_Concentration.execute()
-
-class Buff_Rotation_2(BaseSkill):
-    _display_name ='Buff Second Rotation'
-    key=Key.QUIVER_BARRAGE
-    delay=0.2
-    rep_interval=0.2
-    skill_cool_down=120
-    ground_skill=False
-    buff_time=60
-    combo_delay = 0.2
-
-    def main(self):
-        self.active_if_not_in_skill_buff = 'buff_rotation_1'
-        self.active_if_skill_ready = 'skill_quiver_barrage'
-        super().main()
-        Skill_Maple_Goddess_Blessing().execute()
-        Skill_Fury_Of_The_Wild().execute()
 
 class GSkill_Damage (BaseSkill):
     _display_name ='Guild Skill Damage'
@@ -583,7 +406,7 @@ class AutoHunting(Command):
         toggle = True
         move = config.bot.command_book['move']
         GoToMap(target_map=self.map).execute()
-        SkillCombination(direction='',target_skills='skill_arrow_stream').execute()
+        SkillCombination(direction='',target_skills='skill_attack').execute()
         minimap = config.capture.minimap['minimap']
         height, width, _n = minimap.shape
         bottom_y = height - 30
@@ -591,12 +414,12 @@ class AutoHunting(Command):
         settings.platforms = 'b' + str(int(bottom_y))
         while True:
             if settings.auto_change_channel and config.should_solve_rune:
-                Skill_Arrow_Stream().execute()
+                Skill_Attack().execute()
                 config.bot._solve_rune()
                 continue
             if settings.auto_change_channel and config.should_change_channel:
                 ChangeChannel(max_rand=40).execute()
-                Skill_Arrow_Stream().execute()
+                Skill_Attack().execute()
                 continue
             Frenzy().execute()
             frame = config.capture.frame
@@ -618,9 +441,9 @@ class AutoHunting(Command):
                     bottom_y = config.player_pos[1]
                     settings.platforms = 'b' + str(int(bottom_y))
                 FlashJump(direction='left').execute()
-                SkillCombination(direction='left',target_skills='skill_erda_fountain|skill_0|skill_arrow_stream').execute()
+                SkillCombination(direction='left',target_skills='skill_erda_fountain|skill_0|skill_attack').execute()
                 UpJump(direction='left').execute()
-                SkillCombination(direction='left',target_skills='skill_q|skill_0|skill_f|skill_d|skill_arrow_stream').execute()
+                SkillCombination(direction='left',target_skills='skill_q|skill_0|skill_f|skill_d|skill_attack').execute()
             else:
                 # left side
                 move(20,bottom_y).execute()
@@ -628,20 +451,20 @@ class AutoHunting(Command):
                     bottom_y = config.player_pos[1]
                     settings.platforms = 'b' + str(int(bottom_y))
                 FlashJump(direction='right').execute()
-                SkillCombination(direction='right',target_skills='skill_erda_fountain|skill_0|skill_arrow_stream').execute()
+                SkillCombination(direction='right',target_skills='skill_erda_fountain|skill_0|skill_attack').execute()
                 UpJump(direction='right').execute()
-                SkillCombination(direction='right',target_skills='skill_q|skill_0|skill_f|skill_d|skill_arrow_stream').execute()
+                SkillCombination(direction='right',target_skills='skill_q|skill_0|skill_f|skill_d|skill_attack').execute()
             
             if settings.auto_change_channel and config.should_solve_rune:
                 config.bot._solve_rune()
                 continue
             if settings.auto_change_channel and config.should_change_channel:
                 ChangeChannel(max_rand=40).execute()
-                Skill_Arrow_Stream().execute()
+                Skill_Attack().execute()
                 continue
             move(width//2,bottom_y).execute()
             UpJump(jump='true').execute()
-            SkillCombination(direction='left',target_skills='skill_3|skill_2|skill_1|skill_del|skill_0|skill_arrow_stream').execute()
+            SkillCombination(direction='left',target_skills='skill_3|skill_2|skill_1|skill_del|skill_0|skill_attack').execute()
             toggle = not toggle
 
         if settings.home_scroll_key:
