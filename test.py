@@ -16,7 +16,7 @@ from src.modules.capture import Capture
 import cv2
 
 window = {'left': 0,'top': 0,'width': 1366, 'height': 768}
-default_window_resolution = {'1366x768':(1366,768),'1920x1080':(1920,1080)}
+default_window_resolution = {'1366x768':(1366,768),'2560x1440':(2560,1440)}
 
 # The distance between the top of the minimap and the top of the screen
 MINIMAP_TOP_BORDER = 5
@@ -59,9 +59,9 @@ window['width'] = max(rect[2] - rect[0], MMT_WIDTH)
 window['height'] = max(rect[3] - rect[1], MMT_HEIGHT)
 
 # get the proper pixel location of top without the borders, set proper width and height
-window['top'] = rect[1] + abs(default_window_resolution['1920x1080'][1] - window['height'])
-window['width'] = default_window_resolution['1920x1080'][0]
-window['height'] = default_window_resolution['1920x1080'][1]
+window['top'] = rect[1] + abs(default_window_resolution['2560x1440'][1] - window['height'])
+window['width'] = default_window_resolution['2560x1440'][0]
+window['height'] = default_window_resolution['2560x1440'][1]
 
 # Calibrate by finding the bottom right corner of the minimap
 

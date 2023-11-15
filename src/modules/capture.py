@@ -75,7 +75,7 @@ class Capture:
         }
         self.default_window_resolution = {
             '1366x768':(1366,768),
-            '1920x1080':(1920,1080)
+            '2560x1440': (2560,1440)
         }
         self.latest_positions = []
         self.MAX_LATEST_POSITION_AMOUNT = 10
@@ -112,8 +112,8 @@ class Capture:
             if settings.full_screen:
                 self.window['left'] = 0
                 self.window['top'] = 0
-                self.window['width'] = self.default_window_resolution['1920x1080'][0]
-                self.window['height'] = self.default_window_resolution['1920x1080'][1]
+                self.window['width'] = self.default_window_resolution['2560x1440'][0]
+                self.window['height'] = self.default_window_resolution['2560x1440'][1]
             else:
                 self.window['left'] = rect[0]
                 self.window['top'] = rect[1]
@@ -124,12 +124,12 @@ class Capture:
             # win32gui.SetForegroundWindow(self.handle)
             # win32gui.MoveWindow(self.handle,0,0,self.window['width'],self.window['height'],True)
 
-            if abs(self.default_window_resolution['1920x1080'][0] - self.window['width']) < \
+            if abs(self.default_window_resolution['2560x1440'][0] - self.window['width']) < \
                     abs(self.default_window_resolution['1366x768'][0] - self.window['width']):
-                # self.window['left'] = rect[0] + (self.default_window_resolution['1920x1080'][0] - self.window['width'])
-                self.window['top'] = rect[1] + abs(self.default_window_resolution['1920x1080'][1] - self.window['height'])
-                self.window['width'] = self.default_window_resolution['1920x1080'][0]
-                self.window['height'] = self.default_window_resolution['1920x1080'][1]
+                # self.window['left'] = rect[0] + (self.default_window_resolution['2560x1440'][0] - self.window['width'])
+                self.window['top'] = rect[1] + abs(self.default_window_resolution['2560x1440'][1] - self.window['height'])
+                self.window['width'] = self.default_window_resolution['2560x1440'][0]
+                self.window['height'] = self.default_window_resolution['2560x1440'][1]
             else:
                 # self.window['left'] = rect[0] + (self.default_window_resolution['1366x768'][0] - self.window['width'])
                 self.window['top'] = rect[1] + abs(self.default_window_resolution['1366x768'][1] - self.window['height'])
