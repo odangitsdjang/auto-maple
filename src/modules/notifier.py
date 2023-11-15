@@ -111,11 +111,11 @@ class Notifier:
                     # Check for other players entering the map
                     filtered = utils.filter_color(minimap, OTHER_RANGES)
                     others = len(utils.multi_match(filtered, OTHER_TEMPLATE, threshold=0.5))
-                    config.stage_fright = others > 0
+                    config.stage_fright = others > 1
                     if time.time() - config.latest_change_channel_or_map <= 60 and config.stage_fright:
                         config.should_change_channel = True # if find other in 1 min between change channel, change again
                     if others != prev_others:
-                        if others > prev_others:
+                        if others > 2:
                             self._ping('ding')
                         prev_others = others
 
