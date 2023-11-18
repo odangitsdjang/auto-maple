@@ -13,13 +13,16 @@ class Key:
     TELEPORT = 'd' # 瞬移
     UPJUMP = 'alt' # 上跳
     # Buffs
-    BUFF_5 = '5' # 召喚火魔
-    # Buffs Toggle
+    INFINITY = '9' # Infinity
+    INFINITY2 = '0' # Infinity 2
+    
+    # FMAs / semi FMAs
+    SKILL_Q = 'q' # Genesis
+    SKILL_F2 = 'f2'
+    SKILL_W = 'w' # Peacemaker
 
     # Attack Skills
     SKILL_BB = 'shift' # Big bang
-    SKILL_Q = 'q' # Genesis
-    SKILL_W = 'w' # Peacemaker
     SKILL_E = 'e' # Triumph Feather
     SKILL_R = 'r' # Blood of the Divine
     SKILL_A = 'a' # Angel Ray
@@ -166,50 +169,12 @@ class Adjust(Command):
             toggle = not toggle
 
 class Buff(Command):
-    """Uses each of Adele's buffs once."""
-
     def __init__(self):
         super().__init__(locals())
-        self.cd120_buff_time = 0
-        self.cd150_buff_time = 0
-        self.cd180_buff_time = 0
-        self.cd200_buff_time = 0
-        self.cd240_buff_time = 0
-        self.cd900_buff_time = 0
-        self.cd90_buff_time = 0
-        self.decent_buff_time = 0
 
     def main(self):
-        # buffs = [Key.SPEED_INFUSION, Key.HOLY_SYMBOL, Key.SHARP_EYE, Key.COMBAT_ORDERS, Key.ADVANCED_BLESSING]
-        now = time.time()
-        utils.wait_for_is_standing(1000)
-        if self.cd120_buff_time == 0 or now - self.cd120_buff_time > 121:
-            # time.sleep(utils.rand_float(0.1, 0.2))
-            # Skill_D().execute()
-            self.cd120_buff_time = now
-        if self.cd150_buff_time == 0 or now - self.cd150_buff_time > 151:
-            self.cd150_buff_time = now
-        if self.cd180_buff_time == 0 or now - self.cd180_buff_time > 181:
-            time.sleep(utils.rand_float(0.3, 0.4))
-            Skill_F1().execute()
-            self.cd180_buff_time = now
-        if self.cd200_buff_time == 0 or now - self.cd200_buff_time > 200:
-            self.cd200_buff_time = now
-        if self.cd240_buff_time == 0 or now - self.cd240_buff_time > 240:
-            time.sleep(utils.rand_float(0.3, 0.4))
-            press(Key.BUFF_5, 1,up_time=0.3)
-            self.cd240_buff_time = now
-        if self.cd900_buff_time == 0 or now - self.cd900_buff_time > 900:
-            # time.sleep(utils.rand_float(0.1, 0.3))
-            # press(Key.BUFF_5, 1)
-            self.cd900_buff_time = now
-        if self.cd90_buff_time == 0 or now - self.cd90_buff_time > 90:
-            Skill_F2(active_if_not_in_skill_buff='skill_f1').execute()
-            self.cd90_buff_time = now
-        # if self.decent_buff_time == 0 or now - self.decent_buff_time > settings.buff_cooldown:
-        #     for key in buffs:
-        #       press(key, 3, up_time=0.3)
-        #       self.decent_buff_time = now	
+        Buff_Rotation_1().execute()
+        Buff_Rotation_2().execute()
 
 class Teleport(BaseSkill):
     _display_name ='瞬移'
@@ -251,7 +216,67 @@ class Skill_BB(BaseSkill):
     ground_skill=False
     buff_time=0
     combo_delay = 0.25
-    
+
+class Skill_Infinity(BaseSkill):
+    _display_name ='Infinity'
+    key=Key.INFINITY
+    delay=0.45
+    rep_interval=0.5
+    skill_cool_down=90
+    ground_skill=False
+    buff_time=90
+    combo_delay = 0.5
+    pre_delay = 0.5
+
+class Skill_Infinity2(BaseSkill):
+    _display_name ='Infinity2'
+    key=Key.INFINITY2
+    delay=0.45
+    rep_interval=0.5
+    skill_cool_down=90
+    ground_skill=False
+    buff_time=90
+    combo_delay = 0.5
+    pre_delay = 0.5
+
+class Buff_Rotation_1(BaseSkill):
+    _display_name ='Buff First Rotation'
+    key=Key.INFINITY
+    delay=0.45
+    rep_interval=0.5
+    skill_cool_down=90
+    ground_skill=False
+    buff_time=90
+    combo_delay = 0.5
+    pre_delay = 0.5
+
+    def main(self):
+        self.active_if_not_in_skill_buff = 'buff_rotation_2' # only affects main super().main()
+        self.active_if_skill_ready = 'skill_infinity' # only affects main super().main()
+        # if not utils.get_is_in_skill_buff('buff_rotation_2') and utils.get_if_skill_ready('skill_storm_of_arrows'):
+        if super().main():
+            return True
+        return False
+
+class Buff_Rotation_2(BaseSkill):
+    _display_name ='Buff Second Rotation'
+    key=Key.INFINITY2
+    delay=0.45
+    rep_interval=0.5
+    skill_cool_down=90
+    ground_skill=False
+    buff_time=90
+    combo_delay = 0.5
+    pre_delay = 0.5
+
+    def main(self):
+        self.active_if_not_in_skill_buff = 'buff_rotation_1' # only affects main super().main()
+        self.active_if_skill_ready = 'skill_infinity2' # only affects main super().main()
+        # if not utils.get_is_in_skill_buff('buff_rotation_1') and utils.get_if_skill_ready('skill_quiver_barrage'):
+        if super().main():
+            return True
+        return False
+
 class TeleportCombination(Command):
     """teleport with other skill."""
     _display_name = '瞬移組合'

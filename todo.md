@@ -47,5 +47,6 @@ Test more images
 
 # Other Bot Issues
 * Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck
+* Bot goes to pick up rune that spawned for another player on instanced  (while having rune buff active)
+* Supporting upscaled 2k resolution (may need to add new MM_TL, MM_BR images and then do further testing)
 * Dying, gets stuck
-* Buff function called randomly - self.buff.main() - called every step ? Needs to be looked into to maintain consistent buffs
