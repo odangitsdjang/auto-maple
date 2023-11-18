@@ -30,7 +30,7 @@ class Key:
     MAPLE_GODDESS_BLESSING = ""
     GUILD_DAMAGE = 'insert'
     GUILD_CRIT_DAMAGE = 'pageup'
-    ERDA_FOUNTAIN = "down+7"
+    ERDA_FOUNTAIN = "7"
 
 
 def step(direction, target):
@@ -184,7 +184,7 @@ class Buff(Command):
           
     # bm is a 2 min dpm class, separate burst skills into two timers to elongate burst / mob more effectively
     def main(self):
-        Skill_Maple_Warrior().main()
+        Skill_Maple_Warrior().execute()
 
 class FlashJump(Command):
     """Performs a flash jump in the given direction."""

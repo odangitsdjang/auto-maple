@@ -18,7 +18,7 @@ class Key:
 
     GRITTY = "q"
     ARROW_BLAST = "d"
-    ERDA_FOUNTAIN = "down+7"
+    ERDA_FOUNTAIN = "7"
     
     # 120s Buff First Rotation 
     STORM_OF_ARROWS = '9'
@@ -201,10 +201,10 @@ class Buff(Command):
           
     # bm is a 2 min dpm class, separate burst skills into two timers to elongate burst / mob more effectively
     def main(self):
-        Skill_Phoenix().main()
-        Skill_Arachnid().main()
-        Buff_Rotation_1().main()
-        Buff_Rotation_2().main()
+        Skill_Phoenix().execute()
+        Skill_Arachnid().execute()
+        Buff_Rotation_1().execute()
+        Buff_Rotation_2().execute()
 
 class FlashJump(Command):
     """Performs a flash jump in the given direction."""
@@ -397,7 +397,7 @@ class Skill_Blink_Shot(BaseSkill):
 class Skill_Blink_Shot_Summon(BaseSkill):
     _display_name = 'Blink Shot Summon'
     _distance = 0
-    key=Key.BLINK_SHOT
+    key=Key.BLINK_SHOT_RESUMMON
     delay=0.3
     rep_interval=0.5
     skill_cool_down=30 # actually lasts 60 seconds with 0 cd, but cast it faster in case of other blocking events
@@ -409,135 +409,144 @@ class Skill_Storm_Of_Arrows(BaseSkill):
     _display_name = 'Storm of Arrows'
     _distance = 0
     key=Key.STORM_OF_ARROWS
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=120
     ground_skill=True
     buff_time=65
-    combo_delay = 0.2
+    combo_delay = 0.5
 
 class Skill_Inhuman_Speed(BaseSkill):
     _display_name = 'Inhuman Speed'
     _distance = 0
     key=Key.INHUMAN_SPEED
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=120
     ground_skill=True
     buff_time=30
-    combo_delay = 0.2
+    combo_delay = 0.5
     
 class Skill_Quiver_Barrage(BaseSkill):
     _display_name = 'Quiver Barrage'
     _distance = 0
     key=Key.QUIVER_BARRAGE
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=120
     ground_skill=True
     buff_time=40
-    combo_delay = 0.2
+    combo_delay = 0.5
 
 class Skill_Vicious_Shot(BaseSkill):
     _display_name = 'Vicious Shot'
     _distance = 0
     key=Key.VICIOUS_SHOT
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=120
     ground_skill=True
     buff_time=30
-    combo_delay = 0.2
+    combo_delay = 0.5
 
 class Skill_Concentration(BaseSkill):
     _display_name = 'Concentration'
     _distance = 0
     key=Key.CONCENTRATION
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=120
     ground_skill=True
     buff_time=40
-    combo_delay = 0.2
+    combo_delay = 0.5
 
 class Skill_Arachnid(BaseSkill):
     _display_name = 'Arachnid'
     _distance = 0
     key=Key.ARACHNID
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=250
     ground_skill=True
     buff_time=50
-    combo_delay = 0.2
+    combo_delay = 0.5
     
 class Skill_Phoenix(BaseSkill):
     _display_name = 'Phoenix'
     _distance = 0
     key=Key.PHOENIX
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=160
     ground_skill=True
     buff_time=0
-    combo_delay = 0.2
+    combo_delay = 0.5
 
 class Skill_Maple_Goddess_Blessing(BaseSkill):
     _display_name = 'Maple Goddess Blessing'
     _distance = 0
     key=Key.MAPLE_GODDESS_BLESSING
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=180
     ground_skill=True
     buff_time=60
-    combo_delay = 0.2
+    combo_delay = 0.5
 
 class Skill_Fury_Of_The_Wild(BaseSkill):
     _display_name = 'Fury of the Wild'
     _distance = 0
     key=Key.FURY_OF_THE_WILD
-    delay=0.3
+    delay=0.45
     rep_interval=0.5
     skill_cool_down=120
     ground_skill=True
     buff_time=40
-    combo_delay = 0.2
+    combo_delay = 0.5
 
 class Buff_Rotation_1(BaseSkill):
     _display_name ='Buff First Rotation'
     key=Key.STORM_OF_ARROWS
-    delay=0.2
-    rep_interval=0.2
+    delay=0.45
+    rep_interval=0.5
     skill_cool_down=120
     ground_skill=False
     buff_time=60
-    combo_delay = 0.2
+    combo_delay = 0.5
+    pre_delay = 0.5
 
     def main(self):
-        self.active_if_not_in_skill_buff = 'buff_rotation_2'
-        self.active_if_skill_ready = 'skill_storm_of_arrows'
-        super().main()
-        Skill_Vicious_Shot.execute()
-        Skill_Inhuman_Speed().execute()
-        Skill_Concentration.execute()
+        self.active_if_not_in_skill_buff = 'buff_rotation_2' # only affects main super().main()
+        self.active_if_skill_ready = 'skill_storm_of_arrows' # only affects main super().main()
+        # if not utils.get_is_in_skill_buff('buff_rotation_2') and utils.get_if_skill_ready('skill_storm_of_arrows'):
+        if super().main():
+            Skill_Vicious_Shot().execute()
+            Skill_Inhuman_Speed().execute()
+            Skill_Concentration().execute()
+            return True
+        return False
+
 
 class Buff_Rotation_2(BaseSkill):
     _display_name ='Buff Second Rotation'
     key=Key.QUIVER_BARRAGE
-    delay=0.2
-    rep_interval=0.2
+    delay=0.45
+    rep_interval=0.5
     skill_cool_down=120
     ground_skill=False
     buff_time=60
-    combo_delay = 0.2
+    combo_delay = 0.5
+    pre_delay = 0.5
 
     def main(self):
-        self.active_if_not_in_skill_buff = 'buff_rotation_1'
-        self.active_if_skill_ready = 'skill_quiver_barrage'
-        super().main()
-        Skill_Maple_Goddess_Blessing().execute()
-        Skill_Fury_Of_The_Wild().execute()
+        self.active_if_not_in_skill_buff = 'buff_rotation_1' # only affects main super().main()
+        self.active_if_skill_ready = 'skill_quiver_barrage' # only affects main super().main()
+        # if not utils.get_is_in_skill_buff('buff_rotation_1') and utils.get_if_skill_ready('skill_quiver_barrage'):
+        if super().main():
+            Skill_Maple_Goddess_Blessing().execute()
+            Skill_Fury_Of_The_Wild().execute()
+            return True
+        return False
 
 class GSkill_Damage (BaseSkill):
     _display_name ='Guild Skill Damage'

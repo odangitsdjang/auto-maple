@@ -1,0 +1,21 @@
+*, x=39.000, y=33.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=right, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=right, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+*, x=101.000, y=33.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=right, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+*, x=123.000, y=34.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=right, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+*, x=163.000, y=31.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+*, x=156.000, y=58.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=left, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=left, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=left, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=

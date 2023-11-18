@@ -29,7 +29,7 @@ class Key:
     SKILL_0 = '0' # Cosmic Burst / Note: Turn off auto cast when running bot!
     SKILL_Q = 'q' # Cosmic Shower
     SKILL_F = 'f' # Blazing Assault/Luster Charge
-    SKILL_7 = 'down+7' # Fountain
+    SKILL_7 = '7' # Fountain
     SKILL_MINUS = '-' # 西格諾斯槍兵陣/Cygnus?
 
     # special Skills

@@ -34,7 +34,7 @@ class Key:
     SKILL_C = '' # Phase dash ??
     SKILL_2 = "" 
     SKILL_3 = '1' # Slash Shadow Formation
-    SKILL_4 = 'down+7' # Erda Fountain
+    SKILL_4 = '7' # Erda Fountain
 
     # special Skills
     SP_F12 = '' # frenzy totem
