@@ -15,12 +15,12 @@ class Key:
     UP_JUMP = 'up+alt'
 
     # Buffs
-    DECENT_SPEED_INFUSION = "0"
-    DECENT_SHARP_EYES = "8"
-    DECENT_ADVANCED_BLESSING = "-"
-    DECENT_HOLY_SYMBOL = "6"
+    SKILL_DECENT_HOLY_SYMBOL = "6"
+    SKILL_DECENT_SHARP_EYES = "8"
+    SKILL_DECENT_SPEED_INFUSION = "f6"
+    SKILL_DECENT_ADVANCED_BLESSING = "f12"
     
-    MAPLE_WARRIOR = "5"
+    SKILL_MAPLE_WARRIOR = "5"
     SHADOW_PARTNER = ""
 
     # Attack Skills
@@ -202,38 +202,15 @@ class Buff(Command):
 
     def __init__(self):
         super().__init__(locals())
-        self.cd120_buff_time = 0
-        self.cd150_buff_time = 0
-        self.cd180_buff_time = 0
-        self.cd200_buff_time = 0
-        self.cd240_buff_time = 0
-        self.cd900_buff_time = 0
-        self.decent_buff_time = 0
 
     def main(self):
-        buffs = [Key.DECENT_SPEED_INFUSION, Key.DECENT_HOLY_SYMBOL, Key.DECENT_SHARP_EYES, Key.DECENT_ADVANCED_BLESSING]
-        now = time.time()
-        utils.wait_for_is_standing(1000)
-        if self.cd120_buff_time == 0 or now - self.cd120_buff_time > 121:
-            self.cd120_buff_time = now
-        if self.cd180_buff_time == 0 or now - self.cd150_buff_time > 151:
-            self.cd150_buff_time = now
-        if self.cd180_buff_time == 0 or now - self.cd180_buff_time > 181:
-            # Skill_4().execute()
-            self.cd180_buff_time = now
-        if self.cd200_buff_time == 0 or now - self.cd200_buff_time > 200:
-            self.cd200_buff_time = now
-        if self.cd240_buff_time == 0 or now - self.cd240_buff_time > 240:
-            self.cd240_buff_time = now
-        if self.cd900_buff_time == 0 or now - self.cd900_buff_time > 900:
-            press(Key.MAPLE_WARRIOR, 1)
-            time.sleep(utils.rand_float(0.15, 0.20))
-            self.cd900_buff_time = now
-        if self.decent_buff_time == 0 or now - self.decent_buff_time > settings.buff_cooldown:
-            for key in buffs:
-              press(key, 1, up_time=0.3)
-              time.sleep(utils.rand_float(0.10, 0.15))
-            self.decent_buff_time = now	
+        Skill_Decent_Sharp_Eyes().execute() 
+        Skill_Decent_Holy_Symbol().execute()
+        # No need for the other buffs rn
+        # Skill_Decent_Advanced_Blessing().execute()
+        # Skill_Decent_Speed_Infusion().execute() # autobuffed
+        # Skill_Maple_Warrior().execute()
+        
 
 class FlashJump(Command):
     """Performs a flash jump in the given direction."""
@@ -444,6 +421,50 @@ class Skill_C(BaseSkill):
     ground_skill=True
     buff_time=0
     combo_delay = 0.3
+
+class Skill_Decent_Advanced_Blessing(BaseSkill):
+    _display_name = 'Decent Advanced Blessing'
+    _distance = 0
+    key=Key.SKILL_DECENT_ADVANCED_BLESSING
+    delay=0.9
+    rep_interval=0.5
+    skill_cool_down=180
+    ground_skill=True
+    buff_time=215
+    combo_delay = 0.9
+
+class Skill_Decent_Holy_Symbol(BaseSkill):
+    _display_name = 'Decent HS'
+    _distance = 0
+    key=Key.SKILL_DECENT_HOLY_SYMBOL
+    delay=0.9
+    rep_interval=0.5
+    skill_cool_down=180
+    ground_skill=True
+    buff_time=220
+    combo_delay = 0.9
+
+class Skill_Decent_Sharp_Eyes(BaseSkill):
+    _display_name = 'Decent Sharp Eyes'
+    _distance = 0
+    key=Key.SKILL_DECENT_SHARP_EYES
+    delay=0.9
+    rep_interval=0.5
+    skill_cool_down=180
+    ground_skill=True
+    buff_time=220
+    combo_delay = 0.9
+
+class Skill_Maple_Warrior(BaseSkill):
+    _display_name = 'Maple Warrior'
+    _distance = 0
+    key=Key.SKILL_MAPLE_WARRIOR
+    delay=0.9
+    rep_interval=0.5
+    skill_cool_down=500
+    ground_skill=True
+    buff_time=1080
+    combo_delay = 0.9
 
 class AutoHunting(Command):
     _display_name ='自動走位狩獵'

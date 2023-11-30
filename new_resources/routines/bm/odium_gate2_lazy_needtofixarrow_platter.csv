@@ -1,0 +1,19 @@
+*, x=61.000, y=51.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    Skill_Blink_Shot_Summon, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    Skill_Arrow_Blast, direction=right, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    Skill_Arrow_Blast_Up, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=skill_arrow_blast_summon, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+
+@, label=summons
+*, x=73.000, y=24.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=skill_arrow_blast_summon, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    Skill_Arrow_Blast_Summon, direction=right, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=skill_arrow_blast_summon, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+*, x=146.000, y=51.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=skill_erda_fountain, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    Wait, duration=0.1
+    Skill_Erda_Fountain, direction=left, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+*, x=146.000, y=64.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=skill_erda_fountain, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=left, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=left, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    FlashJump, direction=left, jump=false, combo=False, triple_jump=False, fast_jump=false, reverse_triple=false
+    Skill_Arrow_Stream, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    Skill_Blink_Shot, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=

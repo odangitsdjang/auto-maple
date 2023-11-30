@@ -4,3 +4,5 @@ assets/models/
 .settings/
 recording/
 .tmp*
+
+legion_*

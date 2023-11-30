@@ -1,0 +1,14 @@
+*, x=143.000, y=5.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    EndScript, should_back_home=true, home_scroll_key=o, end_time=4:15
+    TeleportCombination, direction=up, combo_skill=skill_erda_fountain|skill_bb, combo_direction=, jump=False, combo2=true
+    TeleportCombination, direction=down, combo_skill=skill_q|skill_w|skill_bb, combo_direction=, jump=False, combo2=true
+*, x=143.000, y=24.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    TeleportCombination, direction=left, combo_skill=skill_q|skill_w|skill_bb, combo_direction=, jump=False, combo2=true
+    TeleportCombination, direction=left, combo_skill=skill_q|skill_w|skill_bb, combo_direction=, jump=False, combo2=true
+*, x=99.000, y=24.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    TeleportCombination, direction=up, combo_skill=skill_q|skill_w|skill_bb, combo_direction=, jump=False, combo2=true
+*, x=99.000, y=12.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    TeleportCombination, direction=left, combo_skill=skill_q|skill_w|skill_bb, combo_direction=, jump=False, combo2=true
+    TeleportCombination, direction=left, combo_skill=skill_q|skill_w|skill_bb, combo_direction=, jump=False, combo2=true
+    TeleportCombination, direction=left, combo_skill=skill_fountain|skill_bb, combo_direction=, jump=False, combo2=true
+*, x=53.000, y=16.000, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=

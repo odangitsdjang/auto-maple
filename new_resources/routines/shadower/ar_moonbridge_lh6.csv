@@ -29,6 +29,7 @@
     Skill_3, direction=, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
     Player_jump, direction=
     Skill_X, direction=down, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    Wait, duration=0.15
     Player_jump, direction=
     Skill_X, direction=down+right, jump=false, rep=1, pre_delay=0, duration=0, combo=false, wait_until_ready=false, direction_after_skill=false, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
 

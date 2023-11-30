@@ -31,7 +31,9 @@ class Key:
     SKILL_FOUNTAIN = '1'
     SKILL_ERDA_FOUNTAIN = '7'
     SKILL_BAHAMUT = '8'
-
+    SKILL_ADVANCED_BLESSING = '='
+    SKILL_DECENT_SHARP_EYES = '-'
+    
     SKILL_R = 'r' # 持續制裁者
     SKILL_S = 's'# 末日烈焰
     SKILL_BB = 'shift' # 火焰之襲
@@ -100,7 +102,7 @@ def step(direction, target):
                 elif abs(d_y) >= 20:
                     TeleportCombination(combo_skill='skill_bb',direction=direction,combo2='true').execute()
                 else:
-                    Teleport(direction=direction).execute()
+                    TeleportCombination(combo_skill='skill_bb',direction=direction,combo2='true').execute()
                 utils.wait_for_is_standing(300)
             else:
                 press(Key.JUMP, 1)
@@ -173,8 +175,11 @@ class Buff(Command):
         super().__init__(locals())
 
     def main(self):
-        Buff_Rotation_1().execute()
-        Buff_Rotation_2().execute()
+        Buff_Rotation_1(pre_delay=0.7).execute()
+        Buff_Rotation_2(pre_delay=0.7).execute()
+        Skill_Advanced_Blessing(pre_delay=0.7).execute()
+        Skill_Decent_Sharp_Eyes(pre_delay=0.7).execute()
+        
 
 class Teleport(BaseSkill):
     _display_name ='瞬移'
@@ -215,7 +220,7 @@ class Skill_BB(BaseSkill):
     skill_cool_down=0
     ground_skill=False
     buff_time=0
-    combo_delay = 0.25
+    combo_delay = 0.1
 
 class Skill_Infinity(BaseSkill):
     _display_name ='Infinity'
@@ -226,7 +231,6 @@ class Skill_Infinity(BaseSkill):
     ground_skill=False
     buff_time=90
     combo_delay = 0.5
-    pre_delay = 0.5
 
 class Skill_Infinity2(BaseSkill):
     _display_name ='Infinity2'
@@ -237,18 +241,16 @@ class Skill_Infinity2(BaseSkill):
     ground_skill=False
     buff_time=90
     combo_delay = 0.5
-    pre_delay = 0.5
 
 class Buff_Rotation_1(BaseSkill):
     _display_name ='Buff First Rotation'
     key=Key.INFINITY
     delay=0.45
     rep_interval=0.5
-    skill_cool_down=90
+    skill_cool_down=180
     ground_skill=False
     buff_time=90
     combo_delay = 0.5
-    pre_delay = 0.5
 
     def main(self):
         self.active_if_not_in_skill_buff = 'buff_rotation_2' # only affects main super().main()
@@ -263,11 +265,10 @@ class Buff_Rotation_2(BaseSkill):
     key=Key.INFINITY2
     delay=0.45
     rep_interval=0.5
-    skill_cool_down=90
+    skill_cool_down=180
     ground_skill=False
     buff_time=90
     combo_delay = 0.5
-    pre_delay = 0.5
 
     def main(self):
         self.active_if_not_in_skill_buff = 'buff_rotation_1' # only affects main super().main()
@@ -307,7 +308,7 @@ class Skill_Q(BaseSkill):
     key=Key.SKILL_Q
     delay=0.65
     rep_interval=0.2
-    skill_cool_down=0
+    skill_cool_down=30
     ground_skill=True
     buff_time=0
     combo_delay = 0.5
@@ -317,7 +318,7 @@ class Skill_W(BaseSkill):
     key=Key.SKILL_W
     delay=0.8
     rep_interval=0.2
-    skill_cool_down=50
+    skill_cool_down=10
     ground_skill=True
     combo_delay = 0.28
 
@@ -368,15 +369,34 @@ class Skill_Fountain(BaseSkill):
     key=Key.SKILL_FOUNTAIN
     delay=0.9
     rep_interval=0.5
-    skill_cool_down=57
+    skill_cool_down=55
     ground_skill=True
     buff_time=60
     combo_delay = 0.9
 
+class Skill_Advanced_Blessing(BaseSkill):
+    _display_name = 'Advanced Blessing'
+    _distance = 0
+    key=Key.SKILL_ADVANCED_BLESSING
+    delay=0.9
+    rep_interval=0.5
+    skill_cool_down=55
+    ground_skill=True
+    buff_time=300
+    combo_delay = 0.9
 
+class Skill_Decent_Sharp_Eyes(BaseSkill):
+    _display_name = 'Decent Sharp Eyes'
+    _distance = 0
+    key=Key.SKILL_DECENT_SHARP_EYES
+    delay=0.9
+    rep_interval=0.5
+    skill_cool_down=180
+    ground_skill=True
+    buff_time=195
+    combo_delay = 0.9
 
-
-
+## NOT USED  ##
 class Skill_3(BaseSkill):
     _display_name ='劇毒連鎖'
     key=Key.SKILL_3
