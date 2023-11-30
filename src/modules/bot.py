@@ -34,7 +34,7 @@ class Bot(Configurable):
         super().__init__('keybindings')
         config.bot = self
 
-        self.rune_active = False
+        self.map_rune_active = False
         self.in_rune_buff = False
         self.rune_pos = (0, 0)
         self.rune_closest_pos = (0, 0)      # Location of the Point closest to rune
@@ -104,7 +104,7 @@ class Bot(Configurable):
                 # Execute next Point in the routine
                 element = config.routine[config.routine.index]
                 element.execute()
-                if self.rune_active and \
+                if self.map_rune_active and \
                     (isinstance(element, Point) \
                         and (element.location == self.rune_closest_pos or utils.distance(config.bot.rune_pos, element.location) <= 40) \
                         and time.time() - float(config.latest_solved_rune) >= (int(settings.rune_cd_min) * 60) \
@@ -156,7 +156,7 @@ class Bot(Configurable):
             print('\nSolving rune:')
             time.sleep(1.5)
             for _ in range(5):
-                if self.rune_active == False:
+                if self.map_rune_active == False:
                     break
                 frame = config.capture.frame
                 height, width, _n = frame.shape
@@ -181,7 +181,7 @@ class Bot(Configurable):
                             if len(rune_buff) >= 2:
                                 config.latest_solved_rune = time.time()
                                 config.should_solve_rune = False
-                                self.rune_active = False
+                                self.map_rune_active = False
                                 self.in_rune_buff = True
                                 find_rune_buff = True
                             if len(rune_buff) >= 3:
@@ -194,7 +194,7 @@ class Bot(Configurable):
                                 utils.game_window_click(target, button='right')
                                 config.latest_solved_rune = time.time()
                                 config.should_solve_rune = False
-                                self.rune_active = False
+                                self.map_rune_active = False
                                 self.in_rune_buff = True
                                 find_rune_buff = True
                                 utils.game_window_click((700,120), button='right')
@@ -202,7 +202,7 @@ class Bot(Configurable):
                             return True
             press("left", 1, down_time=0.05,up_time=0.1)
             press("right", 1, down_time=0.05,up_time=0.1)
-            if self.rune_active == False:
+            if self.map_rune_active == False:
                 break
             time.sleep(2.8) 
         return False

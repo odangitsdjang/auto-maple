@@ -23,7 +23,7 @@ class Minimap(LabelFrame):
 
         minimap = config.capture.minimap
         if minimap:
-            rune_active = minimap['rune_active']
+            map_rune_active = minimap['map_rune_active']
             rune_pos = minimap['rune_pos']
             path = minimap['path']
             player_pos = minimap['player_pos']
@@ -31,7 +31,7 @@ class Minimap(LabelFrame):
             img = cv2.cvtColor(minimap['minimap'], cv2.COLOR_BGR2RGB)
 
             # Mark the position of the active rune
-            if rune_active:
+            if map_rune_active:
                 cv2.circle(img,
                            utils.convert_to_absolute(rune_pos, img),
                            2,

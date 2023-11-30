@@ -90,6 +90,7 @@ SETTING_VALIDATORS = {
     'cd_value': str,
     'story_mode' : validate_boolean,
     'auto_revive' : validate_boolean,
+    'is_shared_map': validate_boolean,
 }
 
 
@@ -112,6 +113,7 @@ def reset():
     cd_value = ''
     story_mode = False
     auto_revive = False
+    is_shared_map = False
     # rent_frenzy = False
     # driver_key = False
     
@@ -147,6 +149,8 @@ story_mode = False
 auto_revive = False
 
 rune_cd_min = 15
+
+is_shared_map = False
 
 #partner id
 partner = ''

@@ -296,7 +296,7 @@ class Capture:
                 # Package display information to be polled by GUI
                 self.minimap = {
                     'minimap': minimap,
-                    'rune_active': config.bot.rune_active,
+                    'map_rune_active': config.bot.map_rune_active,
                     'rune_pos': config.bot.rune_pos,
                     'path': config.path,
                     'player_pos': config.player_pos

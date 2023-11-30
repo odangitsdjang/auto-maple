@@ -987,7 +987,7 @@ class GoToMap(Command):
 
         press('enter')
         config.should_change_channel = False
-        config.bot.rune_active = False
+        config.bot.map_rune_active = False
         config.latest_change_channel_or_map = time.time()
         time.sleep(2.5)
         # for _ in range(10):
@@ -1077,7 +1077,7 @@ class ChangeChannel(Command):
                 config.current_channel = self.target_channel
                 config.latest_change_channel_or_map = time.time()
                 config.should_change_channel = False
-                config.bot.rune_active = False
+                config.bot.map_rune_active = False
                 time.sleep(3)
                 config.map_changing = False
                 if config.should_change_channel and settings.auto_change_channel:

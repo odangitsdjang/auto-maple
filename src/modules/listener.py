@@ -72,7 +72,7 @@ class Listener(Configurable):
     def toggle_enabled():
         """Resumes or pauses the current routine. Plays a sound to notify the user."""
 
-        config.bot.rune_active = False
+        config.bot.map_rune_active = False
         config.should_solve_rune = False
         
         if not config.enabled:

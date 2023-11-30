@@ -32,9 +32,11 @@ ELITE_TEMPLATE = cv2.imread('assets/elite_template2.jpg', 0)
 
 # check for unexpected conversation
 STOP_CONVERSTION_TEMPLATE = cv2.imread('assets/stop_conversation.jpg', 0)
+# STOP_CONVERSTION_TEMPLATE_EN = cv2.imread('assets/stop_conversation_en.jpg', 0)
 
 # check for unexpected conversation
 REVIVE_CONFIRM_TEMPLATE = cv2.imread('assets/revive_confirm.png', 0)
+# REVIVE_CONFIRM_TEMPLATE_EN = cv2.imread('assets/revive_confirm_en.png', 0)
 
 # fiona_lie_detector image
 FIONA_LIE_DETECTOR_TEMPLATE = cv2.imread('assets/fiona_lie_detector.png',0)
@@ -66,6 +68,7 @@ class Notifier:
         self.room_change_threshold = 0.9
         self.rune_alert_delay = 270         # 4.5 minutes
         self.notifier_delay = 0.1
+        self.rune_ready_offset_seconds = 1
         self.skill_template_cd_set = {}
         self.lastest_skill_cd_check_time = 0
 
@@ -206,42 +209,52 @@ class Notifier:
                     self.lastest_skill_cd_check_time = time.time()
 
                 # Check for rune
+                # Add logic that adds coupling to rune cd which adds overhead of having correct rune cd in the routine but reduces operations and chance of triggering false rune alerts
+                # especially on shared (instanced) maps
                 now = time.time()
+                time_since_last_solved_rune = now - config.latest_solved_rune
+
                 if settings.rent_frenzy == False and settings.story_mode == False:
-                    if not config.bot.rune_active:
-                        filtered = utils.filter_color(minimap, RUNE_RANGES)
-                        matches = utils.multi_match(filtered, RUNE_TEMPLATE, threshold=0.9)
-                        rune_start_time = now
-                        if matches and config.routine.sequence:
-                            abs_rune_pos = (matches[0][0], matches[0][1])
-                            config.bot.rune_pos = utils.convert_to_relative(abs_rune_pos, minimap)
-                            print('rune pos : ',config.bot.rune_pos)
-                            distances = list(map(distance_to_rune, config.routine.sequence))
-                            index = np.argmin(distances)
-                            config.bot.rune_closest_pos = config.routine[index].location
-                            print('rune_closest_pos : ',config.bot.rune_closest_pos)
-                            config.bot.rune_active = True
-                            rune_check_count = 0
-                            self._ping('rune_appeared', volume=0.75)
-                    elif now - rune_start_time > self.rune_alert_delay and now - config.latest_solved_rune >= (60 * int(settings.rune_cd_min) + self.rune_alert_delay):     # Alert if rune hasn't been solved
-                        config.bot.rune_active = False
+                                                           
+                    if not config.bot.map_rune_active:
+                        if time_since_last_solved_rune >= (60 * int(settings.rune_cd_min) - self.rune_ready_offset_seconds):
+                            # look for rune on minimap 
+                            filtered = utils.filter_color(minimap, RUNE_RANGES)
+                            matches = utils.multi_match(filtered, RUNE_TEMPLATE, threshold=0.9)
+                            rune_start_time = now
+                            # if rune is on minimap, find closest position and ping the user
+                            if matches and config.routine.sequence:
+                                abs_rune_pos = (matches[0][0], matches[0][1])
+                                config.bot.rune_pos = utils.convert_to_relative(abs_rune_pos, minimap)
+                                print('rune pos : ',config.bot.rune_pos)
+                                distances = list(map(distance_to_rune, config.routine.sequence))
+                                index = np.argmin(distances)
+                                config.bot.rune_closest_pos = config.routine[index].location
+                                print('rune_closest_pos : ',config.bot.rune_closest_pos)
+                                config.bot.map_rune_active = True
+                                rune_check_count = 0
+                                self._ping('rune_appeared', volume=0.75)
+                    elif now - rune_start_time > self.rune_alert_delay and time_since_last_solved_rune >= (60 * int(settings.rune_cd_min) + self.rune_alert_delay):     # Alert if rune hasn't been solved
+                        config.bot.map_rune_active = False
                         # self._send_msg_to_line_notify("解輪耗時過久")
                         if settings.auto_change_channel:
                             config.should_change_channel = True
                         else:
+                            # this may trigger if rune was solved manually and rune spawned later ? 
                             self._alert('siren')
                     elif config.bot.solve_rune_fail_count >= 3 and not settings.auto_change_channel:
                         # self._send_msg_to_line_notify("多次解輪失敗")
+                        config.bot.map_rune_active = False
                         self._alert('siren')
                     else:
-                        # check for rune is actually existing
-                        if detection_i % 50 == 0:
+                        # Rune was active on map, bot.py should have solved it and rune should no longer be active on map after a while
+                        if detection_i % 10 == 0:
                             filtered = utils.filter_color(minimap, RUNE_RANGES)
                             matches = utils.multi_match(filtered, RUNE_TEMPLATE, threshold=0.9)
                             if len(matches) == 0:
-                                if rune_check_count >= 10:
+                                if rune_check_count >= 50:
                                     rune_check_count = 0
-                                    config.bot.rune_active = False
+                                    config.bot.map_rune_active = False
                                 else:
                                     rune_check_count = rune_check_count + 1
                             else:
@@ -254,10 +267,12 @@ class Notifier:
                             rune_buff_bottom = utils.multi_match(frame[:95, :],
                                             RUNE_BUFF_TEMPLATE_BOTTOM,
                                             threshold=0.93)
+                            # if we have rune buff / cd then we don't care about rune on map
                             if len(rune_buff) > 0 or len(rune_buff_bottom) > 0:
-                                config.bot.in_rune_buff = True
+                                config.bot.in_rune_buff = True # not necessary here?
                                 rune_start_time = now
-                                print('in rune buff')
+                                print('in rune buff/cd, turning off map_rune_active')
+                                config.bot.map_rune_active = False
                             else:
                                 config.bot.in_rune_buff = False
 

@@ -46,7 +46,11 @@ Test more images
 * Needs investigation
 
 # Other Bot Issues
-* Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck
-* Bot goes to pick up rune that spawned for another player on instanced  (while having rune buff active)
-* Supporting upscaled 2k resolution (may need to add new MM_TL, MM_BR images and then do further testing)
-* Dying, gets stuck
+* Bot goes to pick up rune that spawned for another player on instanced  (while having rune buff active) - 
+  - Ensure rune cd is correct for its duration and not try to solve another rune during that time  - also consider manual rune solve
+  - rune_active needs to be set to false when someone else on the map solves the rune - introduce a new optional variable per map - isSharedMap
+  - in rune buff' print when someone else solved the rune
+  
+* Supporting upscaled 2k resolution (may need to add new MM_TL, MM_BR images and then do further testing) - TODO after Nexon fixes resolution pixelation issues
+* Dying, gets stuck - (FIX: add english images)
+* Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck (FIX: add english images)
