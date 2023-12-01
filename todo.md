@@ -54,3 +54,17 @@ Test more images
 * Supporting upscaled 2k resolution (may need to add new MM_TL, MM_BR images and then do further testing) - TODO after Nexon fixes resolution pixelation issues
 * Dying, gets stuck - (FIX: add english images)
 * Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck (FIX: add english images)
+
+
+# Rune logic
+
+## rune is not active on the map 
+  -> if rune time is greater than cd (automatically solved) and doesnt have rune cd/buff (not manually solved)
+    -> check for rune on map 
+## else if rune is active on the map 
+  -> wait for solve rune to complete (bot.py)
+    -> check for rune active on map
+      -> set to rune not active 
+    -> check for rune on buff bar
+      -> set to rune not active
+      -> set to rune solved now 

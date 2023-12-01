@@ -66,7 +66,6 @@ class Notifier:
         self.thread.daemon = True
 
         self.room_change_threshold = 0.9
-        self.rune_alert_delay = 270         # 4.5 minutes
         self.notifier_delay = 0.1
         self.rune_ready_offset_seconds = 1
         self.skill_template_cd_set = {}
@@ -214,10 +213,11 @@ class Notifier:
                 now = time.time()
                 time_since_last_solved_rune = now - config.latest_solved_rune
 
-                if settings.rent_frenzy == False and settings.story_mode == False:
-                                                           
+                if settings.rent_frenzy == False and settings.story_mode == False:                    
                     if not config.bot.map_rune_active:
-                        if time_since_last_solved_rune >= (60 * int(settings.rune_cd_min) - self.rune_ready_offset_seconds):
+                        if (time_since_last_solved_rune >= (60 * int(settings.rune_cd_min) - self.rune_ready_offset_seconds)) and (
+                            not self.has_rune_buff(frame)
+                        ):
                             # look for rune on minimap 
                             filtered = utils.filter_color(minimap, RUNE_RANGES)
                             matches = utils.multi_match(filtered, RUNE_TEMPLATE, threshold=0.9)
@@ -234,14 +234,6 @@ class Notifier:
                                 config.bot.map_rune_active = True
                                 rune_check_count = 0
                                 self._ping('rune_appeared', volume=0.75)
-                    elif now - rune_start_time > self.rune_alert_delay and time_since_last_solved_rune >= (60 * int(settings.rune_cd_min) + self.rune_alert_delay):     # Alert if rune hasn't been solved
-                        config.bot.map_rune_active = False
-                        # self._send_msg_to_line_notify("解輪耗時過久")
-                        if settings.auto_change_channel:
-                            config.should_change_channel = True
-                        else:
-                            # this may trigger if rune was solved manually and rune spawned later ? 
-                            self._alert('siren')
                     elif config.bot.solve_rune_fail_count >= 3 and not settings.auto_change_channel:
                         # self._send_msg_to_line_notify("多次解輪失敗")
                         config.bot.map_rune_active = False
@@ -261,14 +253,7 @@ class Notifier:
                                 rune_check_count = 0
                         
                             # check in rune buff
-                            rune_buff = utils.multi_match(frame[:65, :],
-                                            RUNE_BUFF_TEMPLATE,
-                                            threshold=0.93)
-                            rune_buff_bottom = utils.multi_match(frame[:95, :],
-                                            RUNE_BUFF_TEMPLATE_BOTTOM,
-                                            threshold=0.93)
-                            # if we have rune buff / cd then we don't care about rune on map
-                            if len(rune_buff) > 0 or len(rune_buff_bottom) > 0:
+                            if self.has_rune_buff(frame):
                                 config.bot.in_rune_buff = True # not necessary here?
                                 rune_start_time = now
                                 print('in rune buff/cd, turning off map_rune_active')
@@ -278,6 +263,15 @@ class Notifier:
 
                 detection_i = detection_i + 1
             time.sleep(self.notifier_delay)
+    
+    def has_rune_buff(frame):
+        rune_buff = utils.multi_match(frame[:65, :],
+            RUNE_BUFF_TEMPLATE,
+            threshold=0.93)
+        rune_buff_bottom = utils.multi_match(frame[:95, :],
+            RUNE_BUFF_TEMPLATE_BOTTOM,
+            threshold=0.93)
+        return (len(rune_buff) > 0 or len(rune_buff_bottom) > 0)
 
     # def _send_msg_to_line_notify(self,msg,file=None):
     #     url = "https://notify-api.line.me/api/notify"
