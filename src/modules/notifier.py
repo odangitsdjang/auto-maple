@@ -134,21 +134,21 @@ class Notifier:
                 # not urgen detection 
                 if detection_i % 5==0:
                     # check for rune curse
-                    if settings.rent_frenzy == False and settings.story_mode == False:
-                        curse_frame = frame[0:height // 2, 0:width//2]
-                        rune_curse_detector = utils.multi_match(curse_frame, RUNE_CURSE_TEMPLATE, threshold=0.9)
-                        if len(rune_curse_detector) > 0:
-                            print("find rune_curse_detector")
-                            if settings.auto_change_channel:
-                                if config.should_change_channel == False and config.should_solve_rune == False:
-                                    if time.time() - config.latest_change_channel_or_map <= 60:
-                                        config.should_solve_rune = True
-                                    else:
-                                        config.should_change_channel = True
-                                    self._ping('rune_appeared', volume=0.75)
-                            else:
-                                # self._send_msg_to_line_notify("輪之詛咒")
-                                self._alert('siren')
+                    # if settings.rent_frenzy == False and settings.story_mode == False:
+                    #     curse_frame = frame[0:height // 2, 0:width//2]
+                    #     rune_curse_detector = utils.multi_match(curse_frame, RUNE_CURSE_TEMPLATE, threshold=0.9)
+                    #     if len(rune_curse_detector) > 0:
+                    #         print("find rune_curse_detector")
+                    #         if settings.auto_change_channel:
+                    #             if config.should_change_channel == False and config.should_solve_rune == False:
+                    #                 if time.time() - config.latest_change_channel_or_map <= 60:
+                    #                     config.should_solve_rune = True
+                    #                 else:
+                    #                     config.should_change_channel = True
+                    #                 self._ping('rune_appeared', volume=0.75)
+                    #         else:
+                    #             # self._send_msg_to_line_notify("輪之詛咒")
+                    #             self._alert('siren')
 
                     # check for unexpected conversation
                     if not settings.story_mode:
