@@ -14,3 +14,4 @@ pywinio
 clipboard
 requests
 matplotlib
+python-dotenv

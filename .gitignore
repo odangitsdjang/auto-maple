@@ -5,4 +5,6 @@ assets/models/
 recording/
 .tmp*
 
+.env
 legion_*
+src/common/mvp

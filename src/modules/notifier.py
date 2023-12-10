@@ -1,6 +1,6 @@
 """A module for detecting and notifying the user of dangerous in-game events."""
 
-from src.common import config, utils, settings
+from src.common import config, utils, settings, mvp
 import time
 import os
 import cv2
@@ -108,6 +108,12 @@ class Notifier:
                     elif settings.auto_change_channel:
                         pass
                         # config.should_change_channel = True
+                
+                # Check for mvp every x frames, if found post discord message with a limit of every y minutes,
+                # Do not post same mvp message twice, keep track of previous message
+                mvp_img_point = mvp.get_mvp_announced_pixel_location(frame)
+                if len(mvp_img_point) > 0:
+                    mvp.send_mvp_notif_to_discord(frame, mvp_img_point)
 
                 if settings.rent_frenzy == False and not settings.story_mode:
                     # Check for other players entering the map

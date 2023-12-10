@@ -9,8 +9,6 @@
     * 
 
 
-
-
 ## b. PINK/PURPLE/BLUEORANGE ARROW ISSUE
 * Issue Reason: filter_color is only filtering hue from 1-75, which includes only red, orange, yellow, green
 * Solution Proposal: Include more colors in filter_color but be more specific on Saturation and Value to maintain the noise 
@@ -46,25 +44,12 @@ Test more images
 * Needs investigation
 
 # Other Bot Issues
-* Bot goes to pick up rune that spawned for another player on instanced  (while having rune buff active) - 
-  - Ensure rune cd is correct for its duration and not try to solve another rune during that time  - also consider manual rune solve
-  - rune_active needs to be set to false when someone else on the map solves the rune - introduce a new optional variable per map - isSharedMap
-  - in rune buff' print when someone else solved the rune
-  
 * Supporting upscaled 2k resolution (may need to add new MM_TL, MM_BR images and then do further testing) - TODO after Nexon fixes resolution pixelation issues
 * Dying, gets stuck - (FIX: add english images)
 * Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck (FIX: add english images)
 
+# Adding MVP pings to discord bot while bot is running
+## TODO: Every x mins (optional: if buff is not up), change map, (cc), grab the MVP at the announced time and come back 
 
-# Rune logic
 
-## rune is not active on the map 
-  -> if rune time is greater than cd (automatically solved) and doesnt have rune cd/buff (not manually solved)
-    -> check for rune on map 
-## else if rune is active on the map 
-  -> wait for solve rune to complete (bot.py)
-    -> check for rune active on map
-      -> set to rune not active 
-    -> check for rune on buff bar
-      -> set to rune not active
-      -> set to rune solved now 
+chatbox 12.5 px up to down
