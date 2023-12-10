@@ -80,12 +80,15 @@ class Notifier:
     def _main(self):
         self.ready = True
         prev_others = 0
-        rune_start_time = time.time()
+        prev_mvp = 0
+        prev_mvp_timer = 0
         detection_i = 0
         rune_check_count = 0
 
         while True:
             if config.enabled:
+                now = time.time()
+
                 frame = config.capture.frame
                 height, width, _ = frame.shape
                 minimap = config.capture.minimap['minimap']
@@ -109,11 +112,18 @@ class Notifier:
                         pass
                         # config.should_change_channel = True
                 
-                # Check for mvp every x frames, if found post discord message with a limit of every y minutes,
-                # Do not post same mvp message twice, keep track of previous message
+                # Check for mvp every x frames, if found post discord message with a limit of every 1 minute,
+                # TODO: Do not post same mvp message twice, keep track of previous message
                 mvp_img_point = mvp.get_mvp_announced_pixel_location(frame)
                 if len(mvp_img_point) > 0:
-                    mvp.send_mvp_notif_to_discord(frame, mvp_img_point)
+                    print(mvp_img_point[0])
+                    mvp_img_point = mvp_img_point[0]
+                    cropped_img = mvp.get_cropped_img(frame, mvp_img_point)
+                    # if not prev_mvp === cropped_img and now > prev_mvp_timer + 60:
+                    if now > prev_mvp_timer + 60: 
+                        mvp.send_mvp_notif_to_discord(cropped_img)
+                        prev_mvp = frame
+                        prev_mvp_timer = now 
 
                 if settings.rent_frenzy == False and not settings.story_mode:
                     # Check for other players entering the map
@@ -128,14 +138,14 @@ class Notifier:
                         prev_others = others
 
                 # check for fiona_lie_detector
-                fiona_frame = frame[height-400:height, width - 300:width]
-                fiona_lie_detector = utils.multi_match(fiona_frame, FIONA_LIE_DETECTOR_TEMPLATE, threshold=0.9)
-                if len(fiona_lie_detector) > 0:
-                    print("find fiona_lie_detector")
-                    # self._send_msg_to_line_notify("菲歐娜測謊")
-                    # if settings.rent_frenzy == False:
-                    self._alert('siren')
-                    time.sleep(0.1)
+                # fiona_frame = frame[height-400:height, width - 300:width]
+                # fiona_lie_detector = utils.multi_match(fiona_frame, FIONA_LIE_DETECTOR_TEMPLATE, threshold=0.9)
+                # if len(fiona_lie_detector) > 0:
+                #     print("find fiona_lie_detector")
+                #     # self._send_msg_to_line_notify("菲歐娜測謊")
+                #     # if settings.rent_frenzy == False:
+                #     self._alert('siren')
+                #     time.sleep(0.1)
                     
                 # not urgen detection 
                 if detection_i % 5==0:
@@ -216,7 +226,6 @@ class Notifier:
                 # Check for rune
                 # Add logic that adds coupling to rune cd which adds overhead of having correct rune cd in the routine but reduces operations and chance of triggering false rune alerts
                 # especially on shared (instanced) maps
-                now = time.time()
                 time_since_last_solved_rune = now - config.latest_solved_rune
 
                 if settings.rent_frenzy == False and settings.story_mode == False:                    
@@ -270,7 +279,7 @@ class Notifier:
                 detection_i = detection_i + 1
             time.sleep(self.notifier_delay)
     
-    def has_rune_buff(frame):
+    def has_rune_buff(self, frame):
         rune_buff = utils.multi_match(frame[:65, :],
             RUNE_BUFF_TEMPLATE,
             threshold=0.93)
