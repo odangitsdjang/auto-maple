@@ -121,11 +121,11 @@ class Notifier:
                     # template should be the smaller sized of the two, set the vars appropriately
                     if (len(prev_mvp) > len(cropped_img)):
                         template = cropped_img
-                        frame = prev_mvp
+                        frame_cp = prev_mvp
                     else:
                         template = prev_mvp
-                        frame = cropped_img
-                    if len(prev_mvp) == 0 or (not mvp.is_same_message(frame, cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)) and now > prev_mvp_timer + 60):
+                        frame_cp = cropped_img
+                    if len(prev_mvp) == 0 or (not mvp.is_same_message(frame_cp, cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)) and now > prev_mvp_timer + 60):
                         discord.send_img_msg_to_discord(cropped_img)
                         prev_mvp = cropped_img
                         prev_mvp_timer = now 

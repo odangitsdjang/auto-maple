@@ -307,7 +307,6 @@ class Skill_Arrow_Blast(BaseSkill):
     combo_delay = 0.05
     def main(self):
         super().main()
-        if (self.direction): key_up(self.direction)
 
 class Skill_Arrow_Blast_Up(BaseSkill):
     _display_name = 'Arrow Blast/Platter Up'
@@ -335,7 +334,6 @@ class Skill_Arrow_Blast_Summon(BaseSkill):
 
     def main(self):
         super().main()
-        if (self.direction): key_up(self.direction)
         time.sleep(utils.rand_float(0.1, 0.15))
         press(Key.INTERACT, 1, down_time=.03)
         key_up(Key.ARROW_BLAST)

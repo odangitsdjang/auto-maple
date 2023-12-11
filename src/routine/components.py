@@ -745,7 +745,8 @@ class BaseSkill(Command):
 
     def __init__(self, direction='',jump='false',rep='1',pre_delay='0',duration='0',\
             combo='false',wait_until_ready='false',direction_after_skill='false',\
-            active_if_skill_ready='',active_if_skill_cd='',active_if_in_skill_buff='',active_if_not_in_skill_buff=''\
+            active_if_skill_ready='',active_if_skill_cd='',active_if_in_skill_buff='',active_if_not_in_skill_buff='',\
+            key_down_direction='false', skill_hold_duration='0'\
             ):
         super().__init__(locals())
         self.direction = settings.validate_arrows(direction)
@@ -753,12 +754,14 @@ class BaseSkill(Command):
         self.rep = settings.validate_nonnegative_int(rep)
         self.duration = float(duration)
         self.pre_delay = float(pre_delay)
+        self.skill_hold_duration = float(skill_hold_duration)
         if not self._custom_id in config.is_skill_ready_collector:
             config.is_skill_ready_collector[self._custom_id] = True
             config.skill_cd_timer[self._custom_id] = 0
         self.combo = settings.validate_boolean(combo)
         self.wait_until_ready = settings.validate_boolean(wait_until_ready)
         self.direction_after_skill = settings.validate_boolean(direction_after_skill)
+        self.key_down_direction = settings.validate_boolean(key_down_direction)
         if self.skill_cool_down > 5 and settings.cd_value != '':
             cd_percent_and_sec = settings.cd_value.split('%')
             self.skill_cool_down = self.skill_cool_down * (1-0.01*float(cd_percent_and_sec[0]))
@@ -852,7 +855,7 @@ class BaseSkill(Command):
                 if self.duration != 0:
                     time.sleep(utils.rand_float(self.duration*0.97, self.duration*1.03))
                 if i == (self.rep-1):
-                    if not self.key_down_skill and self.fast_direction:
+                    if not self.key_down_direction and self.fast_direction:
                         key_up(self.direction,up_time=0.05)
                 if not self.key_down_skill:
                     key_up(self.key,up_time=0.02)
@@ -864,6 +867,8 @@ class BaseSkill(Command):
                     rep_interval = self.rep_interval+self.rep_interval_increase*i
                     time.sleep(utils.rand_float(rep_interval*0.95, rep_interval*1.05))
             # if self.skill_cool_down != 0:
+            if self.key_down_skill and self.skill_hold_duration:
+                time.sleep(utils.rand_float(self.skill_hold_duration*0.99, self.skill_hold_duration*1.02)) 
             self.consume_maintained()
             self.set_my_last_cooldown(time.time())
             if self.combo:

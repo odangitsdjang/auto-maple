@@ -48,8 +48,7 @@ Test more images
 * Dying, gets stuck - (FIX: add english images)
 * Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck (FIX: add english images)
 
-# Adding MVP pings to discord bot while bot is running
 ## TODO: Every x mins (optional: if buff is not up), change map, (cc), grab the MVP at the announced time and come back 
-
-
-chatbox 12.5 px up to down
+## TODO: Commerci daily voyages
+## TODO: Grandis dailies
+## TODO: Arcane River dailies

@@ -30,3 +30,19 @@ def get_cropped_img(frame, mvp_img_point):
     height_end_max =  h - TEXT_LINE_DEPTH # prevent showing exp bar
 
     return frame[height_min:min(height_end, height_end_max), FILTER_WIDTH_START:FILTER_WIDTH_END]
+
+#TODO
+def should_grab_mvp():
+    return
+
+#TODO
+def get_channel(frame):
+    return
+
+#TODO
+def get_map(frame):
+    return
+
+#TODO
+def parse_map(frame):
+    return
