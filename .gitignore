@@ -7,4 +7,4 @@ recording/
 
 .env
 legion_*
-src/common/mvp
+testing/*

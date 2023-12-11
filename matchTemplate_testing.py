@@ -2,6 +2,9 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
+TEST_FRAME = cv2.imread('assets/image_2a.jpg', 1)
+TEST_TEMPLATE = cv2.imread('assets/image2b.jpg', 0)
+
 def multi_match(frame, template, threshold=0.95,save_result = False):
     """
     Finds all matches in FRAME that are similar to TEMPLATE by at least THRESHOLD.
@@ -38,6 +41,12 @@ def multi_match(frame, template, threshold=0.95,save_result = False):
         plt.show()   
     return results
 
-RUNE_BUFF_TEMPLATE = cv2.imread('assets/rune_buff_template.jpg', 0)
-frame = cv2.imread('test_rune_2.PNG', 1)
-r = multi_match(frame[:35, :],RUNE_BUFF_TEMPLATE,0.93,save_result=True)
+# RUNE_BUFF_TEMPLATE = cv2.imread('assets/rune_buff_template.jpg', 0)
+# frame = cv2.imread('test_rune_2.PNG', 1)
+# r = multi_match(frame[:35, :],RUNE_BUFF_TEMPLATE,0.93,save_result=True)
+
+# template should be the smaller sized of the two, set the vars appropriately
+print(len(TEST_TEMPLATE))
+print(len(TEST_FRAME))
+
+multi_match(TEST_FRAME,TEST_TEMPLATE, threshold=0.47,save_result=True)

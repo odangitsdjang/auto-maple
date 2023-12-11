@@ -1,6 +1,6 @@
 """A module for detecting and notifying the user of dangerous in-game events."""
 
-from src.common import config, utils, settings, mvp
+from src.common import config, utils, settings, mvp, discord
 import time
 import os
 import cv2
@@ -80,7 +80,7 @@ class Notifier:
     def _main(self):
         self.ready = True
         prev_others = 0
-        prev_mvp = 0
+        prev_mvp = []
         prev_mvp_timer = 0
         detection_i = 0
         rune_check_count = 0
@@ -113,16 +113,21 @@ class Notifier:
                         # config.should_change_channel = True
                 
                 # Check for mvp every x frames, if found post discord message with a limit of every 1 minute,
-                # TODO: Do not post same mvp message twice, keep track of previous message
                 mvp_img_point = mvp.get_mvp_announced_pixel_location(frame)
                 if len(mvp_img_point) > 0:
-                    print(mvp_img_point[0])
                     mvp_img_point = mvp_img_point[0]
                     cropped_img = mvp.get_cropped_img(frame, mvp_img_point)
-                    # if not prev_mvp === cropped_img and now > prev_mvp_timer + 60:
-                    if now > prev_mvp_timer + 60: 
-                        mvp.send_mvp_notif_to_discord(cropped_img)
-                        prev_mvp = frame
+                    print(len(prev_mvp))
+                    # template should be the smaller sized of the two, set the vars appropriately
+                    if (len(prev_mvp) > len(cropped_img)):
+                        template = cropped_img
+                        frame = prev_mvp
+                    else:
+                        template = prev_mvp
+                        frame = cropped_img
+                    if len(prev_mvp) == 0 or (not mvp.is_same_message(frame, cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)) and now > prev_mvp_timer + 60):
+                        discord.send_img_msg_to_discord(cropped_img)
+                        prev_mvp = cropped_img
                         prev_mvp_timer = now 
 
                 if settings.rent_frenzy == False and not settings.story_mode:
