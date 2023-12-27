@@ -22,6 +22,7 @@ class Key:
     GRITTY = "q"
 
     # Buffs
+    SKILL_DECENT_HOLY_SYMBOL = "f5"
     BUFF_1 = "9"
     BUFF_2 = "0"
     BUFF_3 = "-"
@@ -185,6 +186,7 @@ class Buff(Command):
     # bm is a 2 min dpm class, separate burst skills into two timers to elongate burst / mob more effectively
     def main(self):
         Skill_Maple_Warrior().execute()
+        Skill_Decent_Holy_Symbol(pre_delay="0.5").execute()
 
 class FlashJump(Command):
     """Performs a flash jump in the given direction."""
@@ -267,7 +269,18 @@ class Skill_Attack(BaseSkill):
     _display_name = 'Basic Attack'
     _distance = 0
     key=Key.ATTACK
-    delay=0.3 # with decent speed infusion, needs test
+    delay=0.3 
+    rep_interval=0.5
+    skill_cool_down=0
+    ground_skill=False
+    buff_time=0
+    combo_delay = 0.05
+
+class Skill_Attack_Slow(BaseSkill):
+    _display_name = 'Basic Attack Slow AS7'
+    _distance = 0
+    key=Key.ATTACK
+    delay=0.5
     rep_interval=0.5
     skill_cool_down=0
     ground_skill=False
@@ -306,6 +319,17 @@ class Skill_Maple_Warrior(BaseSkill):
     ground_skill=True
     buff_time=0
     combo_delay = 0.2
+
+class Skill_Decent_Holy_Symbol(BaseSkill):
+    _display_name = 'Decent HS'
+    _distance = 0
+    key=Key.SKILL_DECENT_HOLY_SYMBOL
+    delay=0.9
+    rep_interval=0.5
+    skill_cool_down=180
+    ground_skill=True
+    buff_time=220
+    combo_delay = 0.9
 
 class Skill_Buff_1(BaseSkill):
     _display_name = 'Buff 1'
