@@ -161,6 +161,7 @@ class Bot(Configurable):
                 frame = config.capture.frame
                 height, width, _n = frame.shape
                 solution_frame = frame[height//2-300:height//2+30, width //2-500:width//2+500]
+                # TODO: remove noise
                 cv2.imwrite('./recording/s_' + str(time.time()) + '.png',frame)
                 solution = detection.merge_detection(model, frame)
                 if solution:

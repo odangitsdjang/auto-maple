@@ -183,7 +183,6 @@ class Buff(Command):
     def __init__(self):
         super().__init__(locals())
           
-    # bm is a 2 min dpm class, separate burst skills into two timers to elongate burst / mob more effectively
     def main(self):
         Skill_Maple_Warrior().execute()
         Skill_Decent_Holy_Symbol(pre_delay="0.5").execute()

@@ -27,6 +27,19 @@ OTHER_RANGES = (
 other_filtered = utils.filter_color(cv2.imread('assets/other_template.png'), OTHER_RANGES)
 OTHER_TEMPLATE = cv2.cvtColor(other_filtered, cv2.COLOR_BGR2GRAY)
 
+MINIMAP_EXP_PORTAL_RANGES = (
+    ((5, 150, 200),  (10, 255, 255)),
+)
+minimap_exp_portal_filtered = utils.filter_color(cv2.imread('assets/minimap_exp_portal_template.png'), MINIMAP_EXP_PORTAL_RANGES)
+EXP_PORTAL_TEMPLATE = cv2.cvtColor(minimap_exp_portal_filtered, cv2.COLOR_BGR2GRAY)
+
+
+ESPECIA_PORTAL_RANGE = (
+    ((125, 30, 230), (151, 90, 255)),
+)
+especia_filtered = utils.filter_color(cv2.imread('assets/especia_template.png'), ESPECIA_PORTAL_RANGE)
+ESPECIA_TEMPLATE = cv2.cvtColor(especia_filtered, cv2.COLOR_BGR2GRAY)
+
 # The Elite Boss's warning sign
 ELITE_TEMPLATE = cv2.imread('assets/elite_template2.jpg', 0)
 
@@ -80,10 +93,15 @@ class Notifier:
     def _main(self):
         self.ready = True
         prev_others = 0
-        prev_mvp = []
-        prev_mvp_timer = 0
         detection_i = 0
         rune_check_count = 0
+
+        prev_mvp = []
+        prev_mvp_timer = 0
+        mvp_ping_interval = 60 # seconds
+        
+        prev_especia_timer = 0
+        especia_ping_interval = 91 # seconds
 
         while True:
             if config.enabled:
@@ -117,7 +135,6 @@ class Notifier:
                 if len(mvp_img_point) > 0:
                     mvp_img_point = mvp_img_point[0]
                     cropped_img = mvp.get_cropped_img(frame, mvp_img_point)
-                    print(len(prev_mvp))
                     # template should be the smaller sized of the two, set the vars appropriately
                     if (len(prev_mvp) > len(cropped_img)):
                         template = cropped_img
@@ -125,10 +142,24 @@ class Notifier:
                     else:
                         template = prev_mvp
                         frame_cp = cropped_img
-                    if len(prev_mvp) == 0 or (not mvp.is_same_message(frame_cp, cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)) and now > prev_mvp_timer + 60):
+                    if len(prev_mvp) == 0 or (not mvp.is_same_message(frame_cp, cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)) and now > prev_mvp_timer + mvp_ping_interval):
                         discord.send_img_msg_to_discord(cropped_img)
                         prev_mvp = cropped_img
                         prev_mvp_timer = now 
+
+                # Check for Especia portal
+                if now == 0 or now > prev_especia_timer + especia_ping_interval:
+                    # check minimap for red/orange portal first (starforce(?) maps have orange portal all the time though)
+                    filtered = utils.filter_color(minimap, MINIMAP_EXP_PORTAL_RANGES)
+                    does_portal_exist = utils.multi_match(filtered, EXP_PORTAL_TEMPLATE, threshold=0.9)
+
+                    if len(does_portal_exist) > 0:
+                        filtered_frame = utils.filter_color(frame, ESPECIA_PORTAL_RANGE)
+                        matches = utils.multi_match(filtered_frame, ESPECIA_TEMPLATE, threshold=0.4)
+
+                        if len(matches) > 0:
+                            discord.send_msg_to_discord("especia") + time
+                            prev_especia_timer = now
 
                 if settings.rent_frenzy == False and not settings.story_mode:
                     # Check for other players entering the map

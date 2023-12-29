@@ -264,7 +264,7 @@ def multi_match(frame, template, threshold=0.95,save_result = False):
         ax[1].imshow(template,'gray') 
         ax[2].set_title('img_disp')
         ax[2].imshow(cv2.cvtColor(img_disp,cv2.COLOR_BGR2RGB)) 
-        plt.savefig('plot.png') 
+        plt.savefig('testing/plot.png') 
     return results
 
 def single_match_with_threshold(frame, template, threshold=0.95):

@@ -8,3 +8,4 @@ recording/
 .env
 legion_*
 testing/*
+src/common/mvp/*

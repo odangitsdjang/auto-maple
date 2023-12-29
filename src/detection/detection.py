@@ -109,6 +109,18 @@ def get_boxes(model, image):
     boxes = [t[1:] for t in pruned]
     return boxes
 
+# TODO 
+def crop_for_rune_solve(frame):
+    return
+
+# TODO 
+def remove_combo_orbs(frame):
+    return frame
+
+# TODO
+def remove_noise(frame):
+    filtered = remove_combo_orbs(frame)
+    return filtered
 
 @utils.run_if_enabled
 def merge_detection(model, image):

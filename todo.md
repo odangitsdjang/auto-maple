@@ -40,15 +40,21 @@ Test more images
 * Another option: use bitwise_or to create unified mask https://stackoverflow.com/questions/48109650/how-to-detect-two-different-colors-using-cv2-inrange-in-python-opencv 
   - get HSV values for all combination of arrows, allow those colors (OR) in the filter_color 
 
-## c. Full screen issue (doesn't reach the right arrows?)
+## c. Doesn't solve with yellow combo orbs on the screen most of the time
+* Filter out yellow combo orb and run rune solver on filtered frame?
+
+## d. Full screen issue (doesn't reach the right arrows?)
 * Needs investigation
 
 # Other Bot Issues
-* Supporting upscaled 2k resolution (may need to add new MM_TL, MM_BR images and then do further testing) - TODO after Nexon fixes resolution pixelation issues
+* Supporting upscaled 2k resolution (may need to add new MM_TL, MM_BR images and then do further testing)
 * Dying, gets stuck - (FIX: add english images)
 * Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck (FIX: add english images)
+* Pressing interact(?) button on flower/veins on a character without mining unlocked opens dialogue
 
 ## TODO: Every x mins (optional: if buff is not up), change map, (cc), grab the MVP at the announced time and come back 
+## TODO: Fix hardcoded mvp chatbox area - chatbox 12.5 px up to down
+
 ## TODO: Commerci daily voyages
 ## TODO: Grandis dailies
 ## TODO: Arcane River dailies
