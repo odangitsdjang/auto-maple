@@ -158,7 +158,7 @@ class Notifier:
                         matches = utils.multi_match(filtered_frame, ESPECIA_TEMPLATE, threshold=0.4)
 
                         if len(matches) > 0:
-                            discord.send_msg_to_discord("especia") + time
+                            discord.send_msg_to_discord("especia")
                             prev_especia_timer = now
 
                 if settings.rent_frenzy == False and not settings.story_mode:
