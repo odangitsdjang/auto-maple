@@ -4,4 +4,5 @@
 * 12/28/2023: purple portal ping to discord with spawn time (90s spawn)
    * frequency of portal should be every 4 * (10 mins + (1000 kills / ? kpm ))  = ~ 56-60 mins for 200-250 kpm
    * more info on portal https://strategywiki.org/wiki/MapleStory/Bounty_Hunt
-*
+* 1/3/2024: Added missing commits back from original repo (PR#150) from May - Jul, Dec 2022 
+* Soon: Update some assets to support GMS instead, better handling of unexpected popups, more discord pings, removed unnecessary code

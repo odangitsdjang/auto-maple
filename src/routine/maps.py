@@ -29,9 +29,9 @@ class WorldMap():
         self.MAP_CHECK_BR = self.get_final_pos(200,48)
 
         # worlds
-        self.MAPLE_WORLD_PONINT = self.get_final_pos(60,31)
-        self.GRANDIS_PONINT = self.get_final_pos(60,31+self.MENU_GAP*1)
-        self.ARCANE_RIVER_PONINT = self.get_final_pos(60,31+self.MENU_GAP*2)
+        self.MAPLE_WORLD_POINT = self.get_final_pos(60,31)
+        self.GRANDIS_POINT = self.get_final_pos(60,31+self.MENU_GAP*1)
+        self.ARCANE_RIVER_POINT = self.get_final_pos(60,31+self.MENU_GAP*2)
 
         # areas - arcane river
         self.VANISHING_JOURNEY = self.get_final_pos(185,47)
@@ -52,21 +52,21 @@ class WorldMap():
             "鏡光大海3" : {
                 'map_name' : '鏡光大海3',
                 'check_image' : self.MAP_CHECK_DIR + '/mirror_touched_sea3.png',
-                'world_selection_point':self.ARCANE_RIVER_PONINT,
+                'world_selection_point':self.ARCANE_RIVER_POINT,
                 'area_selection_point':self.ESFERA,
                 'point':self.get_final_pos(487,430)
             },
             "鏡光大海2" : {
                 'map_name' : '鏡光大海2',
                 'check_image' : self.MAP_CHECK_DIR + '/mirror_touched_sea2.png',
-                'world_selection_point':self.ARCANE_RIVER_PONINT,
+                'world_selection_point':self.ARCANE_RIVER_POINT,
                 'area_selection_point':self.ESFERA,
                 'point':self.get_final_pos(416,394)
             },
             "五道洞穴的上路" : {
                 'map_name' : '五道洞穴的上路',
                 'check_image' : self.MAP_CHECK_DIR + '/five_road_upper_path.png',
-                'world_selection_point':self.ARCANE_RIVER_PONINT,
+                'world_selection_point':self.ARCANE_RIVER_POINT,
                 'area_selection_point':self.ARCANA,
                 'point':self.get_final_pos(256,455)
             },
@@ -78,7 +78,9 @@ class WorldMap():
             point = utils.multi_match(frame, self.MAP_OPEN_PNG, threshold=0.95)
             if len(point) > 0:
                 print("world map opened")
+                print(f'point: {point}')
                 self.standard_point = (point[0][0]-431,point[0][1]-10)
+                print(f'standard point: {self.standard_point}')
                 return self.standard_point
             else:
                 time.sleep(0.3)

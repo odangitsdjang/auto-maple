@@ -1,4 +1,18 @@
-# Rune solver issue - Notes
+## TODO List; ordered relative to priority
+
+## TODO: Rune solve improvement - idea: capture frame before clicking rune, capture frame after and filter out the same area from before to black
+
+## TODO: Commerci daily voyages
+## TODO: Grandis dailies
+## TODO: Arcane River dailies
+## TODO: Enter Especia, play minigame, exit, continue farming (Need to resummon/restart from beginning of the routine)
+
+## TODO: Restart after crash - which occasionally happens during rune solve - save settings 
+## TODO: Grab MVP, every x mins (optional: if buff is not up), change map, (cc), grab the MVP at the announced time and come back 
+## TODO: Find better burning maps
+## TODO: Fix hardcoded mvp chatbox area - chatbox 12.5 px up to down
+
+# Rune solver issue - Notes - Deprioritized for feature development
 
 ## a. SPINNER ISSUE
 * Current frame recording “s_timeframe” recordings spinners are exactly opposite in direction (if it went straight?) within 1 frame
@@ -51,10 +65,3 @@ Test more images
 * Dying, gets stuck - (FIX: add english images)
 * Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck (FIX: add english images)
 * Pressing interact(?) button on flower/veins on a character without mining unlocked opens dialogue
-
-## TODO: Every x mins (optional: if buff is not up), change map, (cc), grab the MVP at the announced time and come back 
-## TODO: Fix hardcoded mvp chatbox area - chatbox 12.5 px up to down
-
-## TODO: Commerci daily voyages
-## TODO: Grandis dailies
-## TODO: Arcane River dailies

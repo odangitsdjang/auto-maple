@@ -22,7 +22,7 @@ def send_img_msg_to_discord(img, channel=os.getenv("MVP_CHANNEL_ID"), bot_token=
     }
 
     data = {
-        'content': f'<@&{os.getenv("MVP_NOTIFICATION_ROLE_ID")}>', # ping specific role
+        'content': f'<@&{os.getenv("DISCORD_MVP_NOTIFICATION_ROLE_ID")}>', # ping specific role
     }
 
     if mention: files["payload_json"] = (None, json.dumps(data))
@@ -36,7 +36,11 @@ def send_img_msg_to_discord(img, channel=os.getenv("MVP_CHANNEL_ID"), bot_token=
     else:
         response.raise_for_status()
 
-def send_msg_to_discord(msg, channel=os.getenv("ESPECIA_CHANNEL_ID"), bot_token=os.getenv("DISCORD_ESPECIA_TOKEN"), include_time=True):
+def send_msg_to_discord(msg, channel=os.getenv("MS_GENERAL_CHANNEL_ID"), 
+                        bot_token=os.getenv("DISCORD_ESPECIA_TOKEN"), 
+                        include_time=False,
+                        nice_to_have=False,
+                        critical=False):
     url = f'https://discord.com/api/v10/channels/{channel}/messages'
     
     headers= {
@@ -47,12 +51,13 @@ def send_msg_to_discord(msg, channel=os.getenv("ESPECIA_CHANNEL_ID"), bot_token=
 
     
     local_time = datetime.now(timezone.utc).astimezone().strftime("%I:%M:%S.%f")
-    print(local_time)
 
-    print(datetime.now(timezone.utc).astimezone().tzinfo)
+    critical = critical and f'<@&{os.getenv("DISCORD_CRITICAL_ROLE")}>'
+    nice_to_have = nice_to_have and f'<@&{os.getenv("DISCORD_NICE_TO_HAVE_ROLE")}>'
+    time = include_time and local_time
 
     data = {
-        'content': f'<@&{os.getenv("MVP_NOTIFICATION_ROLE_ID")}> {include_time and local_time} {msg}'
+        'content': f'{critical} {nice_to_have} {time} {msg}'
     }
 
     response = requests.post(url, headers=headers, json=data)
