@@ -85,10 +85,12 @@ class Listener(Configurable):
 
         if config.enabled:
             config.gui.view.status.set_start_btn('stop')
-            winsound.Beep(784, 333)     # G5
+            config.notifier._ping('end')
+            # winsound.Beep(784, 333)     # G5
         else:
             config.gui.view.status.set_start_btn('start')
-            winsound.Beep(523, 333)     # C5
+            # winsound.Beep(523, 333)     # C5
+            config.notifier._ping('start')
             release_unreleased_key()
         time.sleep(0.267)
 
@@ -97,10 +99,10 @@ class Listener(Configurable):
         Listener.recalibrate_minimap()
 
         config.routine.load(config.routine.path)
-
-        winsound.Beep(523, 200)     # C5
-        winsound.Beep(659, 200)     # E5
-        winsound.Beep(784, 200)     # G5
+        config.notifier._ping('reload')
+        # winsound.Beep(523, 200)     # C5
+        # winsound.Beep(659, 200)     # E5
+        # winsound.Beep(784, 200)     # G5
 
     @staticmethod
     def recalibrate_minimap():

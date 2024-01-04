@@ -8,7 +8,7 @@ from src.routine import components
 from src.common.interfaces import Configurable
 
 
-CB_KEYBINDING_DIR = os.path.join('resources', 'keybindings')
+CB_KEYBINDING_DIR = os.path.join(config.RESOURCES_DIR, 'keybindings')
 
 
 class CommandBook(Configurable):
