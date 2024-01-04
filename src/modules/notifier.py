@@ -201,11 +201,10 @@ class Notifier:
                             conversation_pos = min(matched, key=lambda p: p[0])
                             target = (
                                 round(conversation_pos[0] +(width //2-250)),
-                                round(conversation_pos[1] +(height//2-250))
+                                round(conversation_pos[1] +(height//2-250) - 2)
                             )
                             utils.game_window_click(target)
                             time.sleep(1)
-                            utils.game_window_click((700,100), button='right')
 
                     # check for unexpected death
                     revive_frame = frame[height//2-100:height//2+200, width //2-150:width//2+150]
@@ -220,7 +219,6 @@ class Notifier:
                         )
                         utils.game_window_click(target)
                         time.sleep(1)
-                        utils.game_window_click((700,100), button='right')
                         if not settings.auto_revive:
                             self._alert('siren')
 

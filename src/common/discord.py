@@ -36,13 +36,15 @@ def send_img_msg_to_discord(img, channel=os.getenv("MVP_CHANNEL_ID"), bot_token=
     else:
         response.raise_for_status()
 
-def send_msg_to_discord(msg, channel=os.getenv("MS_GENERAL_CHANNEL_ID"), 
-                        bot_token=os.getenv("DISCORD_ESPECIA_TOKEN"), 
+def send_msg_to_discord(msg, channel=os.getenv("MS_GENERAL_CHANNEL_ID"),
                         include_time=False,
                         nice_to_have=False,
                         critical=False):
     url = f'https://discord.com/api/v10/channels/{channel}/messages'
     
+    bot_token = (nice_to_have and os.getenv("DISCORD_ESPECIA_TOKEN")) or \
+        (os.getenv("DISCORD_GENERAL_TOKEN"))
+
     headers= {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -52,12 +54,12 @@ def send_msg_to_discord(msg, channel=os.getenv("MS_GENERAL_CHANNEL_ID"),
     
     local_time = datetime.now(timezone.utc).astimezone().strftime("%I:%M:%S.%f")
 
-    critical = critical and f'<@&{os.getenv("DISCORD_CRITICAL_ROLE")}>'
-    nice_to_have = nice_to_have and f'<@&{os.getenv("DISCORD_NICE_TO_HAVE_ROLE")}>'
-    time = include_time and local_time
+    critical = f'<@&{os.getenv("DISCORD_CRITICAL_ROLE")}> ' if critical else ""
+    nice_to_have = f'<@&{os.getenv("DISCORD_NICE_TO_HAVE_ROLE")}> ' if nice_to_have else ""
+    time = f'{local_time} ' if include_time  else ""
 
     data = {
-        'content': f'{critical} {nice_to_have} {time} {msg}'
+        'content': f'{critical}{nice_to_have}{time}{msg}'
     }
 
     response = requests.post(url, headers=headers, json=data)
