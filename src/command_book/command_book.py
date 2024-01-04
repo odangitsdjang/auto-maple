@@ -41,7 +41,7 @@ class CommandBook(Configurable):
             new_cb[c.__name__.lower()] = c
 
         # Import the desired command book file
-        target = '.'.join(['resources', 'command_books', self.name])
+        target = '.'.join([config.RESOURCES_DIR, 'command_books', self.name])
         try:
             module = importlib.import_module(target)
             module = importlib.reload(module)
@@ -74,8 +74,8 @@ class CommandBook(Configurable):
 
         # Populate the new command book
         for name, command in inspect.getmembers(module, inspect.isclass):
-            if issubclass(command, components.Command):
-                new_cb[name.lower()] = command
+            # if issubclass(command, components.Command):
+            new_cb[name.lower()] = command
 
         # Check if required commands have been implemented and overridden
         required_found = True
@@ -133,3 +133,15 @@ class CommandBook(Configurable):
     def _set_keybinds(self):
         for k, v in self.config.items():
             setattr(self.module.Key, k, v)
+    
+    def __iter__(self):
+        return iter(self.dict)
+    
+    def keys(self):
+        return self.dict.keys()
+
+    def items(self):
+        return self.dict.items()
+
+    def values(self):
+        return self.dict.values()
