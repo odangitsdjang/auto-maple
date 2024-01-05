@@ -47,17 +47,25 @@ class WorldMap():
         self.MOONBRIDGE = self.get_final_pos(185,47+self.MENU_GAP*10)
         self.SUFFERING = self.get_final_pos(185,47+self.MENU_GAP*11)
         self.LIMINA = self.get_final_pos(185,47+self.MENU_GAP*12)
+        
+        # areas - grandis
+        # self.CERNIUM = 
+        # self.HOTEL = 
+        # self.ODIUM = 
+        # self.SHANGRI_LA = 
+        # self.ARTERIA = 
+        # self.CARCION = 
 
         self.maps_info = {
-            "鏡光大海3" : {
-                'map_name' : '鏡光大海3',
+            "mts3" : {
+                'map_name' : 'mts3',
                 'check_image' : self.MAP_CHECK_DIR + '/mirror_touched_sea3.png',
                 'world_selection_point':self.ARCANE_RIVER_POINT,
                 'area_selection_point':self.ESFERA,
                 'point':self.get_final_pos(487,430)
             },
-            "鏡光大海2" : {
-                'map_name' : '鏡光大海2',
+            "mts2" : {
+                'map_name' : 'mts2',
                 'check_image' : self.MAP_CHECK_DIR + '/mirror_touched_sea2.png',
                 'world_selection_point':self.ARCANE_RIVER_POINT,
                 'area_selection_point':self.ESFERA,

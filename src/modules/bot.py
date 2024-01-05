@@ -153,7 +153,7 @@ class Bot(Configurable):
                 press("left", 1, down_time=0.1,up_time=0.3) 
             elif ii == 2:
                 press("right", 1, down_time=0.2,up_time=0.3) 
-            # TODO: capture frame before rune solve
+            cv2.imwrite('./recording/s_' + str(time.time()) + '_pre.png',frame)
             # pre_frame = config.capture.frame 
             press(self.config['Interact'], 1, down_time=0.15,up_time=0.1) # Inherited from Configurable
             print('\nSolving rune:')

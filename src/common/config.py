@@ -51,6 +51,8 @@ path = []
 # jump button
 jump_button = 'alt'
 
+world_map_button = 'pageup'
+
 #############################
 #       Shared Modules      #
 #############################

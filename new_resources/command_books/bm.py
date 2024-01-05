@@ -10,6 +10,7 @@ class Key:
 
     # Movement
     JUMP = 'alt'
+    WORLD_MAP = 'w'
     FLASH_JUMP = 'alt'
     ROPE = 'v'
     UP_JUMP = 'up+alt'

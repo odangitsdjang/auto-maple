@@ -2,7 +2,6 @@
 
 import time
 import threading
-import winsound
 import keyboard as kb
 from src.common.interfaces import Configurable
 from src.common import config, utils, settings
@@ -85,12 +84,10 @@ class Listener(Configurable):
 
         if config.enabled:
             config.gui.view.status.set_start_btn('stop')
-            config.notifier._ping('end')
-            # winsound.Beep(784, 333)     # G5
+            config.notifier._ping('start')
         else:
             config.gui.view.status.set_start_btn('start')
-            # winsound.Beep(523, 333)     # C5
-            config.notifier._ping('start')
+            config.notifier._ping('end')
             release_unreleased_key()
         time.sleep(0.267)
 
@@ -100,9 +97,6 @@ class Listener(Configurable):
 
         config.routine.load(config.routine.path)
         config.notifier._ping('reload')
-        # winsound.Beep(523, 200)     # C5
-        # winsound.Beep(659, 200)     # E5
-        # winsound.Beep(784, 200)     # G5
 
     @staticmethod
     def recalibrate_minimap():
