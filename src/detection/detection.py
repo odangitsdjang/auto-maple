@@ -114,12 +114,16 @@ def crop_for_rune_solve(frame):
     return
 
 # TODO 
-def remove_combo_orbs(frame):
-    return frame
+# def remove_combo_orbs(frame):
+#     return frame
+
+def remove_background(prev_frame, frame):
+    return
 
 # TODO
-def remove_noise(frame):
-    filtered = remove_combo_orbs(frame)
+def remove_noise(prev_frame, frame):
+    # filtered = remove_combo_orbs(frame)
+    filtered = remove_background(prev_frame, frame)
     return filtered
 
 @utils.run_if_enabled

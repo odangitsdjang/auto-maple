@@ -974,7 +974,7 @@ class GoToMap(Command):
         # wm = WorldMap()
         # if wm.check_if_in_correct_map(self.target_map):
         #     return
-        press('n') # big map key
+        press(config.world_map_button) # big map key
         time.sleep(utils.rand_float(2*0.9, 2*1.2))
         wm = WorldMap()
         config.map_changing = True

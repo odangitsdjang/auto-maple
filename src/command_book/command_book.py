@@ -8,7 +8,7 @@ from src.routine import components
 from src.common.interfaces import Configurable
 
 
-CB_KEYBINDING_DIR = os.path.join('resources', 'keybindings')
+CB_KEYBINDING_DIR = os.path.join(config.RESOURCES_DIR, 'keybindings')
 
 
 class CommandBook(Configurable):
@@ -100,6 +100,7 @@ class CommandBook(Configurable):
         if required_found and (step_found or movement_found):
             self.buff = new_cb['buff']()
             config.jump_button = new_cb['key'].JUMP
+            config.world_map_button = new_cb['key'].WORLD_MAP or config.world_map_button
 
              # initialize skills ready state
             for key in new_cb:

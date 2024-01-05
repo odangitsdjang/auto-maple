@@ -51,6 +51,8 @@ path = []
 # jump button
 jump_button = 'alt'
 
+world_map_button = 'pageup'
+
 #############################
 #       Shared Modules      #
 #############################
@@ -65,6 +67,9 @@ bot = None
 
 # Shares the video capture loop
 capture = None
+
+# Shares the notifier 
+notifier = None 
 
 # Shares the keyboard listener
 listener = None

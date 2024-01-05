@@ -10,6 +10,7 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/shadower/'
 class Key:
     # Movement
     JUMP = 'alt'
+    WORLD_MAP = 'pageup'
     FLASH_JUMP = 'alt'
     ROPE = 'v'
     UP_JUMP = 'up+alt'

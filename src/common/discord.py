@@ -56,7 +56,7 @@ def send_msg_to_discord(msg, channel=os.getenv("MS_GENERAL_CHANNEL_ID"),
 
     critical = f'<@&{os.getenv("DISCORD_CRITICAL_ROLE")}> ' if critical else ""
     nice_to_have = f'<@&{os.getenv("DISCORD_NICE_TO_HAVE_ROLE")}> ' if nice_to_have else ""
-    time = f'{local_time} ' if include_time  else ""
+    time = f'{local_time}: ' if include_time  else ""
 
     data = {
         'content': f'{critical}{nice_to_have}{time}{msg}'

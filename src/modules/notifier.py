@@ -66,7 +66,7 @@ class Notifier:
 
     def __init__(self):
         """Initializes this Notifier object's main thread."""
-
+        config.notifier = self
         pygame.mixer.init()
         self.mixer = pygame.mixer.music
 
@@ -272,7 +272,7 @@ class Notifier:
                                 print('rune_closest_pos : ',config.bot.rune_closest_pos)
                                 config.bot.map_rune_active = True
                                 rune_check_count = 0
-                                self._ping('rune_appeared', volume=0.75)
+                                self._ping('rune_appeared')
                     elif config.bot.solve_rune_fail_count >= 3 and not settings.auto_change_channel:
                         discord.send_msg_to_discord("Rune Fail", critical=True)
                         config.bot.map_rune_active = False
@@ -312,7 +312,7 @@ class Notifier:
             threshold=0.93)
         return (len(rune_buff) > 0 or len(rune_buff_bottom) > 0)
 
-    def _alert(self, name, volume=0.6):
+    def _alert(self, name, volume=0.33):
         """
         Plays an alert to notify user of a dangerous event. Stops the alert
         once the key bound to 'Start/stop' is pressed.
@@ -335,7 +335,7 @@ class Notifier:
         time.sleep(1)
         config.listener.enabled = True
 
-    def _ping(self, name, volume=0.50):
+    def _ping(self, name, volume=0.25):
         """A quick notification for non-dangerous events."""
 
         self.mixer.load(get_alert_path(name))

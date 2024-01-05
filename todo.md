@@ -57,11 +57,10 @@ Test more images
 ## c. Doesn't solve with yellow combo orbs on the screen most of the time
 * Filter out yellow combo orb and run rune solver on filtered frame?
 
-## d. Full screen issue (doesn't reach the right arrows?)
+## d. Fails to solve when background has colors that match our hsv range in filter_color function (e.g Chu Chu Island's Yellow background) 
+
+## e. Full screen issue (doesn't reach the right arrows?)
 * Needs investigation
 
 # Other Bot Issues
 * Supporting upscaled 2k resolution (may need to add new MM_TL, MM_BR images and then do further testing)
-* Dying, gets stuck - (FIX: add english images)
-* Pressing up on pollo/frito/esp portal brings up dialogue, gets stuck (FIX: add english images)
-* Pressing interact(?) button on flower/veins on a character without mining unlocked opens dialogue
