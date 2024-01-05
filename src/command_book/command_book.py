@@ -100,7 +100,7 @@ class CommandBook(Configurable):
         if required_found and (step_found or movement_found):
             self.buff = new_cb['buff']()
             config.jump_button = new_cb['key'].JUMP
-            config.world_map_button = new_cb['key'].WORLD_MAP or config.world_map_button
+            config.world_map_button = new_cb['key'].WORLD_MAP
 
              # initialize skills ready state
             for key in new_cb:

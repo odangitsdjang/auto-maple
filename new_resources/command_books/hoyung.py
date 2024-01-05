@@ -10,6 +10,7 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/hoyung/'
 class Key:
     # Movement
     JUMP = 'alt'
+    WORLD_MAP = 'pageup'
     FLASH_JUMP = 'alt'
     # ROPE = 'c'
     FLY = 'x' # 觔斗雲

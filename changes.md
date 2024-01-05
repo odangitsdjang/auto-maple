@@ -8,3 +8,4 @@
    * more info on portal https://strategywiki.org/wiki/MapleStory/Bounty_Hunt
 * 1/3/2024: Added missing commits back from original repo (PR#150) from May - Jul, Dec 2022 
 * Updated assets to support GMS instead, better handling of unexpected popups, more discord pings, removed unnecessary code
+* 1/5/2024: Rune solve improvement - remove noise pt 1 (capture frame before clicking rune, capture frame after and filter out matching area)

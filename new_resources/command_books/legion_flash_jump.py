@@ -7,6 +7,7 @@ import cv2
 # List of key mappings
 class Key:
     INTERACT = 'space'
+    WORLD_MAP = 'pageup'
 
     # Movement
     JUMP = 'alt'

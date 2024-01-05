@@ -13,6 +13,7 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/hayato/'
 class Key:
     # Movement
     JUMP = 'alt'
+    WORLD_MAP = 'pageup'
     FLASH_JUMP = 'alt'
     UP_JUMP = 'c'
 

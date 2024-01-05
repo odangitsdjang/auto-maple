@@ -380,6 +380,32 @@ def filter_color(img, ranges):
     result[color_mask] = img[color_mask]
     return result
 
+# Improve: Use SSIM instead https://stackoverflow.com/questions/56183201/detect-and-visualize-differences-between-two-images-with-opencv-python
+def filter_out_matching(frame, template, save_result = False):
+    """
+    Returns a filtered copy of frame that removes all parts matching part with the template
+    on the HSV scale.
+    :param frame:      The frame in question to remove template's colors.
+    :param template:   The template, which should be same in size to frame, to base as the original image.
+    :return:        A filtered copy of frame.
+    """
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    template = cv2.cvtColor(template, cv2.COLOR_BGR2RGB)
+    diff = cv2.absdiff(frame, template)
+
+    if save_result:
+        fig,ax = plt.subplots(3,1)
+        fig.suptitle('match_template')
+        ax[0].set_title('frame')
+        ax[0].imshow(frame) 
+        ax[1].set_title('template')
+        ax[1].imshow(template) 
+        ax[2].set_title('diff')
+        ax[2].imshow(diff)  
+        plt.savefig('plot.png') 
+        plt.show()   
+
+    return diff
 
 def draw_location(minimap, pos, color):
     """

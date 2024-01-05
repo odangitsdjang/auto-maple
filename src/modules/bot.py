@@ -152,21 +152,22 @@ class Bot(Configurable):
             if ii == 1:
                 press("left", 1, down_time=0.1,up_time=0.3) 
             elif ii == 2:
-                press("right", 1, down_time=0.2,up_time=0.3) 
-            cv2.imwrite('./recording/s_' + str(time.time()) + '_pre.png',frame)
-            # pre_frame = config.capture.frame 
+                press("right", 1, down_time=0.2,up_time=0.3)
+            time.sleep(0.8) # stop moving 
+            pre_rune_frame = config.capture.frame 
+            cv2.imwrite('./recording/s_' + str(time.time()) + '_patched_pre.png',pre_rune_frame)
             press(self.config['Interact'], 1, down_time=0.15,up_time=0.1) # Inherited from Configurable
             print('\nSolving rune:')
-            time.sleep(1.5)
+            time.sleep(0.15) # reduce this time as much as possible 
             for _ in range(5):
                 if self.map_rune_active == False:
                     break
                 frame = config.capture.frame
                 height, width, _n = frame.shape
-                solution_frame = frame[height//2-300:height//2+30, width //2-500:width//2+500]
-                # TODO: remove noise
-                cv2.imwrite('./recording/s_' + str(time.time()) + '.png',frame)
-                solution = detection.merge_detection(model, frame)
+                # solution_frame = frame[height//2-300:height//2+30, width //2-500:width//2+500]
+                filtered_frame = detection.remove_noise(frame, pre_rune_frame)
+                cv2.imwrite('./recording/s_' + str(time.time()) + '.png',filtered_frame)
+                solution = detection.merge_detection(model, filtered_frame)
                 if solution:
                     print(', '.join(solution))
                     if len(solution) == 4:

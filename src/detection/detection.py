@@ -113,17 +113,13 @@ def get_boxes(model, image):
 def crop_for_rune_solve(frame):
     return
 
-# TODO 
+# TODO: may not be necessary anymore
 # def remove_combo_orbs(frame):
 #     return frame
 
-def remove_background(prev_frame, frame):
-    return
-
-# TODO
-def remove_noise(prev_frame, frame):
-    # filtered = remove_combo_orbs(frame)
-    filtered = remove_background(prev_frame, frame)
+def remove_noise(frame, prev_frame):
+    # TODO: find and remove same (1-2) monsters within the frame before removing background
+    filtered = utils.filter_out_matching(frame, prev_frame) # remove background
     return filtered
 
 @utils.run_if_enabled

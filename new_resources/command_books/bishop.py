@@ -10,6 +10,7 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/ice_lightning/'
 class Key:
     # Movement
     JUMP = 'alt'
+    WORLD_MAP = 'pageup'
     TELEPORT = 'd' # 瞬移
     UPJUMP = 'alt' # 上跳
     # Buffs

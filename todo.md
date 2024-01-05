@@ -1,7 +1,5 @@
 ## TODO List; ordered relative to priority
 
-## TODO: Rune solve improvement - idea: capture frame before clicking rune, capture frame after and filter out the same area from before to black
-
 ## TODO: Commerci daily voyages
 ## TODO: Grandis dailies
 ## TODO: Arcane River dailies
@@ -9,8 +7,9 @@
 
 ## TODO: Restart after crash - which occasionally happens during rune solve - save settings 
 ## TODO: Grab MVP, every x mins (optional: if buff is not up), change map, (cc), grab the MVP at the announced time and come back 
-## TODO: Find better burning maps
+## TODO: Find better burning maps (auto cc)
 ## TODO: Fix hardcoded mvp chatbox area - chatbox 12.5 px up to down
+
 
 # Rune solver issue - Notes - Deprioritized for feature development
 
