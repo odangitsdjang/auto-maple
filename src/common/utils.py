@@ -232,7 +232,7 @@ def single_match(frame, template):
     bottom_right = (top_left[0] + w, top_left[1] + h)
     return top_left, bottom_right
 
-def multi_match(frame, template, threshold=0.95,save_result = False):
+def multi_match(frame, template, threshold=0.95, centered=True, save_result = False):
     """
     Finds all matches in FRAME that are similar to TEMPLATE by at least THRESHOLD.
     :param frame:       The image in which to search.
@@ -241,18 +241,21 @@ def multi_match(frame, template, threshold=0.95,save_result = False):
     :return:            An array of matches that exceed THRESHOLD.
     """
 
-    if template.shape[0] > frame.shape[0] or template.shape[1] > frame.shape[1]:
-        return []
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     result = cv2.matchTemplate(gray, template, cv2.TM_CCOEFF_NORMED)
     locations = np.where(result >= threshold)
     locations = list(zip(*locations[::-1]))
     results = []
+
     if save_result:
         img_disp = gray.copy()
     for p in locations:
-        x = int(round(p[0] + template.shape[1] / 2))
-        y = int(round(p[1] + template.shape[0] / 2))
+        if centered:
+            x = int(round(p[0] + template.shape[1] / 2))
+            y = int(round(p[1] + template.shape[0] / 2))
+        else:
+            x = p[0]
+            y =  p[1]
         results.append((x, y))
         if save_result:
             right_bottom = (p[0] + template.shape[1], p[1] + template.shape[0])
@@ -266,7 +269,8 @@ def multi_match(frame, template, threshold=0.95,save_result = False):
         ax[1].imshow(template,'gray') 
         ax[2].set_title('img_disp')
         ax[2].imshow(cv2.cvtColor(img_disp,cv2.COLOR_BGR2RGB)) 
-        plt.savefig('testing/plot.png') 
+        plt.savefig('plot.png') 
+        plt.show()   
     return results
 
 def single_match_with_threshold(frame, template, threshold=0.95):
@@ -407,7 +411,7 @@ def remove_from_frame(frame, template, save_result = False):
         ax[1].set_title('result')
         ax[1].imshow(result)  
         plt.savefig('plot.png') 
-        plt.show()   
+        plt.show()
 
     return result
 
