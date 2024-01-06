@@ -33,7 +33,6 @@ MINIMAP_EXP_PORTAL_RANGES = (
 minimap_exp_portal_filtered = utils.filter_color(cv2.imread('assets/minimap_exp_portal_template.png'), MINIMAP_EXP_PORTAL_RANGES)
 EXP_PORTAL_TEMPLATE = cv2.cvtColor(minimap_exp_portal_filtered, cv2.COLOR_BGR2GRAY)
 
-
 ESPECIA_PORTAL_RANGE = (
     ((125, 30, 230), (151, 90, 255)),
 )

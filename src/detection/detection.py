@@ -5,6 +5,7 @@ import tensorflow as tf
 import numpy as np
 from src.common import utils
 
+COMBO_ORB_TEMPLATE = cv2.imread('assets/orange_combo_orb.png', 0)
 
 #########################
 #       Functions       #
@@ -39,7 +40,7 @@ def filter_color(image):
     :return:        The color-filtered image.
     """
 
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
     mask = cv2.inRange(hsv, (1, 100, 100), (75, 255, 255))
 
     # Mask the image
@@ -113,13 +114,10 @@ def get_boxes(model, image):
 def crop_for_rune_solve(frame):
     return
 
-# TODO: may not be necessary anymore
-# def remove_combo_orbs(frame):
-#     return frame
-
-def remove_noise(frame, prev_frame):
-    # TODO: find and remove same (1-2) monsters within the frame before removing background
-    filtered = utils.filter_out_matching(frame, prev_frame) # remove background
+def remove_noise(frame):
+    # TODO: find and remove same (1-2) monsters from the map within the frame 
+    # TODO: do not remove pixels from 'forbidden area'
+    filtered = utils.remove_from_frame(frame, COMBO_ORB_TEMPLATE)
     return filtered
 
 @utils.run_if_enabled
