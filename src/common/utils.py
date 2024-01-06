@@ -380,8 +380,10 @@ def filter_color(img, ranges):
     result[color_mask] = img[color_mask]
     return result
 
-# Improve: Use SSIM instead https://stackoverflow.com/questions/56183201/detect-and-visualize-differences-between-two-images-with-opencv-python
-def filter_out_matching(frame, template, save_result = False):
+# Use SSIM to filter out differences in same sized images https://stackoverflow.com/questions/56183201/detect-and-visualize-differences-between-two-images-with-opencv-python
+
+
+def remove_from_frame(frame, template, save_result = False):
     """
     Returns a filtered copy of frame that removes all parts matching part with the template
     on the HSV scale.
@@ -389,23 +391,25 @@ def filter_out_matching(frame, template, save_result = False):
     :param template:   The template, which should be same in size to frame, to base as the original image.
     :return:        A filtered copy of frame.
     """
+    combo_orbs_coord = multi_match(frame, template, centered=False, threshold=0.8)
+    if (len(combo_orbs_coord) == 0): return frame
+    x, y = template.shape
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    template = cv2.cvtColor(template, cv2.COLOR_BGR2RGB)
-    diff = cv2.absdiff(frame, template)
-
+    coords = [(x, y) for y, x in combo_orbs_coord]
+    for coordx, coordy in coords:
+        frame[coordx:coordx+x, coordy:coordy+y] = (0, 0, 0)
+    result = frame
     if save_result:
-        fig,ax = plt.subplots(3,1)
+        fig,ax = plt.subplots(2,1)
         fig.suptitle('match_template')
         ax[0].set_title('frame')
         ax[0].imshow(frame) 
-        ax[1].set_title('template')
-        ax[1].imshow(template) 
-        ax[2].set_title('diff')
-        ax[2].imshow(diff)  
+        ax[1].set_title('result')
+        ax[1].imshow(result)  
         plt.savefig('plot.png') 
         plt.show()   
 
-    return diff
+    return result
 
 def draw_location(minimap, pos, color):
     """
