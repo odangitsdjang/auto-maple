@@ -40,7 +40,7 @@ def filter_color(image):
     :return:        The color-filtered image.
     """
 
-    hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, (1, 100, 100), (75, 255, 255))
 
     # Mask the image

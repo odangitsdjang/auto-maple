@@ -402,7 +402,7 @@ def remove_from_frame(frame, template, save_result = False):
     coords = [(x, y) for y, x in combo_orbs_coord]
     for coordx, coordy in coords:
         frame[coordx:coordx+x, coordy:coordy+y] = (0, 0, 0)
-    result = frame
+    result =  cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
     if save_result:
         fig,ax = plt.subplots(2,1)
         fig.suptitle('match_template')
