@@ -8,8 +8,9 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/ice_lightning/'
 
 # List of key mappings
 class Key:
+    WORLD_MAP = 'pageup'
+    
     # Movement
-    JUMP = 'alt'
     TELEPORT = '`' # 瞬移
     UPJUMP = 'shift' # 上跳
     # Buffs

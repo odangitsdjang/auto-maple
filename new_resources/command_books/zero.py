@@ -8,8 +8,9 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/zero/'
 
 # List of key mappings
 class Key:
+    WORLD_MAP = 'pageup'
+    
     # Movement
-    JUMP = 'alt'
     FLASH_JUMP = 'alt'
     TELEPORT = 'x' # 爆裂衝刺
 
@@ -99,7 +100,7 @@ def step(direction, target):
                 Teleport(direction=direction).execute()
             utils.wait_for_is_standing(300)
         else:
-            press(Key.JUMP, 1)
+            press(config.bot.config['Jump'], 1)
             time.sleep(utils.rand_float(0.2, 0.25))
     if direction == 'down':
         # if config.player_states['movement_state'] == config.MOVEMENT_STATE_STANDING and config.player_states['in_bottom_platform'] == False:
@@ -109,11 +110,11 @@ def step(direction, target):
         # if abs(d_x) > 3:
         #     if d_x > 0:
         #         key_down('right')
-        #         press(Key.JUMP, 1)
+        #         press(config.bot.config['Jump'], 1)
         #         key_up('right')
         #     else:
         #         key_down('left')
-        #         press(Key.JUMP, 1)
+        #         press(config.bot.config['Jump'], 1)
         #         key_up('left')
         time.sleep(utils.rand_float(0.05, 0.08))
         # utils.wait_for_is_standing(300)
@@ -215,7 +216,7 @@ class FlashJump(Command):
             self.player_jump(self.direction)
         else:
             key_down(self.direction,down_time=0.05)
-            press(Key.JUMP,down_time=0.04,up_time=0.05)
+            press(config.bot.config['Jump'],down_time=0.04,up_time=0.05)
         if not self.fast_jump:
             time.sleep(utils.rand_float(0.02, 0.04)) # fast flash jump gap
         else:

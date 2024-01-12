@@ -331,14 +331,14 @@ class Command(Component):
     def player_jump(self,direction=""):
         utils.wait_for_is_standing(1500)
         key_down(direction)
-        press(config.jump_button, 1,up_time=0.05)
+        press(config.bot.config['Jump'], 1,up_time=0.05)
         for i in range(100): # maximum time : 2s
             if config.player_states['movement_state'] == config.MOVEMENT_STATE_JUMPING \
                 or config.player_states['movement_state'] == config.MOVEMENT_STATE_FALLING:
                 time.sleep(utils.rand_float(0.01, 0.03))
                 break
             if i % 10 == 9:
-                press(config.jump_button, 1,up_time=0.05)
+                press(config.bot.config['Jump'], 1,up_time=0.05)
             else:
                 time.sleep(0.02)
             
@@ -628,7 +628,7 @@ class Fall(Command):
         for i in range(3):
             cur_y = config.player_pos[1]
             key_down('down',down_time=0.04)
-            press(config.jump_button, 1, down_time=0.05,up_time=0.05)
+            press(config.bot.config['Jump'], 1, down_time=0.05,up_time=0.05)
             key_up('down',up_time=0.08)
             cur_y2 = config.player_pos[1]
             for j in range(50):
@@ -640,7 +640,7 @@ class Fall(Command):
             if not fall_successful:
                 if cur_y != cur_y2:
                     print("in ladder")
-                    press("left+"+config.jump_button, 1, down_time=0.08,up_time=0.05)
+                    press("left+"+config.bot.config['Jump'], 1, down_time=0.08,up_time=0.05)
                 else:
                     time.sleep(utils.rand_float(0.1, 0.15))
                     continue
@@ -649,7 +649,7 @@ class Fall(Command):
                 pass
             elif self.direction != '':
                 key_down(self.direction)
-                press(config.jump_button, 2, down_time=0.05,up_time=0.05)
+                press(config.bot.config['Jump'], 2, down_time=0.05,up_time=0.05)
                 key_up(self.direction,up_time=0.02)
             # time.sleep(utils.rand_float(0.15, 0.17))
             if config.player_pos[1]-cur_y >= 1:
@@ -961,7 +961,7 @@ class SkillCombination(Command):
 
 class GoToMap(Command):
     """ go to target map """
-    _display_name = '前往地圖'
+    _display_name = 'Map Change'
     # skill_cool_down = 0
 
     def __init__(self,target_map=''):
@@ -974,7 +974,7 @@ class GoToMap(Command):
         # wm = WorldMap()
         # if wm.check_if_in_correct_map(self.target_map):
         #     return
-        press(config.world_map_button) # big map key
+        press(config.world_map_button)
         time.sleep(utils.rand_float(2*0.9, 2*1.2))
         wm = WorldMap()
         config.map_changing = True
@@ -1009,6 +1009,19 @@ class GoToMap(Command):
         else:
             time.sleep(2.2)
         config.map_changing = False
+
+# TODO
+# In order to save operation, have the desired target map saved as "favorite" in the guide menu
+class GoToGuideMap(Command):
+    """ go to target map via guide """
+    _display_name = 'Map Change via Guide'
+    def __init__(self,target_map=''):
+        super().__init__(locals())
+        self.target_map = target_map
+
+    def main(self):
+        return
+
 
 class ChangeChannel(Command):
     """ go to target channel """
@@ -1242,3 +1255,114 @@ class StoryAssistant(Command):
             #     utils.game_window_click((700,100), button='right')
 
         time.sleep(utils.rand_float(0.2, 0.4))
+
+### Flow:
+### a. Start at San Commerci Trading Post map
+### b. Click on Maestra Flametta NPC
+### c_1. If there is a quest with Maestra, choice between quest / "Start Trade"
+### c_2. No quest - no dialogue
+### d . Click on "Enter Trade" or Interact button
+### e_1. did not claim reward before ->   
+###     click next -> click Yes -> click next (or Interact -> Y -> Interact)
+### e_2. already claimed reward ->  move on to next step
+### f. Click on middle Scale image (Dolce)
+### g. Click on OK (Proceeding to Dolce) or Enter button
+### h. Fill items for the voyage,  Commerci soap (6x)
+### i. Click "SHIP"
+### j. Click "OK" or Enter button
+### k. Click depart
+### l. Click "OK" or Enter button
+### m. Auto hunt for ~22 seconds, (flash jump right twice and platter left)
+### n. Click Brown ok button or wait a few more seconds to leave
+class Commerci(Command):
+    _display_name ='Commerci Solo Voyage'
+
+    # number of Dolce Voyages that can be run, # of items that ship can bring
+    def __init__(self,voyages='12',items='6'):
+        super().__init__(locals())
+        self.voyages = float(voyages)
+        self.items = float(items)
+
+    def main(self):
+        maestra_template = cv2.imread('assets/commerci/maestra_template.png', 0)
+        start_trade_template = cv2.imread('assets/commerci/start_trade_template.png', 0)
+        next_template = cv2.imread('assets/commerci/commerci_next.png', 0)
+        dolce_template = cv2.imread('assets/commerci/dolce.png', 0)
+        add_item_template = cv2.imread('assets/commerci/commerci_add_item.png', 0)
+        ship_template = cv2.imread('assets/commerci/commerci_ship.png', 0)
+        depart_template = cv2.imread('assets/commerci/commerci_depart.png', 0)
+
+        # GoToGuideMap(target_map="commerci_solo").execute()
+        bot = config.bot
+        time.sleep(0.3)
+        while self.voyages > 0:
+            points = utils.multi_match(config.capture.frame, maestra_template, threshold=0.9)
+            if len(points) > 0:
+                p = (points[0][0],points[0][1])
+                print("clicking Maestra")
+                utils.game_window_click(p,delay=0.1)
+                time.sleep(0.3)
+                # utils.game_window_click((700,100), button='right',delay=0.1)
+            
+            # if start trade button exists, there is an extra dialogue box
+            points = utils.multi_match(config.capture.frame, start_trade_template, threshold=0.9)
+            if len(points) > 0:
+                press("down")
+                press(bot.config['Interact'], up_time=0.15)
+                print("click start trade")
+                # utils.game_window_click((700,100), button='right',delay=0.1)
+
+            press(bot.config['Interact'], up_time=0.15)
+
+            # if next button exists, need to claim
+            points = utils.multi_match(config.capture.frame, next_template, threshold=0.9)
+            if len(points) > 0:
+                press(bot.config['Interact'])
+                press("y")
+                press(bot.config['Interact'])
+                print("claimed voyage rewards")
+
+            points = utils.multi_match(config.capture.frame, dolce_template, threshold=0.9)
+            if len(points) > 0:
+                p = (points[0][0],points[0][1])
+                print("clicking Dolce")
+                utils.game_window_click(p,delay=0.1)
+                time.sleep(0.15)
+                # utils.game_window_click((700,100), button='right',delay=0.1)        
+
+            press("enter", up_time=0.15)
+
+            points = utils.multi_match(config.capture.frame, add_item_template, threshold=0.9)
+            if len(points) > 0:
+                p = (points[0][0],points[0][1])
+                print("adding items")
+                for _ in range(self.items):
+                    utils.game_window_click(p,delay=0.15)
+                time.sleep(0.15)
+                # utils.game_window_click((700,100), button='right',delay=0.1)    
+
+            points = utils.multi_match(config.capture.frame, ship_template, threshold=0.9)
+            if len(points) > 0:
+                p = (points[0][0],points[0][1])
+                print("ship")
+                utils.game_window_click(p,delay=0.1)
+                time.sleep(0.15)
+            
+            press("enter", up_time=0.15)
+
+            points = utils.multi_match(config.capture.frame, depart_template, threshold=0.9)
+            if len(points) > 0:
+                p = (points[0][0],points[0][1])
+                print("ship")
+                utils.game_window_click(p,delay=0.1)
+                time.sleep(0.15)
+
+            press("enter", up_time=0.15)
+
+            config.map_changing = True
+            auto_hunting = config.bot.command_book['commercidolceautohunt']
+            auto_hunting().execute()
+            config.map_changing = False
+
+            self.voyages = self.voyages - 1
+        

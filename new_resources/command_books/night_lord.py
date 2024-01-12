@@ -8,8 +8,9 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/night_lord/'
 
 # List of key mappings
 class Key:
+    WORLD_MAP = 'pageup'
+    
     # Movement
-    JUMP = 'alt'
     FLASH_JUMP = 'v'
     ROPE = '`'
     UP_JUMP = 'c'
@@ -57,9 +58,9 @@ def step(direction, target):
                 x_arrow = 'right'
             else:
                 x_arrow = 'left'
-            press(x_arrow+'+'+Key.JUMP)
+            press(x_arrow+'+'+config.bot.config['Jump'])
         else:
-            press(Key.JUMP)
+            press(config.bot.config['Jump'])
         Skill_A(direction='',pre_delay='0.1').execute()
         WaitStanding(duration='3').execute()
 
@@ -105,7 +106,7 @@ def step(direction, target):
             time.sleep(utils.rand_float(0.2, 0.3))
             WaitStanding(duration='3300').execute()
         else:
-            press(Key.JUMP, 1)
+            press(config.bot.config['Jump'], 1)
             time.sleep(utils.rand_float(0.1, 0.15))
 
     if direction == 'down':
@@ -131,11 +132,11 @@ def step(direction, target):
                     print("leave lader")
                     if d_x > 0:
                         key_down('left')
-                        press(Key.JUMP)
+                        press(config.bot.config['Jump'])
                         key_up('left')
                     else:
                         key_down('right')
-                        press(Key.JUMP)
+                        press(config.bot.config['Jump'])
                         key_up('right')
             SkillCombination(direction='',jump='false',target_skills='skill_a').execute()
                 
@@ -186,7 +187,7 @@ class Adjust(Command):
                         utils.wait_for_is_standing(1000)
                         key_down('down')
                         time.sleep(utils.rand_float(0.05, 0.07))
-                        press(Key.JUMP, 2, down_time=0.1)
+                        press(config.bot.config['Jump'], 2, down_time=0.1)
                         key_up('down')
                         time.sleep(utils.rand_float(0.17, 0.25))
                     counter -= 1
@@ -248,10 +249,10 @@ class FlashJump(Command):
                 time.sleep(utils.rand_float(0.02, 0.04)) # fast flash jump gap
             else:
                 key_down(self.direction,down_time=0.05)
-                press(Key.JUMP,down_time=0.06,up_time=0.05)
+                press(config.bot.config['Jump'],down_time=0.06,up_time=0.05)
         else:
             key_down(self.direction,down_time=0.05)
-            press(Key.JUMP,down_time=0.06,up_time=0.05)
+            press(config.bot.config['Jump'],down_time=0.06,up_time=0.05)
         
         press(Key.FLASH_JUMP, 1,down_time=0.06,up_time=0.01)
         key_up(self.direction,up_time=0.01)
@@ -295,7 +296,7 @@ class UpJump(BaseSkill):
     #     key_down(self.direction)
     #     time.sleep(utils.rand_float(0.35, 0.4))
     #     if 'left' in self.direction or 'right' in self.direction:
-    #         press(Key.JUMP, 1)
+    #         press(config.bot.config['Jump'], 1)
     #     key_up(self.direction)
         
 class Rope(BaseSkill):

@@ -8,9 +8,9 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/ice_lightning/'
 
 # List of key mappings
 class Key:
-    # Movement
-    JUMP = 'alt'
     WORLD_MAP = 'pageup'
+    
+    # Movement
     TELEPORT = 'x' # 瞬移
     UPJUMP = 'c' # 上跳
     # Buffs
@@ -42,14 +42,14 @@ def step(direction, target):
 
     d_y = target[1] - config.player_pos[1]
     d_x = target[0] - config.player_pos[0]
-
+    jump = config.bot.config['Jump']
     # if not check_current_tag('alpha'):
     #     utils.wait_for_is_standing(1000)
     #     Skill_A().execute()
     if config.player_states['is_stuck'] and abs(d_x) >= 17:
         print("is stuck")
         time.sleep(utils.rand_float(0.2, 0.3))
-        press(Key.JUMP,up_time=0.4)
+        press(jump,up_time=0.4)
         WaitStanding(duration='1').execute()
         # if d_x <= 0:
         #     Fall(direction='left',duration='0.3')
@@ -91,7 +91,7 @@ def step(direction, target):
                 utils.wait_for_is_standing(300)
                 Skill_S(combo='False').execute()
             else:
-                press(Key.JUMP, 1)
+                press(jump, 1)
                 time.sleep(utils.rand_float(0.1, 0.15))
     if direction == 'down':
         if abs(d_x) <= settings.move_tolerance:

@@ -53,12 +53,9 @@ Test more images
 * Another option: use bitwise_or to create unified mask https://stackoverflow.com/questions/48109650/how-to-detect-two-different-colors-using-cv2-inrange-in-python-opencv 
   - get HSV values for all combination of arrows, allow those colors (OR) in the filter_color 
 
-## c. Doesn't solve with yellow combo orbs on the screen most of the time
-* Filter out yellow combo orb and run rune solver on filtered frame?
+## c. Fails to solve when background has colors that match our hsv range in filter_color function (e.g Chu Chu Island's Yellow background) 
 
-## d. Fails to solve when background has colors that match our hsv range in filter_color function (e.g Chu Chu Island's Yellow background) 
-
-## e. Full screen issue (doesn't reach the right arrows?)
+## d. Full screen issue (doesn't reach the right arrows?)
 * Needs investigation
 
 # Other Bot Issues

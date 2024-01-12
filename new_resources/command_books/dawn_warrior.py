@@ -8,9 +8,9 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/dawn_warrior/'
 
 # List of key mappings
 class Key:
-    # Movement
-    JUMP = 'alt'
     WORLD_MAP = 'pageup'
+    
+    # Movement
     FLASH_JUMP = 'alt'
     ROPE = 'v'
     UP_JUMP = 'up+alt'
@@ -44,6 +44,7 @@ def step(direction, target):
 
     d_y = target[1] - config.player_pos[1]
     d_x = target[0] - config.player_pos[0]
+    jump = config.bot.config['Jump']
 
     if direction == 'left' or direction == 'right':
         utils.wait_for_is_standing(1000)
@@ -52,7 +53,7 @@ def step(direction, target):
         if config.player_states['is_stuck'] and abs(d_x) < 16:
             print("is stuck")
             time.sleep(utils.rand_float(0.1, 0.2))
-            press(Key.JUMP)
+            press(jump)
             Skill_Auto(direction='').execute()
             WaitStanding(duration='1').execute()
         if abs(d_x) >= 16:
@@ -83,7 +84,7 @@ def step(direction, target):
             return
         if abs(d_y) > 6 :
             if abs(d_y) > 36:
-                press(Key.JUMP, 1)
+                press(jump, 1)
                 time.sleep(utils.rand_float(0.12, 0.18))
                 press(Key.ROPE, 1)
                 time.sleep(utils.rand_float(1.2, 1.5))
@@ -95,7 +96,7 @@ def step(direction, target):
             SkillCombination(direction='',jump='false',target_skills='skill_auto').execute()
             utils.wait_for_is_standing(1300)
         else:
-            press(Key.JUMP, 1)
+            press(jump, 1)
             time.sleep(utils.rand_float(0.1, 0.15))
 
     if direction == 'down':
@@ -121,11 +122,11 @@ def step(direction, target):
                     print("leave lader")
                     if d_x > 0:
                         key_down('left')
-                        press(Key.JUMP)
+                        press(jump)
                         key_up('left')
                     else:
                         key_down('right')
-                        press(Key.JUMP)
+                        press(jump)
                         key_up('right')
             SkillCombination(direction='',jump='false',target_skills='skill_auto').execute()
                 
@@ -146,6 +147,7 @@ class Adjust(Command):
         threshold = settings.adjust_tolerance
         d_x = self.target[0] - config.player_pos[0]
         d_y = self.target[1] - config.player_pos[1]
+        jump = config.bot.config['Jump']
         while config.enabled and counter > 0 and (abs(d_x) > threshold or abs(d_y) > threshold):
             if toggle:
                 d_x = self.target[0] - config.player_pos[0]
@@ -176,7 +178,7 @@ class Adjust(Command):
                         utils.wait_for_is_standing(1000)
                         key_down('down')
                         time.sleep(utils.rand_float(0.05, 0.07))
-                        press(Key.JUMP, 1, down_time=0.1)
+                        press(jump, 1, down_time=0.1)
                         key_up('down')
                         time.sleep(utils.rand_float(0.17, 0.25))
                     counter -= 1
@@ -228,6 +230,7 @@ class FlashJump(Command):
         self.reverse_triple = settings.validate_boolean(reverse_triple)
 
     def main(self):
+        jump = config.bot.config['Jump']
         if not self.jump:
             utils.wait_for_is_standing()
             if not self.fast_jump:
@@ -235,10 +238,10 @@ class FlashJump(Command):
                 time.sleep(utils.rand_float(0.02, 0.04)) # fast flash jump gap
             else:
                 key_down(self.direction,down_time=0.05)
-                press(Key.JUMP,down_time=0.06,up_time=0.05)
+                press(jump,down_time=0.06,up_time=0.05)
         else:
             key_down(self.direction,down_time=0.05)
-            press(Key.JUMP,down_time=0.06,up_time=0.05)
+            press(jump,down_time=0.06,up_time=0.05)
         
         press(Key.FLASH_JUMP, 1,down_time=0.06,up_time=0.01)
         key_up(self.direction,up_time=0.01)

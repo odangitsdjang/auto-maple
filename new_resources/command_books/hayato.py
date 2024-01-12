@@ -11,9 +11,9 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/hayato/'
 
 # List of key mappings
 class Key:
-    # Movement
-    JUMP = 'alt'
     WORLD_MAP = 'pageup'
+    
+    # Movement
     FLASH_JUMP = 'alt'
     UP_JUMP = 'c'
 
@@ -57,6 +57,7 @@ def step(direction, target):
 
     d_y = target[1] - config.player_pos[1]
     d_x = target[0] - config.player_pos[0]
+    jump = config.bot.config['Jump']
     
     if direction == 'left' or direction == 'right':
         if abs(d_x) > 20:
@@ -90,23 +91,23 @@ def step(direction, target):
             SkillCombination(direction='',jump='false',target_skills='skill_1+skill_2|MainGroupAttackSkill').execute()
             utils.wait_for_is_standing(300)
         else:
-            press(Key.JUMP, 1)
+            press(jump, 1)
             time.sleep(utils.rand_float(0.1, 0.15))
     if direction == 'down':
         if config.player_states['movement_state'] == config.MOVEMENT_STATE_STANDING and config.player_states['in_bottom_platform'] == False:
             print("down stair")
             time.sleep(utils.rand_float(0.05, 0.07))
-            press(Key.JUMP, 1)
+            press(jump, 1)
             time.sleep(utils.rand_float(0.08, 0.12))
             key_up('down')
             if abs(d_x) > 5:
                 if d_x > 0:
                     key_down('right')
-                    press(Key.JUMP, 1)
+                    press(jump, 1)
                     key_up('right')
                 else:
                     key_down('left')
-                    press(Key.JUMP, 1)
+                    press(jump, 1)
                     key_up('left')
             SkillCombination(direction='',jump='false',target_skills='skill_1+skill_2|skill_a+skill_33|skill_3|MainGroupAttackSkill').execute()
         time.sleep(utils.rand_float(0.05, 0.1))
@@ -154,7 +155,7 @@ class Adjust(Command):
                         if config.player_states['movement_state'] == config.MOVEMENT_STATE_STANDING and config.player_states['in_bottom_platform'] == False:
                             print("down stair")
                             time.sleep(utils.rand_float(0.05, 0.07))
-                            press(Key.JUMP, 1)
+                            press(config.bot.config['Jump'], 1)
                             time.sleep(utils.rand_float(0.08, 0.12))
                             key_up('down')
                         time.sleep(utils.rand_float(0.1, 0.15))

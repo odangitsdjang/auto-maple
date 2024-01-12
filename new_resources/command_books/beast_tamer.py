@@ -10,8 +10,9 @@ from src.common.vkeys import press, key_down, key_up
 IMAGE_DIR = config.RESOURCES_DIR + '/command_books/beast_tamer/'
 # List of key mappings
 class Key:
+    WORLD_MAP = 'pageup'
+    
     # Movement
-    JUMP = 'alt'
     FLASH_JUMP = 'alt'
     UP_JUMP = 'c'
     ROPE = '`'
@@ -50,6 +51,8 @@ def step(direction, target):
     d_y = target[1] - config.player_pos[1]
     d_x = target[0] - config.player_pos[0]
 
+    jump = config.bot.config['Jump']
+
     if direction == 'left' or direction == 'right':
         if abs(d_x) >= 16:
             # if abs(d_x) >= 60:
@@ -79,7 +82,7 @@ def step(direction, target):
             return
         if abs(d_y) > 6 :
             if abs(d_y) > 36:
-                press(Key.JUMP, 1)
+                press(jump, 1)
                 time.sleep(utils.rand_float(0.1, 0.15))
                 press(Key.ROPE, 1)
                 time.sleep(utils.rand_float(1.2, 1.5))
@@ -89,7 +92,7 @@ def step(direction, target):
             utils.wait_for_is_standing(1000)
             time.sleep(utils.rand_float(0.1, 0.2))
         else:
-            press(Key.JUMP, 1)
+            press(jump, 1)
             time.sleep(utils.rand_float(0.06, 0.12))
             utils.wait_for_is_standing(1000)
             time.sleep(utils.rand_float(0.1, 0.15))
@@ -116,11 +119,11 @@ def step(direction, target):
                 if config.player_states['movement_state'] == config.MOVEMENT_STATE_STANDING:
                     if d_x > 0:
                         key_down('left')
-                        press(Key.JUMP)
+                        press(jump)
                         key_up('left')
                     else:
                         key_down('right')
-                        press(Key.JUMP)
+                        press(jump)
                         key_up('right')
             # SkillCombination(direction='',jump='false',target_skills='skill_a').execute()
         utils.wait_for_is_standing(1800)
@@ -140,6 +143,7 @@ class Adjust(Command):
         threshold = settings.adjust_tolerance
         d_x = self.target[0] - config.player_pos[0]
         d_y = self.target[1] - config.player_pos[1]
+        jump = config.bot.config['Jump']
         while config.enabled and counter > 0 and (abs(d_x) > threshold or abs(d_y) > threshold):
             if toggle:
                 d_x = self.target[0] - config.player_pos[0]
@@ -170,7 +174,7 @@ class Adjust(Command):
                         utils.wait_for_is_standing(1000)
                         key_down('down')
                         time.sleep(utils.rand_float(0.05, 0.07))
-                        press(Key.JUMP, 2, down_time=0.1)
+                        press(jump, 2, down_time=0.1)
                         key_up('down')
                         time.sleep(utils.rand_float(0.17, 0.25))
                     counter -= 1
@@ -245,6 +249,8 @@ class FlashJump(Command):
         self.reverse_triple = settings.validate_boolean(reverse_triple)
 
     def main(self):
+        jump = config.bot.config['Jump']
+
         if not self.jump:
             utils.wait_for_is_standing()
             if not self.fast_jump:
@@ -252,10 +258,10 @@ class FlashJump(Command):
                 time.sleep(utils.rand_float(0.02, 0.04)) # fast flash jump gap
             else:
                 key_down(self.direction,down_time=0.05)
-                press(Key.JUMP,down_time=0.06,up_time=0.05)
+                press(jump,down_time=0.06,up_time=0.05)
         else:
             key_down(self.direction,down_time=0.05)
-            press(Key.JUMP,down_time=0.06,up_time=0.05)
+            press(jump,down_time=0.06,up_time=0.05)
         
         press(Key.FLASH_JUMP, 1,down_time=0.06,up_time=0.01)
         key_up(self.direction,up_time=0.01)
@@ -322,11 +328,12 @@ class Skill_AA(Command):
         self.jump = settings.validate_boolean(jump)
 
     def main(self):
+        jump = config.bot.config['Jump']
         if self.jump:
             utils.wait_for_is_standing(2000)
             key_down(self.direction)
             time.sleep(utils.rand_float(0.03, 0.05))
-            press(Key.JUMP, 1)
+            press(jump, 1)
         else:
             key_down(self.direction)
         time.sleep(utils.rand_float(0.03, 0.05))

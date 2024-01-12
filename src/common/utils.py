@@ -82,7 +82,7 @@ def game_window_click(point=(0,0),button='left',click_time=1,delay=0.4):
         round(point[0] + config.capture.window['left']),
         round(point[1] + config.capture.window['top'])
     )
-    print(target)
+    # print(target)
     click(target, button=button,click_time=click_time)
     time.sleep(rand_float(delay,delay*1.5))
 

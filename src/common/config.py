@@ -48,9 +48,6 @@ skill_buff_timer = {}
 # Represents the current shortest path that the bot is taking
 path = []
 
-# jump button
-jump_button = 'alt'
-
 world_map_button = 'pageup'
 
 #############################

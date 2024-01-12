@@ -195,11 +195,11 @@ pip install numpy --upgrade
   </li>
   <li>
     Inside Auto Maple's main directory, open a command prompt and run:
-    <pre><code>python -m pip install -r requirements.txt</code></pre>
+    <pre><code>python3 -m pip install -r requirements.txt</code></pre>
   </li>
   <li>
     Lastly, create a desktop shortcut by running:
-    <pre><code>python setup.py</code></pre>
+    <pre><code>python3 setup.py</code></pre>
     This shortcut uses absolute paths, so feel free to move it wherever you want. However, if you move Auto Maple's main directory, you will need to run <code>python setup.py</code> again to generate a new shortcut. To keep the command prompt open after Auto Maple closes, run the above command with the <code>--stay</code> flag.
   </li>
 </ol>

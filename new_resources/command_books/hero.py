@@ -10,9 +10,9 @@ from src.common.vkeys import press, key_down, key_up
 IMAGE_DIR = config.RESOURCES_DIR + '/command_books/hero/'
 # List of key mappings
 class Key:
-    # Movement
-    JUMP = 'alt'
     WORLD_MAP = 'pageup'
+    
+    # Movement
     FLASH_JUMP = 'alt'
     UP_JUMP = 'shift'
     ROPE = 'c'
@@ -51,6 +51,7 @@ def step(direction, target):
     #     time.sleep(utils.rand_float(0.1, 0.3))
     d_y = target[1] - config.player_pos[1]
     d_x = target[0] - config.player_pos[0]
+    jump = config.bot.config['Jump']
     if direction == 'left' or direction == 'right':
         if abs(d_x) >= 16:
             if abs(d_x) >= 23:
@@ -72,7 +73,7 @@ def step(direction, target):
         utils.wait_for_is_standing(500)
         if abs(d_y) > 6 :
             if abs(d_y) > 36:
-                press(Key.JUMP, 1)
+                press(jump, 1)
                 time.sleep(utils.rand_float(0.1, 0.15))
                 press(Key.ROPE, 1)
                 time.sleep(utils.rand_float(1.2, 1.5))
@@ -84,7 +85,7 @@ def step(direction, target):
                 time.sleep(utils.rand_float(1.2, 1.5))
             utils.wait_for_is_standing(300)
         else:
-            press(Key.JUMP, 1)
+            press(jump, 1)
             time.sleep(utils.rand_float(0.1, 0.15))
     if direction == 'down':
         down_duration = 0.04
@@ -150,7 +151,7 @@ class Adjust(Command):
                         utils.wait_for_is_standing(1000)
                         key_down('down')
                         time.sleep(utils.rand_float(0.05, 0.07))
-                        press(Key.JUMP, 2, down_time=0.1)
+                        press(config.bot.config['Jump'], 2, down_time=0.1)
                         key_up('down')
                         time.sleep(utils.rand_float(0.17, 0.25))
                     counter -= 1
@@ -248,7 +249,7 @@ class UpJump(Command):
         key_down(self.direction)
         time.sleep(utils.rand_float(0.35, 0.4))
         if 'left' in self.direction or 'right' in self.direction:
-            press(Key.JUMP, 1)
+            press(config.bot.config['Jump'], 1)
         key_up(self.direction)
         
 
@@ -263,7 +264,7 @@ class Rope(Command):
     def main(self):
         if self.jump:
             utils.wait_for_is_standing(500)
-            press(Key.JUMP, 1)
+            press(config.bot.config['Jump'], 1)
             time.sleep(utils.rand_float(0.03, 0.05))
         press(Key.ROPE, 1, up_time=0.1)
         time.sleep(utils.rand_float(1.2, 1.4))
@@ -345,7 +346,7 @@ class Skill_3(Command):
             if self.jump:
                 utils.wait_for_is_standing(300)
                 key_down(self.direction)
-                press(Key.JUMP, 1)
+                press(config.bot.config['Jump'], 1)
             else:
                 key_down(self.direction)
             time.sleep(utils.rand_float(0.03, 0.05))
@@ -395,7 +396,7 @@ class Skill_A(Command):
             if self.jump:
                 utils.wait_for_is_standing(500)
                 key_down(self.direction)
-                press(Key.JUMP, 1)
+                press(config.bot.config['Jump'], 1)
             else:
                 key_down(self.direction)
             time.sleep(utils.rand_float(0.03, 0.05))
@@ -419,7 +420,7 @@ class Skill_X(Command):
         if self.check_is_skill_ready():
             if self.jump:
                 utils.wait_for_is_standing(500)
-                press(Key.JUMP, 1)
+                press(config.bot.config['Jump'], 1)
             key_down(self.direction)
             time.sleep(utils.rand_float(0.03, 0.05))
             press(Key.SKILL_X, 1, up_time=0.1)

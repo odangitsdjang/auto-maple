@@ -26,6 +26,7 @@ class Bot(Configurable):
 
     DEFAULT_CONFIG = {
         'Interact': 'space',
+        'Jump': 'alt',
         'Feed pet': '9'
     }
 

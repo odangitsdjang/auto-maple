@@ -37,7 +37,8 @@ class CommandBook(Configurable):
         new_cb = {}
         for c in (components.Wait, components.Walk, components.Fall, components.SkillCombination, components.GoToMap, \
                 components.CustomKey, components.ChangeChannel,components.Player_jump,components.WaitStanding, \
-                components.EndScript, components.DailyCombination, components.FollowPartner, components.StoryAssistant):
+                components.EndScript, components.DailyCombination, components.FollowPartner, components.StoryAssistant, \
+                components.Commerci):
             new_cb[c.__name__.lower()] = c
 
         # Import the desired command book file
@@ -99,7 +100,6 @@ class CommandBook(Configurable):
                   f"or the function 'step'")
         if required_found and (step_found or movement_found):
             self.buff = new_cb['buff']()
-            config.jump_button = new_cb['key'].JUMP
             config.world_map_button = new_cb['key'].WORLD_MAP
 
              # initialize skills ready state

@@ -8,9 +8,9 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/hoyung/'
 
 # List of key mappings
 class Key:
-    # Movement
-    JUMP = 'alt'
     WORLD_MAP = 'pageup'
+    
+    # Movement
     FLASH_JUMP = 'alt'
     # ROPE = 'c'
     FLY = 'x' # 觔斗雲
@@ -55,6 +55,7 @@ def step(direction, target):
 
     d_y = target[1] - config.player_pos[1]
     d_x = target[0] - config.player_pos[0]
+    jump = config.bot.config['Jump']
 
     if config.player_states['is_stuck']:
         print("is stuck")
@@ -65,9 +66,9 @@ def step(direction, target):
                 x_arrow = 'right'
             else:
                 x_arrow = 'left'
-            press(x_arrow+'+'+Key.JUMP)
+            press(x_arrow+'+'+jump)
         else:
-            press(Key.JUMP)
+            press(jump)
         Skill_A(direction='',pre_delay='0.1').execute()
         WaitStanding(duration='3').execute()
 
@@ -174,7 +175,7 @@ def step(direction, target):
                 SkillCombination(direction='',jump='false',target_skills='stomp|skill_a').execute()
             utils.wait_for_is_standing(1300)
         else:
-            press(Key.JUMP, 1)
+            press(jump, 1)
             time.sleep(utils.rand_float(0.1, 0.15))
 
     if direction == 'down':
@@ -190,7 +191,7 @@ def step(direction, target):
                     x_direction = 'right'
                 else:
                     x_direction = 'left'
-                press(x_direction+'+'+Key.JUMP, 1,up_time=0.12)
+                press(x_direction+'+'+jump, 1,up_time=0.12)
                 # Skill_Q(combo='true').execute()
                 fly_time = (abs(d_y)-4)*0.025
                 Fly(direction='down',duration=str(fly_time)).execute()
@@ -249,7 +250,7 @@ class Adjust(Command):
                         utils.wait_for_is_standing(1000)
                         key_down('down')
                         time.sleep(utils.rand_float(0.05, 0.07))
-                        press(Key.JUMP, 2, down_time=0.1)
+                        press(config.bot.config['Jump'], 2, down_time=0.1)
                         key_up('down')
                         time.sleep(utils.rand_float(0.17, 0.25))
                     counter -= 1
@@ -308,10 +309,10 @@ class FlashJump(Command):
                 time.sleep(utils.rand_float(0.02, 0.04)) # fast flash jump gap
             else:
                 key_down(self.direction,down_time=0.05)
-                press(Key.JUMP,down_time=0.06,up_time=0.05)
+                press(config.bot.config['Jump'],down_time=0.06,up_time=0.05)
         else:
             key_down(self.direction,down_time=0.05)
-            press(Key.JUMP,down_time=0.06,up_time=0.05)
+            press(config.bot.config['Jump'],down_time=0.06,up_time=0.05)
         
         press(Key.FLASH_JUMP, 1,down_time=0.06,up_time=0.01)
         key_up(self.direction,up_time=0.01)

@@ -8,10 +8,11 @@ IMAGE_DIR = config.RESOURCES_DIR + '/command_books/dawn_warrior/'
 
 # List of key mappings
 class Key:
+    WORLD_MAP = 'pageup'
+    
     # Movement
-    JUMP = 'alt'
     FLASH_JUMP = 'shift'
-    ROPE = '`'
+    ROPE = 'v'
     UP_JUMP = 'c'
 
     # Buffs
@@ -51,9 +52,9 @@ def step(direction, target):
                 x_arrow = 'right'
             else:
                 x_arrow = 'left'
-            press(x_arrow+'+'+Key.JUMP)
+            press(x_arrow+'+'+config.bot.config['Jump'])
         else:
-            press(Key.JUMP)
+            press(config.bot.config['Jump'])
         Skill_A(direction='',pre_delay='0.1').execute()
         WaitStanding(duration='3').execute()
 
@@ -66,7 +67,7 @@ def step(direction, target):
                 FlashJump(direction='',triple_jump='false',fast_jump='false').execute()
                 SkillCombination(direction='',jump='false',target_skills='skill_a').execute()
             elif abs(d_x) >= 26:
-                press(Key.JUMP,up_time=0.08)
+                press(config.bot.config['Jump'],up_time=0.08)
                 time.sleep(0.3)
                 press(Key.FLASH_JUMP,up_time=0.02)
                 if d_x < 0:
@@ -76,7 +77,7 @@ def step(direction, target):
                     key_up('right')
                     SkillCombination(direction='left',jump='false',target_skills='skill_a').execute()
             elif abs(d_x) >= 20:
-                press(Key.JUMP,up_time=0.02)
+                press(config.bot.config['Jump'],up_time=0.02)
                 time.sleep(0.45)
                 press(Key.FLASH_JUMP,up_time=0.02)
                 if d_x < 0:
@@ -115,7 +116,7 @@ def step(direction, target):
                 SkillCombination(direction='',jump='false',target_skills='skill_a').execute()
             utils.wait_for_is_standing(300)
         else:
-            press(Key.JUMP, 1)
+            press(config.bot.config['Jump'], 1)
             time.sleep(utils.rand_float(0.1, 0.15))
 
     if direction == 'down':
@@ -138,11 +139,11 @@ def step(direction, target):
             #         print("leave lader")
             #         if d_x > 0:
             #             key_down('left')
-            #             press(Key.JUMP)
+            #             press(config.bot.config['Jump'])
             #             key_up('left')
             #         else:
             #             key_down('right')
-            #             press(Key.JUMP)
+            #             press(config.bot.config['Jump'])
             #             key_up('right')
             SkillCombination(direction='',jump='false',target_skills='skill_a').execute()
                 
@@ -194,7 +195,7 @@ class Adjust(Command):
                         utils.wait_for_is_standing(1000)
                         key_down('down')
                         time.sleep(utils.rand_float(0.05, 0.07))
-                        press(Key.JUMP, 2, down_time=0.1)
+                        press(config.bot.config['Jump'], 2, down_time=0.1)
                         key_up('down')
                         time.sleep(utils.rand_float(0.17, 0.25))
                     counter -= 1
@@ -253,10 +254,10 @@ class FlashJump(Command):
                 time.sleep(utils.rand_float(0.02, 0.04)) # fast flash jump gap
             else:
                 key_down(self.direction,down_time=0.05)
-                press(Key.JUMP,down_time=0.06,up_time=0.05)
+                press(config.bot.config['Jump'],down_time=0.06,up_time=0.05)
         else:
             key_down(self.direction,down_time=0.05)
-            # press(Key.JUMP,down_time=0.06,up_time=0.05)
+            # press(config.bot.config['Jump'],down_time=0.06,up_time=0.05)
         
         press(Key.FLASH_JUMP, 1,down_time=0.06,up_time=0.01)
         key_up(self.direction,up_time=0.01)
