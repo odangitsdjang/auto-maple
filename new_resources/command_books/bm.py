@@ -14,6 +14,7 @@ class Key:
     UP_JUMP = 'up+alt'
     BLINK_SHOT = "n"
     BLINK_SHOT_RESUMMON = "down+n"
+    COVERING_FIRE = "r"
 
     GRITTY = "q"
     ARROW_BLAST = "d"
@@ -210,13 +211,12 @@ class FlashJump(Command):
     """Performs a flash jump in the given direction."""
     _display_name = '二段跳'
 
-    def __init__(self, direction="",jump='false',combo='False',triple_jump="False",fast_jump="false",reverse_triple='false'):
+    def __init__(self, direction="",jump='false',combo='False',triple_jump="False",fast_jump="false"):
         super().__init__(locals())
         self.direction = settings.validate_arrows(direction)
         self.triple_jump = settings.validate_boolean(triple_jump)
         self.fast_jump = settings.validate_boolean(fast_jump)
         self.jump = settings.validate_boolean(jump)
-        self.reverse_triple = settings.validate_boolean(reverse_triple)
 
     def main(self):
         jump = config.bot.config['Jump']
@@ -235,21 +235,18 @@ class FlashJump(Command):
         press(Key.FLASH_JUMP, 1,down_time=0.06,up_time=0.01)
         key_up(self.direction,up_time=0.01)
         if self.triple_jump:
+            settings.validate_required(self.direction) # direction is required since opposite direction is required for triple 
+            self.direction = settings.validate_horizontal_arrows(self.direction)
             time.sleep(utils.rand_float(0.03, 0.05))
             # reverse_direction
             reverse_direction = ''
-            if self.reverse_triple:
-                if self.direction == 'left':
-                    reverse_direction = 'right'
-                elif self.direction == 'right':
-                    reverse_direction = 'left'
-                print('reverse_direction : ',reverse_direction)
-                key_down(reverse_direction,down_time=0.05)
-            else:
-                time.sleep(utils.rand_float(0.02, 0.03))
-            press(Key.FLASH_JUMP, 1,down_time=0.07,up_time=0.04) # if this job can do triple jump
-            if self.reverse_triple:
-                key_up(reverse_direction,up_time=0.01)
+            if self.direction == 'left':
+                reverse_direction = 'right'
+            elif self.direction == 'right':
+                reverse_direction = 'left'
+            key_down(reverse_direction,down_time=0.05)
+            press(Key.COVERING_FIRE, 1,down_time=0.07,up_time=0.04)
+            key_up(reverse_direction,up_time=0.01)
         time.sleep(utils.rand_float(0.01, 0.02))
 
 class UpJump(BaseSkill):

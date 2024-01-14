@@ -66,6 +66,18 @@ def validate_horizontal_arrows(key):
             return key
     raise ValueError(f"'{key}' is not a valid horizontal arrow key.")
 
+def validate_required(key):
+    """
+    Checks whether string KEY is either a left or right arrow key.
+    :param key:     The key to check.
+    :return:        KEY in lowercase if it is a valid horizontal arrow key.
+    """
+
+    if isinstance(key, str):
+        key = key.lower()
+        if key in ['']:
+            raise ValueError(f"Key: '{key}' needs to be configured.")
+
 
 #########################
 #       Settings        #

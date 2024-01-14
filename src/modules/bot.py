@@ -155,8 +155,8 @@ class Bot(Configurable):
             elif ii == 2:
                 press("right", 1, down_time=0.2,up_time=0.3)
             time.sleep(0.8) # stop moving 
-            # pre_rune_frame = config.capture.frame 
-            # cv2.imwrite('./recording/s_' + str(time.time()) + '_pre.png',pre_rune_frame)
+            pre_rune_frame = config.capture.frame 
+            cv2.imwrite('./recording/s_' + str(time.time()) + '_pre.png',pre_rune_frame)
             press(self.config['Interact'], 1, down_time=0.15,up_time=0.1) # Inherited from Configurable
             print('\nSolving rune:')
             time.sleep(0.15) # reduce this time as much as possible 
