@@ -1,0 +1,2 @@
+*, x=59, y=32, frequency=1, skip=False, adjust=False, active_if_in_x_range=, active_if_in_y_range=, active_if_not_in_x_range=, active_if_not_in_y_range=, active_if_skill_ready=, active_if_skill_cd=, active_if_in_skill_buff=, active_if_not_in_skill_buff=
+    Commerci, voyages=12, items=6

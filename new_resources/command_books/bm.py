@@ -328,7 +328,7 @@ class Skill_Arrow_Blast_Summon(BaseSkill):
     key_down_skill=True
     delay=0.5
     rep_interval=0.5
-    skill_cool_down=20
+    skill_cool_down=5
     ground_skill=True
     buff_time=60
     combo_delay = 0.05
@@ -662,22 +662,52 @@ class AutoHunting(Command):
             config.map_changing = False
         return
 
+# TODO: Add break if already outside from the voyage
 class CommerciDolceAutoHunt(Command): 
     _display_name ='Commerci Dolce Auto Hunt'
 
     def __init__(self,duration='30'):
         super().__init__(locals())
-        self.duration = float(duration)
+        self.duration = int(duration)
 
     def main(self):
         end_ok_template = cv2.imread('assets/commerci/commerci_end_ok.png', 0)
+        start_time = time.time()
 
+        time.sleep(utils.rand_float(2.4,2.6)) # wait for map to load
         config.map_changing = False
-        time.sleep(utils.rand_float(1.2,1.4)) # wait for map to load
+        jump = config.bot.config['Jump']
+        while True:
+            points = utils.multi_match(config.capture.frame, end_ok_template, threshold=0.95)
+            if len(points) > 0:
+                p = (points[0][0],points[0][1]-2)
+                print("end")
+                utils.game_window_click(p,delay=0.1)
+                utils.game_window_click((700,100), button='right',delay=0.1)  
+                time.sleep(0.15)
+                break
+            
+            if time.time() - start_time >= self.duration:
+                break
+            # no minimap so manually flash jump
+            key_down("right",down_time=0.05)
+            press(jump,down_time=0.06,up_time=0.05)
+        
+            press(jump, 1,down_time=0.06,up_time=0.01)
+            time.sleep(0.8)
+            
+            press(jump,down_time=0.06,up_time=0.05)
+            press(jump, 1,down_time=0.06,up_time=0.01)
+            key_up("right",up_time=0.01)
+            time.sleep(0.6)
+            Skill_Arrow_Blast_Summon(direction='left').execute()
 
-        FlashJump(direction='right').execute()
-        FlashJump(direction='right').execute()
-        Skill_Arrow_Blast_Summon(direction='left').execute()
+            key_down("left",down_time=1.2)
+            key_up("left")
+            print("holding hurricane")
+            Skill_Hurricane(skill_hold_duration=24.5).execute()
+            Skill_Hurricane_Up().execute()
+            print("releasing hurricane")
         
         config.map_changing = True
         return

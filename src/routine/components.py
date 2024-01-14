@@ -1281,11 +1281,12 @@ class Commerci(Command):
     def __init__(self,voyages='12',items='6'):
         super().__init__(locals())
         self.voyages = float(voyages)
-        self.items = float(items)
+        self.items = int(items)
 
     def main(self):
+        settings.story_mode = True
         maestra_template = cv2.imread('assets/commerci/maestra_template.png', 0)
-        start_trade_template = cv2.imread('assets/commerci/start_trade_template.png', 0)
+        start_trade_template = cv2.imread('assets/commerci/start_trade.png', 0)
         next_template = cv2.imread('assets/commerci/commerci_next.png', 0)
         dolce_template = cv2.imread('assets/commerci/dolce.png', 0)
         add_item_template = cv2.imread('assets/commerci/commerci_add_item.png', 0)
@@ -1296,73 +1297,78 @@ class Commerci(Command):
         bot = config.bot
         time.sleep(0.3)
         while self.voyages > 0:
-            points = utils.multi_match(config.capture.frame, maestra_template, threshold=0.9)
+            points = utils.multi_match(config.capture.frame, maestra_template, threshold=0.95)
             if len(points) > 0:
                 p = (points[0][0],points[0][1])
                 print("clicking Maestra")
                 utils.game_window_click(p,delay=0.1)
-                time.sleep(0.3)
+                time.sleep(0.5)
                 # utils.game_window_click((700,100), button='right',delay=0.1)
             
             # if start trade button exists, there is an extra dialogue box
-            points = utils.multi_match(config.capture.frame, start_trade_template, threshold=0.9)
+            points = utils.multi_match(config.capture.frame, start_trade_template, threshold=0.95)
             if len(points) > 0:
                 press("down")
-                press(bot.config['Interact'], up_time=0.15)
+                press(bot.config['Interact'], up_time=0.3)
                 print("click start trade")
-                # utils.game_window_click((700,100), button='right',delay=0.1)
+                utils.game_window_click((700,100), button='right',delay=0.1)
 
-            press(bot.config['Interact'], up_time=0.15)
+            press(bot.config['Interact'], up_time=0.3)
 
             # if next button exists, need to claim
-            points = utils.multi_match(config.capture.frame, next_template, threshold=0.9)
+            points = utils.multi_match(config.capture.frame, next_template, threshold=0.95)
             if len(points) > 0:
                 press(bot.config['Interact'])
                 press("y")
                 press(bot.config['Interact'])
                 print("claimed voyage rewards")
+                time.sleep(0.3)
 
-            points = utils.multi_match(config.capture.frame, dolce_template, threshold=0.9)
+            points = utils.multi_match(config.capture.frame, dolce_template, threshold=0.95)
             if len(points) > 0:
                 p = (points[0][0],points[0][1])
                 print("clicking Dolce")
                 utils.game_window_click(p,delay=0.1)
-                time.sleep(0.15)
-                # utils.game_window_click((700,100), button='right',delay=0.1)        
+                time.sleep(0.3)
+                utils.game_window_click((700,100), button='right',delay=0.1)        
 
-            press("enter", up_time=0.15)
+            press("enter", up_time=0.3)
 
-            points = utils.multi_match(config.capture.frame, add_item_template, threshold=0.9)
+            points = utils.multi_match(config.capture.frame, add_item_template, threshold=0.95)
             if len(points) > 0:
-                p = (points[0][0],points[0][1])
+                p = (points[0][0]+2,points[0][1]-6)
                 print("adding items")
                 for _ in range(self.items):
                     utils.game_window_click(p,delay=0.15)
-                time.sleep(0.15)
-                # utils.game_window_click((700,100), button='right',delay=0.1)    
+                time.sleep(0.1)
+                utils.game_window_click((700,100), button='right',delay=0.1)    
 
-            points = utils.multi_match(config.capture.frame, ship_template, threshold=0.9)
+            points = utils.multi_match(config.capture.frame, ship_template, threshold=0.95)
             if len(points) > 0:
-                p = (points[0][0],points[0][1])
+                p = (points[0][0],points[0][1]-2)
                 print("ship")
                 utils.game_window_click(p,delay=0.1)
+                utils.game_window_click((700,100), button='right',delay=0.1)  
                 time.sleep(0.15)
             
-            press("enter", up_time=0.15)
+            press("enter", up_time=0.4)
 
-            points = utils.multi_match(config.capture.frame, depart_template, threshold=0.9)
+            points = utils.multi_match(config.capture.frame, depart_template, threshold=0.95)
             if len(points) > 0:
-                p = (points[0][0],points[0][1])
-                print("ship")
+                p = (points[0][0],points[0][1]-2)
+                print("depart")
                 utils.game_window_click(p,delay=0.1)
+                utils.game_window_click((700,100), button='right',delay=0.1)  
                 time.sleep(0.15)
 
-            press("enter", up_time=0.15)
+            press("enter", up_time=0.3)
 
             config.map_changing = True
             auto_hunting = config.bot.command_book['commercidolceautohunt']
             auto_hunting().execute()
+            time.sleep(2.5)
             config.map_changing = False
 
             self.voyages = self.voyages - 1
+        settings.story_mode = False
         
