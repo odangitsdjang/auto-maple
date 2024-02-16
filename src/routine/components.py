@@ -328,8 +328,10 @@ class Command(Component):
                 result += f'\n        {key}={value}'
         return result
 
-    def player_jump(self,direction=""):
-        utils.wait_for_is_standing(1500)
+    def player_jump(self,direction="",ground_skill=True):
+        print("player jumping")
+        if ground_skill:
+            utils.wait_for_is_standing(1500)
         key_down(direction)
         press(config.bot.config['Jump'], 1,up_time=0.05)
         for i in range(100): # maximum time : 2s
@@ -341,6 +343,7 @@ class Command(Component):
                 press(config.bot.config['Jump'], 1,up_time=0.05)
             else:
                 time.sleep(0.02)
+        key_up(direction)
             
     def check_should_active(self):
         '''
@@ -568,12 +571,14 @@ class Adjust(Command):
         self.max_steps = settings.validate_nonnegative_int(max_steps)
 
 class Player_jump(Command):
-    def __init__(self, direction=''):
+    def __init__(self, direction='',ground_skill="True"):
         super().__init__(locals())
         self.direction = direction
-    
+        self.ground_skill = settings.validate_boolean(ground_skill)
+
     def main(self):
-        self.player_jump(direction=self.direction)
+        print(f"Player_jump with direction{self.direction} groundSkill {self.ground_skill}")
+        self.player_jump(direction=self.direction, ground_skill=self.ground_skill)
         return super().main()
 
 def step(direction, target):
@@ -696,7 +701,7 @@ class CustomKey(Command):
                 utils.wait_for_is_standing(1000)
 
             if self.jump:
-                self.player_jump(self.direction)
+                self.player_jump(direction=self.direction,ground_skill=self.ground_skill)
                 # time.sleep(utils.rand_float(0.02, 0.05))
             else:
                 key_down(self.direction)
@@ -832,7 +837,7 @@ class BaseSkill(Command):
 
             if not self.direction_after_skill:
                 if self.jump and not self.ground_skill:
-                    self.player_jump(self.direction)
+                    self.player_jump(direction=self.direction, ground_skill=self.ground_skill)
                     time.sleep(utils.rand_float(0.02, 0.04))
                 else:
                     if not self.key_up_skill:
@@ -840,7 +845,7 @@ class BaseSkill(Command):
                         time.sleep(utils.rand_float(0.02, 0.03))
             else:
                 if self.jump and not self.ground_skill:
-                    self.player_jump()
+                    self.player_jump(direction=self.direction, ground_skill=self.ground_skill)
                     time.sleep(utils.rand_float(0.02, 0.04))
 
             for i in range(self.rep):
@@ -1296,6 +1301,7 @@ class Commerci(Command):
         # GoToGuideMap(target_map="commerci_solo").execute()
         bot = config.bot
         time.sleep(0.3)
+        # TODO: determine automatically how many voyages left 
         while self.voyages > 0:
             points = utils.multi_match(config.capture.frame, maestra_template, threshold=0.95)
             if len(points) > 0:
@@ -1365,10 +1371,9 @@ class Commerci(Command):
 
             config.map_changing = True
             auto_hunting = config.bot.command_book['commercidolceautohunt']
-            auto_hunting().execute()
-            time.sleep(2.5)
-            config.map_changing = False
+            completed_correctly = auto_hunting().execute()
 
-            self.voyages = self.voyages - 1
+            if completed_correctly:
+                self.voyages = self.voyages - 1
         settings.story_mode = False
         

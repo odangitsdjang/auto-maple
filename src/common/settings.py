@@ -121,7 +121,7 @@ def reset():
     main_attack_skill_key = ''
     frenzy_key = ''
     home_scroll_key = ''
-    rune_cd_min = 10
+    rune_cd_min = 15
     cd_value = ''
     story_mode = False
     auto_revive = False
@@ -160,7 +160,7 @@ story_mode = False
 
 auto_revive = False
 
-rune_cd_min = 10
+rune_cd_min = 15
 
 is_shared_map = False
 

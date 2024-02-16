@@ -12,35 +12,35 @@ class Key:
     FLASH_JUMP = 'alt'
     ROPE = 'v'
     UP_JUMP = 'up+alt'
-    BLINK_SHOT = "n"
-    BLINK_SHOT_RESUMMON = "down+n"
-    COVERING_FIRE = "r"
+    BLINK_SHOT = 'n'
+    BLINK_SHOT_RESUMMON = 'down+n'
+    COVERING_FIRE = 'r'
 
-    GRITTY = "q"
-    ARROW_BLAST = "d"
-    ERDA_FOUNTAIN = "7"
+    GRITTY = 'q'
+    ARROW_BLAST = 'd'
+    ERDA_FOUNTAIN = '7'
     
     # 120s Buff First Rotation 
     STORM_OF_ARROWS = '9'
-    VICIOUS_SHOT = "o"
-    INHUMAN_SPEED = "0"
+    VICIOUS_SHOT = 'o'
+    INHUMAN_SPEED = '0'
     CONCENTRATION = '='
 
     # 120s Buffs Second Rotation (balance out damage)
-    MAPLE_GODDESS_BLESSING = "6"
-    QUIVER_BARRAGE = "8"
-    FURY_OF_THE_WILD = "3"
+    MAPLE_GODDESS_BLESSING = '6'
+    QUIVER_BARRAGE = '8'
+    FURY_OF_THE_WILD = '3'
 
     # 3rd rotation
-    ARACHNID = "5"
+    ARACHNID = '5'
 
     # Other Buffs
-    PHOENIX = "1"
-    MAPLE_WARRIOR = "" # Auto Buffed
-    EPIC_ADVENTURE = "" # Auto Buffed
+    PHOENIX = '1'
+    MAPLE_WARRIOR = '' # Auto Buffed
+    EPIC_ADVENTURE = '' # Auto Buffed
     
     # Skills
-    ARROW_STREAM = "shift"
+    ARROW_STREAM = 'shift'
     HURRICANE = 'a'
 
     # Buffs
@@ -61,7 +61,7 @@ def step(direction, target):
     jump = config.bot.config['Jump']
 
     if direction == 'left' or direction == 'right':
-        utils.wait_for_is_standing(1000)
+        utils.wait_for_is_standing(1500)
         d_y = target[1] - config.player_pos[1]
         d_x = target[0] - config.player_pos[0]
         if config.player_states['is_stuck'] and abs(d_x) < 16:
@@ -93,14 +93,22 @@ def step(direction, target):
         utils.wait_for_is_standing(1500)
         if abs(d_x) > settings.move_tolerance:
             return
-        if abs(d_y) > 6 :
-            if abs(d_y) > 36:
+        if abs(d_y) > 6:
+            print(f"dy is {d_y}")
+            if (abs(d_y) > 42):
+                UpJump(pre_delay="0.1", jump='true').execute()
+                time.sleep(utils.rand_float(0.10, 0.15))
+                press(Key.ROPE, 1)
+                time.sleep(utils.rand_float(1.2, 1.5))
+            elif abs(d_y) > 36:
                 press(jump, 1)
                 time.sleep(utils.rand_float(0.12, 0.18))
                 press(Key.ROPE, 1)
                 time.sleep(utils.rand_float(1.2, 1.5))
+            elif abs(d_y) <= 16:
+                UpJump_Slow().execute()
             elif abs(d_y) <= 26:
-                UpJump(pre_delay="0.1").execute()
+                UpJump(pre_delay="0.1", jump='true').execute()
             else:
                 press(Key.ROPE, 1)
                 time.sleep(utils.rand_float(1.2, 1.5))
@@ -114,6 +122,8 @@ def step(direction, target):
         if abs(d_x) > settings.move_tolerance:
             return
         down_duration = 0.04
+        if abs(d_y) > 27:
+            down_duration = 0.6
         if abs(d_y) > 20:
             down_duration = 0.4
         elif abs(d_y) > 13:
@@ -182,10 +192,10 @@ class Adjust(Command):
                 d_y = self.target[1] - config.player_pos[1]
                 if abs(d_y) > settings.adjust_tolerance:
                     if d_y < 0:
-                        utils.wait_for_is_standing(1000)
-                        UpJump().main()
+                        utils.wait_for_is_standing(1500)
+                        UpJump(jump='true').execute()
                     else:
-                        utils.wait_for_is_standing(1000)
+                        utils.wait_for_is_standing(1500)
                         key_down('down')
                         time.sleep(utils.rand_float(0.05, 0.07))
                         press(config.bot.config['Jump'], 1, down_time=0.1)
@@ -211,19 +221,21 @@ class FlashJump(Command):
     """Performs a flash jump in the given direction."""
     _display_name = '二段跳'
 
-    def __init__(self, direction="",jump='false',combo='False',triple_jump="False",fast_jump="false"):
+    def __init__(self, direction="",jump='false',combo='False',triple_jump="False",fast_jump="false",reverse_triple=""):
         super().__init__(locals())
         self.direction = settings.validate_arrows(direction)
         self.triple_jump = settings.validate_boolean(triple_jump)
         self.fast_jump = settings.validate_boolean(fast_jump)
         self.jump = settings.validate_boolean(jump)
+        if self.triple_jump:
+            settings.validate_required(self.direction) # direction is required since opposite direction is required for triple 
 
     def main(self):
         jump = config.bot.config['Jump']
         if not self.jump:
             utils.wait_for_is_standing()
             if not self.fast_jump:
-                self.player_jump(self.direction)
+                self.player_jump(direction=self.direction)
                 time.sleep(utils.rand_float(0.02, 0.04)) # fast flash jump gap
             else:
                 key_down(self.direction,down_time=0.05)
@@ -235,7 +247,6 @@ class FlashJump(Command):
         press(Key.FLASH_JUMP, 1,down_time=0.06,up_time=0.01)
         key_up(self.direction,up_time=0.01)
         if self.triple_jump:
-            settings.validate_required(self.direction) # direction is required since opposite direction is required for triple 
             self.direction = settings.validate_horizontal_arrows(self.direction)
             time.sleep(utils.rand_float(0.03, 0.05))
             # reverse_direction
@@ -244,13 +255,14 @@ class FlashJump(Command):
                 reverse_direction = 'right'
             elif self.direction == 'right':
                 reverse_direction = 'left'
-            key_down(reverse_direction,down_time=0.05)
-            press(Key.COVERING_FIRE, 1,down_time=0.07,up_time=0.04)
+            key_down(reverse_direction, down_time=0.10)
+            press('r', 1) # Key.COVERING_FIRE doesnt work for some reason
             key_up(reverse_direction,up_time=0.01)
+            time.sleep(utils.rand_float(0.5, 0.55))
         time.sleep(utils.rand_float(0.01, 0.02))
 
 class UpJump(BaseSkill):
-    """Performs a up jump in the given direction."""
+    """Performs a up jump."""
     _display_name = '上跳'
     _distance = 27
     key=Key.UP_JUMP
@@ -261,16 +273,27 @@ class UpJump(BaseSkill):
     buff_time=0
     combo_delay = 0.1
 
-    # def __init__(self,jump='false', direction='',combo='true'):
+    # def __init__(self, pre_delay='0'):
     #     super().__init__(locals())
-    #     self.direction = settings.validate_arrows(direction)
+    #     self.pre_delay = float(pre_delay)
+    # def main(self):
+    #     # press(config.bot.config['Jump'])
+    #     # press(self.key)
+    #     self.jump = True
+    #     super().main()
+
+class UpJump_Slow(Command):
+    """Performs a slow up jump."""
 
     def main(self):
-        self.jump = True
-        super().main()
+        jump = jump = config.bot.config['Jump']
+        press(jump)
+        print('resting')
+        time.sleep(utils.rand_float(0.3, 0.35))
+        press(Key.UP_JUMP)
         
 class Rope(BaseSkill):
-    """Performs a up jump in the given direction."""
+    """Performs rope lift in the given direction."""
     _display_name = 'Rope lift'
     _distance = 27
     key=Key.ROPE
@@ -391,7 +414,6 @@ class Skill_Blink_Shot(BaseSkill):
     rep_interval=0.5
     skill_cool_down=0
     ground_skill=True
-    buff_time=0
     combo_delay = 0.2
 
 class Skill_Blink_Shot_Summon(BaseSkill):
@@ -400,9 +422,9 @@ class Skill_Blink_Shot_Summon(BaseSkill):
     key=Key.BLINK_SHOT_RESUMMON
     delay=0.3
     rep_interval=0.5
-    skill_cool_down=30 # actually lasts 60 seconds with 0 cd, but cast it faster in case of other blocking events
+    skill_cool_down=1
     ground_skill=True
-    buff_time=30
+    buff_time=120
     combo_delay = 0.2
 
 class Skill_Storm_Of_Arrows(BaseSkill):
@@ -627,7 +649,7 @@ class AutoHunting(Command):
                     settings.platforms = 'b' + str(int(bottom_y))
                 FlashJump(direction='left').execute()
                 SkillCombination(direction='left',target_skills='skill_erda_fountain|skill_0|skill_arrow_stream').execute()
-                UpJump(direction='left').execute()
+                UpJump(jump='true').execute()
                 SkillCombination(direction='left',target_skills='skill_q|skill_0|skill_f|skill_d|skill_arrow_stream').execute()
             else:
                 # left side
@@ -637,7 +659,7 @@ class AutoHunting(Command):
                     settings.platforms = 'b' + str(int(bottom_y))
                 FlashJump(direction='right').execute()
                 SkillCombination(direction='right',target_skills='skill_erda_fountain|skill_0|skill_arrow_stream').execute()
-                UpJump(direction='right').execute()
+                UpJump(jump='true').execute()
                 SkillCombination(direction='right',target_skills='skill_q|skill_0|skill_f|skill_d|skill_arrow_stream').execute()
             
             if settings.auto_change_channel and config.should_solve_rune:
@@ -668,14 +690,24 @@ class CommerciDolceAutoHunt(Command):
         self.duration = int(duration)
 
     def main(self):
+        # Changing into the voyage
+        config.map_changing = True
+        time.sleep(utils.rand_float(2.4,2.6)) # wait for map to load
+
         end_ok_template = cv2.imread('assets/commerci/commerci_end_ok.png', 0)
+        trading_post_template = cv2.imread('assets/commerci/trading_post.png', 0)
         start_time = time.time()
 
-        time.sleep(utils.rand_float(2.4,2.6)) # wait for map to load
+        points = utils.multi_match(config.capture.frame, trading_post_template, threshold=0.95)
+        if len(points) > 0:
+            print("Trading post text found; did not depart on voyage correctly")
+            return False
+        
         config.map_changing = False
         jump = config.bot.config['Jump']
         while True:
             points = utils.multi_match(config.capture.frame, end_ok_template, threshold=0.95)
+
             if len(points) > 0:
                 p = (points[0][0],points[0][1]-2)
                 print("end")
@@ -707,6 +739,8 @@ class CommerciDolceAutoHunt(Command):
             print("releasing hurricane")
         
         config.map_changing = True
-        return
+        time.sleep(2.5)
+        config.map_changing = False
+        return True
 
         
