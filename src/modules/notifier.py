@@ -143,9 +143,11 @@ class Notifier:
 
                 # Check for Especia portal
                 if now == 0 or now > prev_especia_timer + especia_ping_interval:
+                    does_portal_exist = []
                     # check minimap for red/orange portal first (starforce(?) maps have orange portal all the time though)
                     filtered = utils.filter_color(minimap, MINIMAP_EXP_PORTAL_RANGES)
-                    does_portal_exist = utils.multi_match(filtered, EXP_PORTAL_TEMPLATE, threshold=0.9)
+                    if (len(filtered) > len(EXP_PORTAL_TEMPLATE)): 
+                        does_portal_exist = utils.multi_match(filtered, EXP_PORTAL_TEMPLATE, threshold=0.9)
 
                     if len(does_portal_exist) > 0:
                         filtered_frame = utils.filter_color(frame, ESPECIA_PORTAL_RANGE)
